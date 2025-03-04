@@ -11,8 +11,8 @@ const svg = d3.select("#chart-container").append("svg")
     .attr("transform", `translate(${margin.left},${margin.top})`);
 
 Promise.all([
-    d3.csv("Dexcom_001.csv", d3.autoType),
-    d3.csv("Food_Log_001.csv", d3.autoType)
+    d3.csv("data/Dexcom_001.csv", d3.autoType),
+    d3.csv("data/Food_Log_001.csv", d3.autoType)
 ]).then(([dexcomData, foodLogData]) => {
     // Parse timestamps
     dexcomData.forEach(d => d.Timestamp = new Date(d.Timestamp));
