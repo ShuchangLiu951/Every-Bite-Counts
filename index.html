@@ -3,8 +3,16 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Project Proposal</title>
+    <title>Food, Fitness, and Glucose: A Data-Driven Look</title>
+    
     <link rel="stylesheet" href="main.css">
+    <script src="https://d3js.org/d3.v7.min.js"></script>
+    
+    <style>
+        body { font-family: Arial, sans-serif; }
+        #chart-container { display: flex; flex-wrap: wrap; justify-content: center; margin-top: 20px; }
+        svg { margin: 10px; border: 1px solid #ccc; }
+    </style>
 </head>
 <body>
 
@@ -13,12 +21,17 @@
         <h2>BIG IDEAs Lab Glycemic Variability and Wearable Device Data</h2>
         <p>We aim to explore the relationship between dietary intake and glucose regulation using an interactive visualization. By analyzing participants’ food logs—tracking what they eat, when they eat it, and the nutritional content—we will correlate these inputs with their continuous glucose readings recorded every five minutes by the Dexcom G6 sensor. Our approach will identify patterns in glucose response to different food types, meal timing, and macronutrient composition. Through dynamic charts and trend analyses, we will highlight individual variations in glucose metabolism and infer potential dietary impacts on prediabetes risk. This webpage will provide an intuitive way to examine how specific foods and meal timing influence glucose fluctuations.</p>
     </header>
+
+    <h2>Glucose Levels and Food Intake Across 16 Subjects</h2>
+    <div id="chart-container"></div> <!-- D3 Chart Container -->
+
+    <h3>Data Visualizations</h3>
     <img src="images/sugar2.png" alt="Sugar Consumption" width="700" height="400">
     <img src="images/carbs2.png" alt="Carbs Consumption" width="700" height="400">
     <img src="images/sugar_carbs2.png" alt="Sugar and Carbs Consumption" width="700" height="400">
     <img src="images/glucose variability.png" alt="Variability in Glucose Readings" width="700" height="400">
     <img src="images/glucose distrbution.png" alt="Distribution of Glucose Levels" width="700" height="400">
 
-
+    <script src="main.js"></script> <!-- Link to your D3 visualization script -->
 </body>
 </html>
