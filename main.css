@@ -49,3 +49,46 @@ footer a {
     font-weight: bold;
 }
 
+/* Style for the SVG container */
+#chart-container {
+    border: 1px solid #ccc; /* Light border around the SVG */
+    margin: 20px; /* Space around the SVG */
+}
+
+/* Style for axes */
+.axis path,
+.axis line {
+    fill: none;
+    shape-rendering: crispEdges;
+    stroke: #333; /* Dark color for axes */
+}
+
+.axis text {
+    font-family: Arial, sans-serif; /* Font for axis labels */
+    font-size: 12px; /* Font size for axis labels */
+    fill: #333; /* Dark color for text */
+}
+
+/* Style for the food points */
+.food-point {
+    fill: red; /* Color for food intake points */
+    stroke: black; /* Outline color for food intake points */
+    stroke-width: 1; /* Width of the outline */
+}
+
+/* Tooltip styles */
+.tooltip {
+    position: absolute;
+    background: lightgray; /* Background color for tooltip */
+    border: 1px solid #aaa; /* Border color for tooltip */
+    padding: 5px; /* Padding inside tooltip */
+    border-radius: 4px; /* Rounded corners */
+    font-family: Arial, sans-serif; /* Font for tooltip text */
+    font-size: 12px; /* Font size for tooltip text */
+    visibility: hidden; /* Hidden by default */
+}
+
+/* Transition effects for points */
+.food-point:hover {
+    fill: orange; /* Change color on hover */
+}
