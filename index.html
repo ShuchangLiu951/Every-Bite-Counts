@@ -13,7 +13,7 @@
         #chart-container { display: flex; flex-wrap: wrap; justify-content: center; margin-top: 20px; }
         svg { margin: 10px; border: 1px solid #ccc; }
     </style>
-</head>
+</head> 
 <body>
 
     <header>
@@ -23,6 +23,22 @@
     </header>
 
     <h2>Glucose Levels and Food Intake Across 16 Subjects</h2>
+
+    <!-- Descriptive Exposition Before the D3 Chart -->
+    <section id="glucose-intro">
+        <h3>How Do Your Meals Shape Your Blood Sugar Levels?</h3>
+        <p>Every meal you eat sets off a cascade of metabolic responses, influencing your body's blood sugar levels in real time. But how exactly does your glucose fluctuate throughout the day, and what patterns emerge based on what and when you eat?</p>
+        <p>Using continuous glucose monitoring (CGM) data from the Dexcom G6 sensor, we can visualize these fluctuations over a full day, mapping each meal to its corresponding impact on blood sugar. By overlaying food intake onto a dynamic glucose trend line, we can see how different meals—whether rich in carbohydrates, proteins, or fats—affect glucose stability and overall metabolic health.</p>
+        <p>In the interactive graph below, each <strong>meal event</strong> is marked along the timeline. Notice how some meals trigger sharp glucose spikes, while others result in steadier, more controlled changes. Click on a meal to explore its macronutrient composition and observe how the body responds in the minutes and hours that follow.</p>
+        <h4>🔎 What to Look For:</h4>
+        <ul>
+            <li>Do certain meals lead to rapid glucose spikes or crashes?</li>
+            <li>How long does it take for glucose levels to return to baseline after eating?</li>
+            <li>Are there patterns based on meal timing, such as breakfast vs. dinner?</li>
+        </ul>
+        <p>Explore the visualization below to uncover the unique story behind each meal and its impact on blood sugar regulation.</p>
+    </section>
+
     <div id="chart-container"></div> <!-- D3 Chart Container -->
 
     <h3>Data Visualizations</h3>
@@ -33,5 +49,6 @@
     <img src="images/glucose distrbution.png" alt="Distribution of Glucose Levels" width="700" height="400">
 
     <script src="main.js"></script> <!-- Link to your D3 visualization script -->
+
 </body>
-</html>
+
