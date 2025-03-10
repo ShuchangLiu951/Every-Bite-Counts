@@ -18,7 +18,7 @@ d3.csv("filtered data/number4_integrate.csv").then(data => {
         d["Glucose Value (mg/dL)"] = +d["Glucose Value (mg/dL)"];
         d.total_carb = d.total_carb ? +d.total_carb : null;
         d.sugar = d.sugar ? +d.sugar : null;
-        d.protein = d.protein ? +d.total_carb : null;
+        d.protein = d.protein ? +d.protein : null;
 
         d.logged_food = d.logged_food ? d.logged_food.trim() : "";
     });
