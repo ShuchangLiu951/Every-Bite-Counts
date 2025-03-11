@@ -1,6 +1,5 @@
-// // // // // D3.js visualization comparing glucose levels with food intake over time, per subject
-// // // //draft 1
-// D3.js visualization comparing glucose levels with food intake over time
+// // // // // // D3.js visualization comparing glucose levels with food intake over time, per subject
+// D3.js visualization comparing glucose levels with food intake over time, per subject
 const margin = { top: 50, right: 50, bottom: 50, left: 70 },
     width = 900 - margin.left - margin.right,
     height = 500 - margin.top - margin.bottom;
@@ -54,7 +53,8 @@ d3.csv("filtered data/number4_integrate.csv").then(data => {
         .attr("text-anchor", "middle")
         .attr("x", width / 2)
         .attr("y", height + 40)
-        .style("font-size", "14px")
+        .style("font-size", "18px") // Increase font size
+        .style("font-weight", "bold")
         .text("Time");
 
     svg.append("text")
@@ -62,7 +62,8 @@ d3.csv("filtered data/number4_integrate.csv").then(data => {
         .attr("transform", "rotate(-90)")
         .attr("x", -height / 2)
         .attr("y", -50)
-        .style("font-size", "14px")
+        .style("font-size", "18px") // Increase font size
+        .style("font-weight", "bold")
         .text("Glucose (mg/dL)");
 
     // Line generator
@@ -70,12 +71,20 @@ d3.csv("filtered data/number4_integrate.csv").then(data => {
         .x(d => x(d.Timestamp))
         .y(d => y(d["Glucose Value (mg/dL)"]));
 
+
+    svg.append("defs").append("clipPath")
+        .attr("id", "clip")
+        .append("rect")
+        .attr("width", width)
+        .attr("height", height);
+
     const glucosePath = svg.append("path")
         .datum(glucoseData)
         .attr("fill", "none")
         .attr("stroke", "steelblue")
         .attr("stroke-width", 2)
-        .attr("d", line);
+        .attr("d", line)
+        .attr("clip-path", "url(#clip)");
 
     // Add food intake points
     const foodPoints = svg.selectAll(".food-point")
@@ -85,7 +94,8 @@ d3.csv("filtered data/number4_integrate.csv").then(data => {
         .attr("cx", d => x(d.Timestamp))
         .attr("cy", d => y(d["Glucose Value (mg/dL)"]))
         .attr("r", 6)
-        .attr("fill", "red");
+        .attr("fill", "red")
+        .attr("clip-path", "url(#clip)");
 
     // Tooltip
     const tooltip = d3.select("body").append("div")
@@ -111,15 +121,20 @@ d3.csv("filtered data/number4_integrate.csv").then(data => {
         tooltip.style("visibility", "hidden");
     }
 
-    foodPoints.on("mouseenter", function (event, d) {
+    foodPoints
+    .on("mouseenter", function (event, d) {
         d3.select(this).attr("r", 8).style("fill-opacity", 1);
-        updateTooltip(event, d);
+        updateTooltip(event, d); // Enlarge circle
     })
-    .on("mousemove", updateTooltip)
+    .on("mousemove", function (event) {
+        tooltip.style("left", `${event.pageX + 10}px`)
+               .style("top", `${event.pageY - 10}px`);
+    })
     .on("mouseleave", function () {
-        d3.select(this).attr("r", 6).style("fill-opacity", 0.7);
+        d3.select(this).attr("r", 6).style("fill-opacity", 0.7); // Restore size
         hideTooltip();
     });
+
 
     // Brush and zoom setup
     const brush = d3.brushX()
@@ -129,32 +144,41 @@ d3.csv("filtered data/number4_integrate.csv").then(data => {
     const brushGroup = svg.append("g").attr("class", "brush").call(brush);
     svg.selectAll('.food-point, .overlay ~ *').raise();
 
-
     function brushed(event) {
         if (!event.selection) return;
         const [x0, x1] = event.selection.map(x.invert);
         x.domain([x0, x1]);
-
+    
+        // Update x-axis within valid bounds
         xAxis.transition().duration(1000).call(d3.axisBottom(x));
+    
+        // Update the glucose line and points within the clip path
         glucosePath.transition().duration(1000).attr("d", line);
         
         foodPoints.transition().duration(1000)
             .attr("cx", d => x(d.Timestamp))
             .attr("fill", d => (d.Timestamp >= x0 && d.Timestamp <= x1) ? "orange" : "red");
-        
+
+
+                // Reapply tooltip event listeners after zoom
         foodPoints.on("mouseenter", function (event, d) {
-            d3.select(this).attr("r", 8).style("fill-opacity", 1);
+            d3.select(this).attr("r", 8);
             updateTooltip(event, d);
         })
-        .on("mousemove", updateTooltip)
+        .on("mousemove", function (event) {
+            tooltip.style("left", `${event.pageX + 10}px`)
+                .style("top", `${event.pageY - 10}px`);
+        })
         .on("mouseleave", function () {
-            d3.select(this).attr("r", 6).style("fill-opacity", 0.7);
+            d3.select(this).attr("r", 6);
             hideTooltip();
         });
-
+        
         brushGroup.call(brush.move, null);
     }
+    
 
+    // foodPoints.raise();
     d3.select("#reset-button").on("click", () => {
         x.domain(d3.extent(glucoseData, d => d.Timestamp));
         xAxis.transition().duration(1000).call(d3.axisBottom(x));

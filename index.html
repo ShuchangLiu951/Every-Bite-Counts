@@ -17,7 +17,7 @@
 <body>
 
     <header>
-        <h1>Food, Fitness, and Glucose: A Data-Driven Look at Metabolic Health</h1>
+        <h1>Food and Glucose: A Data-Driven Look at Metabolic Health</h1>
         <h2>BIG IDEAs Lab Glycemic Variability and Wearable Device Data</h2>
         <p>We aim to explore the relationship between dietary intake and glucose regulation using interactive visualizations. By analyzing diabetic participants’ food logs—tracking what they eat, when they eat it, and the nutritional content—we will correlate these inputs with their continuous glucose readings recorded every five minutes by the Dexcom G6 sensor. Our approach will identify patterns in glucose response to different food types, meal timing, and macronutrient composition. Through dynamic charts and trend analyses, we will highlight individual variations in glucose metabolism and infer potential dietary impacts. This webpage will provide an intuitive way to examine how specific foods and meal timing influence glucose fluctuations.</p>
     </header>
@@ -40,6 +40,7 @@
     </section>
 
     <div id="chart-container"></div> <!-- D3 Chart Container -->
+    <script src="main.js"></script>
 
     <button id="reset-button">Reset Zoom</button>
 
@@ -55,43 +56,16 @@
             <li><strong>Bars:</strong> Visual representation of average glucose responses, allowing for quick comparisons across meal categories.</li>
         </ul>
         <p>This histogram will feature interactive elements where users can hover over bars to reveal sample meals within each category and click to filter corresponding data in the line graph. This dual visualization approach will facilitate a comprehensive exploration of how macronutrient composition affects glucose regulation.</p>
-    
+
+        <div id="chart2-container"></div> <!-- D3 Chart Container -->
+        <script src="glucose.js"></script>
         
     </section>
-    <script src="main.js"></script>
     
-
-    <div id="heatmap-container"></div>
-    <script src="heatmap.js"></script> <!-- D3 Heatmap Container -->
+    
 
 </body>
 
 
 
 
-   <!-- <div id="glucosePlot" style="width:100%; height:600px;"></div>
-    <script>
-        document.addEventListener("DOMContentLoaded", function() {
-            var trace = {
-                x: ["2020-02-21 10:09:00", "2020-02-21 10:11:00", "2020-02-21 12:09:00"],
-                y: [120, 135, 140],
-                mode: 'markers',
-                marker: {
-                    size: [48.0, 32.0, 4.4],
-                    color: [48.0, 3.0, 3.6],
-                    colorscale: 'Viridis',
-                    showscale: true
-                },
-                text: ['48.0 g Sugar', '3.0 g Sugar', '3.6 g Sugar'],
-                type: 'scatter'
-            };
-
-            var layout = {
-                title: 'Effect of Carbohydrate and Sugar Intake on Glucose Levels',
-                xaxis: { title: 'Time', type: 'category' },
-                yaxis: { title: 'Glucose Value (mg/dL)' }
-            };
-
-            Plotly.newPlot('glucosePlot', [trace], layout);
-        });
-    </script> -->

@@ -73,3 +73,34 @@ footer a {
     margin-top: 20px;
     background-color: lightgray;
 }
+
+
+#glucose-intro {
+    margin-left: 50px; /* Adjust as needed for more spacing */
+    font-size: 1.2em; /* Slightly bigger font */
+}
+
+h3{
+    color: black;
+    margin-left: 50px; /* Adjust as needed for more spacing */
+    font-size: 1.2em;
+}
+
+
+
+#reset-button {
+    display: block;
+    margin: 20px auto; /* Centers it */
+    font-size: 18px; /* Increases text size */
+    padding: 10px 20px; /* Adds more padding */
+    width: 150px; /* Makes button larger */
+    background-color: steelblue; /* Optional: Better visibility */
+    color: white;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+}
+
+#reset-button:hover {
+    background-color: darkblue; /* Optional: Hover effect */
+}
