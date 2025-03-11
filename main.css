@@ -49,3 +49,89 @@ footer a {
     font-weight: bold;
 }
 
+
+@keyframes marching-ants {
+    to {
+      stroke-dashoffset: -8; /* 5 + 3 */
+    }
+  }
+  
+  .selection {
+    fill-opacity: 0.1;
+    stroke: black;
+    stroke-opacity: 0.7;
+    stroke-dasharray: 5 3;
+    animation: marching-ants 2s linear infinite;
+  }
+  
+  circle.selected {
+    fill: #ff6b6b; /* Color for selected food points */
+  }
+  #heatmap-container {
+    display: flex;
+    justify-content: center;
+    margin-top: 20px;
+    background-color: lightgray;
+}
+
+
+#glucose-intro {
+    margin-left: 50px; /* Adjust as needed for more spacing */
+    font-size: 1.2em; /* Slightly bigger font */
+}
+
+h3{
+    color: black;
+    margin-left: 50px; /* Adjust as needed for more spacing */
+    font-size: 1.2em;
+}
+
+
+
+#reset-button {
+    display: block;
+    margin: 20px auto; /* Centers it */
+    font-size: 18px; /* Increases text size */
+    padding: 10px 20px; /* Adds more padding */
+    width: 150px; /* Makes button larger */
+    background-color: steelblue; /* Optional: Better visibility */
+    color: white;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+}
+
+#reset-button:hover {
+    background-color: darkblue; /* Optional: Hover effect */
+}
+
+
+#data-select {
+    display: block;
+    margin: 20px auto; /* Centers it */
+    font-size: 18px; /* Matches button text size */
+    padding: 10px 20px; /* Matches button padding */
+    width: 180px; /* Slightly wider for better appearance */
+    background-color: steelblue; /* Matches button background */
+    color: white;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    text-align: center; /* Ensures text is centered */
+}
+
+/* Hover effect to match the button */
+#data-select:hover {
+    background-color: darkblue;
+}
+
+/* Optional: Remove default dropdown arrow and style it */
+#data-select::-ms-expand {
+    display: none;
+}
+
+#data-select {
+    appearance: none;
+    -webkit-appearance: none;
+    -moz-appearance: none;
+}

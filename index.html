@@ -3,12 +3,11 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Food, Fitness, and Glucose: A Data-Driven Look</title>
+    <title>Food and Glucose: A Data-Driven Look</title>
     
     <link rel="stylesheet" href="main.css">
     <script src="https://cdnjs.cloudflare.com/ajax/libs/plotly.js/2.24.1/plotly.min.js"></script>
     <script src="https://d3js.org/d3.v7.min.js"></script>
-    
     <style>
         body { font-family: Arial, sans-serif; }
         #chart-container { display: flex; flex-wrap: wrap; justify-content: center; margin-top: 20px; }
@@ -18,19 +17,19 @@
 <body>
 
     <header>
-        <h1>Food, Fitness, and Glucose: A Data-Driven Look at Metabolic Health</h1>
+        <h1>Food and Glucose: A Data-Driven Look at Metabolic Health</h1>
         <h2>BIG IDEAs Lab Glycemic Variability and Wearable Device Data</h2>
-        <p>We aim to explore the relationship between dietary intake and glucose regulation using an interactive visualization. By analyzing participants’ food logs—tracking what they eat, when they eat it, and the nutritional content—we will correlate these inputs with their continuous glucose readings recorded every five minutes by the Dexcom G6 sensor. Our approach will identify patterns in glucose response to different food types, meal timing, and macronutrient composition. Through dynamic charts and trend analyses, we will highlight individual variations in glucose metabolism and infer potential dietary impacts on prediabetes risk. This webpage will provide an intuitive way to examine how specific foods and meal timing influence glucose fluctuations.</p>
+        <p>We aim to explore the relationship between dietary intake and glucose regulation using interactive visualizations. By analyzing diabetic participants’ food logs—tracking what they eat, when they eat it, and the nutritional content—we will correlate these inputs with their continuous glucose readings recorded every five minutes by the Dexcom G6 sensor. Our approach will identify patterns in glucose response to different food types, meal timing, and macronutrient composition. Through dynamic charts and trend analyses, we will highlight individual variations in glucose metabolism and infer potential dietary impacts. This webpage will provide an intuitive way to examine how specific foods and meal timing influence glucose fluctuations.</p>
     </header>
 
-    <h2>Glucose Levels and Food Intake Across 16 Subjects</h2>
+    <h2>How Food Intake Influences Glucose Levels</h2>
 
     <!-- Descriptive Exposition Before the D3 Chart -->
     <section id="glucose-intro">
         <h3>How Do Your Meals Shape Your Blood Sugar Levels?</h3>
         <p>Every meal you eat sets off a cascade of metabolic responses, influencing your body's blood sugar levels in real time. But how exactly does your glucose fluctuate throughout the day, and what patterns emerge based on what and when you eat?</p>
         <p>Using continuous glucose monitoring (CGM) data from the Dexcom G6 sensor, we can visualize these fluctuations over a full day, mapping each meal to its corresponding impact on blood sugar. By overlaying food intake onto a dynamic glucose trend line, we can see how different meals—whether rich in carbohydrates, proteins, or fats—affect glucose stability and overall metabolic health.</p>
-        <p>In the interactive graph below, each <strong>meal event</strong> is marked along the timeline. Notice how some meals trigger sharp glucose spikes, while others result in steadier, more controlled changes. Click on a meal to explore its macronutrient composition and observe how the body responds in the minutes and hours that follow.</p>
+        <p>In the interactive graph below, each <strong>meal event</strong> is marked along the timeline. Notice how some meals trigger sharp glucose spikes, while others result in steadier, more controlled changes. Hover over a meal to explore its macronutrient composition and observe how the body responds in the minutes and hours that follow.</p>
         <h4>🔎 What to Look For:</h4>
         <ul>
             <li>Do certain meals lead to rapid glucose spikes or crashes?</li>
@@ -41,42 +40,45 @@
     </section>
 
     <div id="chart-container"></div> <!-- D3 Chart Container -->
+    <script src="main.js"></script>
 
-    <h3>Data Visualizations</h3>
-    <img src="images/sugar2.png" alt="Sugar Consumption" width="700" height="400">
-    <img src="images/carbs2.png" alt="Carbs Consumption" width="700" height="400">
-    <img src="images/sugar_carbs2.png" alt="Sugar and Carbs Consumption" width="700" height="400">
-    <img src="images/glucose variability.png" alt="Variability in Glucose Readings" width="700" height="400">
-    <img src="images/glucose distrbution.png" alt="Distribution of Glucose Levels" width="700" height="400">
+<select id="data-select">
+    <option value="filtered data/number1_integrate.csv">Dataset 1</option>
+    <option value="filtered data/number2_integrate.csv">Dataset 2</option>
+    <option value="filtered data/number4_integrate.csv" selected>Dataset 4</option>
+    <option value="filtered data/number5_integrate.csv">Dataset 5</option>
+    <option value="filtered data/number6_integrate.csv">Dataset 6</option>
+    <option value="filtered data/number8_integrate.csv">Dataset 8</option>
+    <option value="filtered data/number9_integrate.csv">Dataset 9</option>
+    <option value="filtered data/number10_integrate.csv">Dataset 10</option>
+    <option value="filtered data/number11_integrate.csv">Dataset 11</option>
+    <option value="filtered data/number12_integrate.csv">Dataset 12</option>
+    <option value="filtered data/number14_integrate.csv">Dataset 14</option>
+</select>
+    <button id="reset-button">Reset Zoom</button>
 
-    <script src="main.js"></script> <!-- Link to your D3 visualization script -->
 
-    <div id="glucosePlot" style="width:100%; height:600px;"></div>
-    <script>
-        document.addEventListener("DOMContentLoaded", function() {
-            var trace = {
-                x: ["2020-02-21 10:09:00", "2020-02-21 10:11:00", "2020-02-21 12:09:00"],
-                y: [120, 135, 140],
-                mode: 'markers',
-                marker: {
-                    size: [48.0, 32.0, 4.4],
-                    color: [48.0, 3.0, 3.6],
-                    colorscale: 'Viridis',
-                    showscale: true
-                },
-                text: ['48.0 g Sugar', '3.0 g Sugar', '3.6 g Sugar'],
-                type: 'scatter'
-            };
+    <!-- <section id="visualization-ideas">
+        <h3>Glucose Trends and Macronutrient Effects</h3>
+        <p> After Exploring our data, we wanted to gain a deeper understanding of how meals impact blood sugar levels, we propose visualizations that reveal insights from the data collected via continuous glucose monitoring. These visualizations will help answer critical questions about glucose fluctuations and the effects of different macronutrient compositions.</p>
+        <h4>Glucose Response to Macronutrient Ratios</h4>
+        <p>The second visualization employs a histogram to compare the effects of different macronutrient categories on glucose levels. This analysis aims to determine if higher carbohydrate meals induce more substantial glucose spikes compared to high-protein meals. Key components of this histogram include:</p>
+        <ul>
+            <li><strong>X-axis:</strong> Macronutrient categories such as High-Carb, Low-Carb, and High-Protein.</li>
+            <li><strong>Y-axis:</strong> Average glucose change observed within 30-60 minutes post-meal, quantifying the impact of each meal type.</li>
+            <li><strong>Bars:</strong> Visual representation of average glucose responses, allowing for quick comparisons across meal categories.</li>
+        </ul>
+        <p>This histogram will feature interactive elements where users can hover over bars to reveal sample meals within each category and click to filter corresponding data in the line graph. This dual visualization approach will facilitate a comprehensive exploration of how macronutrient composition affects glucose regulation.</p>
 
-            var layout = {
-                title: 'Effect of Carbohydrate and Sugar Intake on Glucose Levels',
-                xaxis: { title: 'Time', type: 'category' },
-                yaxis: { title: 'Glucose Value (mg/dL)' }
-            };
-
-            Plotly.newPlot('glucosePlot', [trace], layout);
-        });
-    </script>
+        <div id="chart2-container"></div> D3 Chart Container -->
+        <!-- <script src="glucose.js"></script>
+        
+    </section> --> 
+    
+    
 
 </body>
+
+
+
 
