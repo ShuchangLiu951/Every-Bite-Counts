@@ -104,3 +104,34 @@ h3{
 #reset-button:hover {
     background-color: darkblue; /* Optional: Hover effect */
 }
+
+
+#data-select {
+    display: block;
+    margin: 20px auto; /* Centers it */
+    font-size: 18px; /* Matches button text size */
+    padding: 10px 20px; /* Matches button padding */
+    width: 180px; /* Slightly wider for better appearance */
+    background-color: steelblue; /* Matches button background */
+    color: white;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    text-align: center; /* Ensures text is centered */
+}
+
+/* Hover effect to match the button */
+#data-select:hover {
+    background-color: darkblue;
+}
+
+/* Optional: Remove default dropdown arrow and style it */
+#data-select::-ms-expand {
+    display: none;
+}
+
+#data-select {
+    appearance: none;
+    -webkit-appearance: none;
+    -moz-appearance: none;
+}
