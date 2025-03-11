@@ -88,7 +88,6 @@
 
 // });
 
-
 const margin = { top: 50, right: 50, bottom: 50, left: 70 },
       width = 900 - margin.left - margin.right,
       height = 500 - margin.top - margin.bottom;
