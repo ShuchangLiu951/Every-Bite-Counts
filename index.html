@@ -8,7 +8,6 @@
     <link rel="stylesheet" href="main.css">
     <script src="https://cdnjs.cloudflare.com/ajax/libs/plotly.js/2.24.1/plotly.min.js"></script>
     <script src="https://d3js.org/d3.v7.min.js"></script>
-    
     <style>
         body { font-family: Arial, sans-serif; }
         #chart-container { display: flex; flex-wrap: wrap; justify-content: center; margin-top: 20px; }
@@ -71,9 +70,18 @@
     
         
     </section>
-    <script src="main.js"></script> <!-- Link to your D3 visualization script -->
+    <script src="main.js"></script>
+    
 
-    <div id="glucosePlot" style="width:100%; height:600px;"></div>
+    <div id="heatmap-container"></div>
+    <script src="heatmap.js"></script> <!-- D3 Heatmap Container -->
+
+</body>
+
+
+
+
+   <!-- <div id="glucosePlot" style="width:100%; height:600px;"></div>
     <script>
         document.addEventListener("DOMContentLoaded", function() {
             var trace = {
@@ -98,6 +106,4 @@
 
             Plotly.newPlot('glucosePlot', [trace], layout);
         });
-    </script>
-</body>
-
+    </script> -->

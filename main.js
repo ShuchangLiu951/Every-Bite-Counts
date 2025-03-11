@@ -1,5 +1,5 @@
-// // // // D3.js visualization comparing glucose levels with food intake over time, per subject
-// // //draft 1
+// // // // // D3.js visualization comparing glucose levels with food intake over time, per subject
+// // // //draft 1
 // D3.js visualization comparing glucose levels with food intake over time
 const margin = { top: 50, right: 50, bottom: 50, left: 70 },
     width = 900 - margin.left - margin.right,
@@ -19,7 +19,6 @@ d3.csv("filtered data/number4_integrate.csv").then(data => {
         d.total_carb = d.total_carb ? +d.total_carb : null;
         d.sugar = d.sugar ? +d.sugar : null;
         d.protein = d.protein ? +d.protein : null;
-
         d.logged_food = d.logged_food ? d.logged_food.trim() : "";
     });
     data.sort((a, b) => a.Timestamp - b.Timestamp);
@@ -96,7 +95,6 @@ d3.csv("filtered data/number4_integrate.csv").then(data => {
         .style("padding", "5px")
         .style("border-radius", "5px");
 
-        // Tooltip logic
     function updateTooltip(event, d) {
         tooltip.style("visibility", "visible")
             .html(`
@@ -109,22 +107,19 @@ d3.csv("filtered data/number4_integrate.csv").then(data => {
             .style("top", `${event.pageY - 10}px`);
     }
 
-    foodPoints.on("mouseover", function (event, d) {
-            d3.select(this).attr("r", 8);
-            updateTooltip(event, d);
-        })
-        .on("mousemove", updateTooltip)
-        .on("mouseout", function () {
-            d3.select(this).attr("r", 6);
-            hideTooltip();
-        });
-        
+    function hideTooltip() {
+        tooltip.style("visibility", "hidden");
+    }
 
-        function hideTooltip() {
-            tooltip.style("visibility", "hidden");
-        }
-    // Food count display
-    const foodCountText = d3.select("#food-count").text(`Total food items: ${foodData.length}`);
+    foodPoints.on("mouseenter", function (event, d) {
+        d3.select(this).attr("r", 8).style("fill-opacity", 1);
+        updateTooltip(event, d);
+    })
+    .on("mousemove", updateTooltip)
+    .on("mouseleave", function () {
+        d3.select(this).attr("r", 6).style("fill-opacity", 0.7);
+        hideTooltip();
+    });
 
     // Brush and zoom setup
     const brush = d3.brushX()
@@ -132,43 +127,38 @@ d3.csv("filtered data/number4_integrate.csv").then(data => {
         .on("end", brushed);
 
     const brushGroup = svg.append("g").attr("class", "brush").call(brush);
+    svg.selectAll('.food-point, .overlay ~ *').raise();
+
 
     function brushed(event) {
         if (!event.selection) return;
-
         const [x0, x1] = event.selection.map(x.invert);
         x.domain([x0, x1]);
 
-        // Update axes
         xAxis.transition().duration(1000).call(d3.axisBottom(x));
-
-        // Update glucose line and circles
         glucosePath.transition().duration(1000).attr("d", line);
         
         foodPoints.transition().duration(1000)
             .attr("cx", d => x(d.Timestamp))
-            .attr("fill", d => (d.Timestamp >= x0 && d.Timestamp <= x1) ? "orange" : "red"); 
+            .attr("fill", d => (d.Timestamp >= x0 && d.Timestamp <= x1) ? "orange" : "red");
+        
+        foodPoints.on("mouseenter", function (event, d) {
+            d3.select(this).attr("r", 8).style("fill-opacity", 1);
+            updateTooltip(event, d);
+        })
+        .on("mousemove", updateTooltip)
+        .on("mouseleave", function () {
+            d3.select(this).attr("r", 6).style("fill-opacity", 0.7);
+            hideTooltip();
+        });
 
-        // Update food count in zoomed area
-        const visibleFoodCount = foodData.filter(d => d.Timestamp >= x0 && d.Timestamp <= x1).length;
-        foodCountText.text(`Food items in view: ${visibleFoodCount}`);
-
-        // Ensure graph doesn't go outside axis
         brushGroup.call(brush.move, null);
     }
 
-    // Zoom-out button
     d3.select("#reset-button").on("click", () => {
         x.domain(d3.extent(glucoseData, d => d.Timestamp));
-
         xAxis.transition().duration(1000).call(d3.axisBottom(x));
         glucosePath.transition().duration(1000).attr("d", line);
-
-        foodPoints.transition().duration(1000)
-            .attr("cx", d => x(d.Timestamp))
-            .attr("fill", "red"); 
-
-        foodCountText.text(`Total food items: ${foodData.length}`);
+        foodPoints.transition().duration(1000).attr("cx", d => x(d.Timestamp)).attr("fill", "red");
     });
-
 });

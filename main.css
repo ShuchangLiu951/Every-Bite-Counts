@@ -67,4 +67,9 @@ footer a {
   circle.selected {
     fill: #ff6b6b; /* Color for selected food points */
   }
-  
+  #heatmap-container {
+    display: flex;
+    justify-content: center;
+    margin-top: 20px;
+    background-color: lightgray;
+}
