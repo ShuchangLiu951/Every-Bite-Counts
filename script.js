@@ -1,5 +1,5 @@
 let data = [];
-
+let meanHistory = [];
 // Fetch and process CSV data
 fetch('combination.csv')
     .then(response => {
@@ -22,8 +22,6 @@ fetch('combination.csv')
                 data.push(parsedData);
             }
         });
-        console.log(data)
-        console.log(d3.sum(data, d => d.maxGlucoseSpike))
         updateChart();
     })
     .catch(error => console.error("Error loading CSV:", error));
@@ -42,6 +40,7 @@ function filterData() {
                (proteinFilter === "all" || (proteinFilter === "high" ? d.protein > thresholds.protein : d.protein <= thresholds.protein));
     });
 }
+
 function updateChart() {
     const filteredData = filterData();
     const svg = d3.select("svg");
@@ -71,10 +70,41 @@ function updateChart() {
 
     // Compute the mean glucose spike
     const meanValue = d3.mean(filteredData, d => d.maxGlucoseSpike);
+    const carbsFilter = document.getElementById("carbs").value;
+    const sugarFilter = document.getElementById("sugar").value;
+    const proteinFilter = document.getElementById("protein").value;
 
-    // Add X and Y axis
-    g.append("g").call(d3.axisLeft(y));
-    g.append("g").attr("transform", `translate(0,${height})`).call(d3.axisBottom(x));
+    // Store mean value with filter information
+    meanHistory.push({ 
+        category: `Carbs: ${carbsFilter}, Sugar: ${sugarFilter}, Protein: ${proteinFilter}`, 
+        mean: meanValue 
+    });
+// Add Y-axis
+g.append("g")
+  .call(d3.axisLeft(y));
+
+// Add X-axis
+g.append("g")
+  .attr("transform", `translate(0,${height})`)
+  .call(d3.axisBottom(x));
+
+// Add X-axis label
+g.append("text")
+  .attr("x", width / 2)
+  .attr("y", height + 40) // Adjust the gap from the axis
+  .attr("text-anchor", "middle")
+  .style("font-size", "14px")
+  .text("X-Axis Label");
+
+// Add Y-axis label
+g.append("text")
+  .attr("transform", "rotate(-90)")
+  .attr("x", -height / 2)
+  .attr("y", -40) // Adjust the gap from the axis
+  .attr("text-anchor", "middle")
+  .style("font-size", "14px")
+  .text("Y-Axis Label");
+
 
     // Bind data
     let bars = g.selectAll("rect").data(bins);
@@ -131,6 +161,82 @@ function updateChart() {
 }
 
 
+
+function updateMeanGraph() {
+    const svgWidth = 500, svgHeight = 300;
+    const margin = { top: 20, right: 30, bottom: 50, left: 50 };
+    const width = svgWidth - margin.left - margin.right;
+    const height = svgHeight - margin.top - margin.bottom;
+
+    // Create or select SVG for mean graph
+    let meanSvg = d3.select("#meanGraph");
+    if (meanSvg.empty()) {
+        meanSvg = d3.select("body").append("svg")
+            .attr("id", "meanGraph")
+            .attr("width", svgWidth)
+            .attr("height", svgHeight);
+    }
+    meanSvg.selectAll("*").remove(); // Clear previous chart
+
+    const g = meanSvg.append("g").attr("transform", `translate(${margin.left},${margin.top})`);
+
+    // Define scales
+    const xScale = d3.scaleBand()
+        .domain(meanHistory.map((d, i) => i)) // Use index as category
+        .range([0, width])
+        .padding(0.2); // Space between bars
+
+    const yScale = d3.scaleLinear()
+        .domain([0, d3.max(meanHistory, d => d.mean) + 5]) // Ensure space above bars
+        .range([height, 0]);
+
+    // Draw X and Y axis
+    g.append("g")
+        .attr("transform", `translate(0,${height})`)
+        .call(d3.axisBottom(xScale).tickFormat(d => `#${d + 1}`)); // Label bars by index
+
+    g.append("g").call(d3.axisLeft(yScale));
+
+    // Bind data to bars
+    let bars = g.selectAll("rect").data(meanHistory);
+
+    // ENTER: Create new bars
+    bars.enter().append("rect")
+        .attr("x", (d, i) => xScale(i))
+        .attr("width", xScale.bandwidth())
+        .attr("y", height) // Start from bottom
+        .attr("height", 0)
+        .attr("fill", "steelblue")
+        .merge(bars)
+        .transition().duration(1000)
+        .attr("y", d => yScale(d.mean))
+        .attr("height", d => height - yScale(d.mean));
+
+    // EXIT: Remove old bars smoothly
+    bars.exit()
+        .transition().duration(500)
+        .attr("y", height)
+        .attr("height", 0)
+        .remove();
+
+    // ADD MEAN VALUE LABELS ON TOP OF BARS
+    let labels = g.selectAll(".bar-label").data(meanHistory);
+
+    labels.enter().append("text")
+        .attr("class", "bar-label")
+        .attr("x", (d, i) => xScale(i) + xScale.bandwidth() / 2)
+        .attr("y", height)
+        .attr("text-anchor", "middle")
+        .attr("fill", "black")
+        .style("font-size", "12px")
+        .merge(labels)
+        .transition().duration(1000)
+        .attr("y", d => yScale(d.mean) - 5)
+        .text(d => d.mean.toFixed(2));
+
+    // EXIT: Remove old labels
+    labels.exit().remove();
+}
 
 
 
