@@ -67,6 +67,24 @@ function updateChart() {
     const y = d3.scaleLinear()
         .domain([0, d3.max(bins, d => d.length)]) 
         .range([height, 0]);
+    
+    g.append("text")
+        .attr("text-anchor", "middle")
+        .attr("x", width / 2)
+        .attr("y", height + margin.bottom - 2) // Adjust for space
+        .style("font-size", "18px") // Increase font size
+        .style("font-weight", "bold")
+        .text("Change in Glucose (mg/dL)");
+    
+    // Y-axis label
+    g.append("text")
+        .attr("text-anchor", "middle")
+        .attr("transform", "rotate(-90)")
+        .attr("x", -height / 2)
+        .attr("y", -margin.left + 15) // Adjust for space
+        .style("font-size", "18px") // Increase font size
+        .style("font-weight", "bold")
+        .text("Count of Food Items");
 
     // Compute the mean glucose spike
     const meanValue = d3.mean(filteredData, d => d.maxGlucoseSpike);
