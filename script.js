@@ -88,23 +88,6 @@ g.append("g")
   .attr("transform", `translate(0,${height})`)
   .call(d3.axisBottom(x));
 
-// Add X-axis label
-g.append("text")
-  .attr("x", width / 2)
-  .attr("y", height + 40) // Adjust the gap from the axis
-  .attr("text-anchor", "middle")
-  .style("font-size", "14px")
-  .text("X-Axis Label");
-
-// Add Y-axis label
-g.append("text")
-  .attr("transform", "rotate(-90)")
-  .attr("x", -height / 2)
-  .attr("y", -40) // Adjust the gap from the axis
-  .attr("text-anchor", "middle")
-  .style("font-size", "14px")
-  .text("Y-Axis Label");
-
 
     // Bind data
     let bars = g.selectAll("rect").data(bins);
