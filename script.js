@@ -227,6 +227,7 @@ function updateMeanGraph() {
         .attr("y", d => yScale(d.mean))
         .attr("height", d => height - yScale(d.mean));
 
+
     // EXIT: Remove old bars smoothly
     bars.exit()
         .transition().duration(500)
@@ -248,6 +249,7 @@ function updateMeanGraph() {
         .transition().duration(1000)
         .attr("y", d => yScale(d.mean) - 5)
         .text(d => d.mean.toFixed(2));
+
 
     // EXIT: Remove old labels
     labels.exit().remove();
