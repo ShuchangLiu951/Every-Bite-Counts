@@ -44,12 +44,16 @@ function filterData() {
 function updateChart() {
     const filteredData = filterData();
     const svg = d3.select("svg");
-    svg.selectAll("*").remove(); // Clear previous chart
 
     const margin = { top: 20, right: 30, bottom: 30, left: 40 };
     const width = +svg.attr("width") - margin.left - margin.right;
     const height = +svg.attr("height") - margin.top - margin.bottom;
-    const g = svg.append("g").attr("transform", `translate(${margin.left},${margin.top})`);
+
+    // Select or create the main group container
+    let g = svg.select("g");
+    if (g.empty()) {
+        g = svg.append("g").attr("transform", `translate(${margin.left},${margin.top})`);
+    }
 
     // Adjust domain to account for negative values
     const xMin = d3.min(filteredData, d => d.maxGlucoseSpike);
@@ -67,32 +71,72 @@ function updateChart() {
     const y = d3.scaleLinear()
         .domain([0, d3.max(bins, d => d.length)]) 
         .range([height, 0]);
-    
-    g.append("text")
-        .attr("text-anchor", "middle")
-        .attr("x", width / 2)
-        .attr("y", height + margin.bottom - 2) // Adjust for space
-        .style("font-size", "18px") // Increase font size
-        .style("font-weight", "bold")
-        .text("Change in Glucose (mg/dL)");
 
-    // Add X-axis label
-    g.append("text")
-        .attr("text-anchor", "middle")
-        .attr("x", width / 2)
-        .attr("y", height + margin.bottom - 2) // Adjust for space
-        .style("font-size", "18px") // Increase font size
-        .style("font-weight", "bold")
-        .text("Change in Glucose (mg/dL)");
-    // Y-axis label 
-    g.append("text")
-        .attr("text-anchor", "middle")
-        .attr("transform", "rotate(-90)")
-        .attr("x", -height / 2)
-        .attr("y", -margin.left + 15) // Adjust for space
-        .style("font-size", "18px") // Increase font size
-        .style("font-weight", "bold")
-        .text("Count of Food Items");
+    // Update x-axis
+    let xAxis = g.select(".x-axis");
+    if (xAxis.empty()) {
+        xAxis = g.append("g").attr("class", "x-axis").attr("transform", `translate(0,${height})`);
+    }
+    xAxis.transition().duration(1000).call(d3.axisBottom(x));
+
+    // Update y-axis
+    let yAxis = g.select(".y-axis");
+    if (yAxis.empty()) {
+        yAxis = g.append("g").attr("class", "y-axis");
+    }
+    yAxis.transition().duration(1000).call(d3.axisLeft(y));
+
+    // Bind data to bars
+    const bars = g.selectAll(".bar")
+        .data(bins);
+
+    // Enter selection: Add new bars
+    bars.enter()
+        .append("rect")
+        .attr("class", "bar")
+        .attr("x", d => x(d.x0)) // Initial position
+        .attr("y", height) // Start at the bottom
+        .attr("width", d => Math.max(0, x(d.x1) - x(d.x0) - 1)) // Bar width
+        .attr("height", 0) // Start with height 0
+        .attr("fill", "steelblue")
+        .merge(bars) // Merge with the update selection
+        .transition() // Apply transition to both new and existing bars
+        .duration(1000)
+        .attr("x", d => x(d.x0)) // Update position
+        .attr("y", d => y(d.length)) // Update height
+        .attr("height", d => height - y(d.length)) // Update height
+        .attr("width", d => Math.max(0, x(d.x1) - x(d.x0) - 1)); // Update width
+
+    // Exit selection: Remove bars that are no longer in the data
+    bars.exit()
+        .transition()
+        .duration(1000)
+        .attr("y", height) // Shrink bars to the bottom
+        .attr("height", 0) // Shrink height to 0
+        .remove();
+
+    // Add x-axis label (if not already added)
+    if (g.select(".x-axis-label").empty()) {
+        g.append("text")
+            .attr("class", "x-axis-label")
+            .attr("text-anchor", "middle")
+            .attr("x", width / 2)
+            .attr("y", height + margin.bottom - 10)
+            .style("font-size", "12px")
+            .text("Glucose Spike");
+    }
+
+    // Add y-axis label (if not already added)
+    if (g.select(".y-axis-label").empty()) {
+        g.append("text")
+            .attr("class", "y-axis-label")
+            .attr("text-anchor", "middle")
+            .attr("transform", "rotate(-90)")
+            .attr("x", -height / 2)
+            .attr("y", -margin.left + 10)
+            .style("font-size", "12px")
+            .text("Count");
+    }
 
     // Compute the mean glucose spike
     const meanValue = d3.mean(filteredData, d => d.maxGlucoseSpike);
@@ -107,50 +151,23 @@ function updateChart() {
             mean: meanValue 
         });
     }
-// Add Y-axis
-g.append("g")
-  .call(d3.axisLeft(y));
 
-// Add X-axis
-g.append("g")
-  .attr("transform", `translate(0,${height})`)
-  .call(d3.axisBottom(x));
+    // Select or create the mean line
+    let meanLine = g.selectAll(".mean-line").data([meanValue]);
 
+    // Update the existing mean line
+    meanLine
+        .transition()
+        .duration(1000)
+        .attr("x1", x(meanValue))
+        .attr("x2", x(meanValue))
+        .attr("y1", 0)
+        .attr("y2", height);
 
-    // Bind data
-    let bars = g.selectAll("rect").data(bins);
-
-    // ENTER: Create new bars
-    bars.enter().append("rect")
-        .attr("x", d => x(d.x0))
-        .attr("width", d => Math.max(0, x(d.x1) - x(d.x0) - 1))
-        .attr("y", height) // Start from bottom
-        .attr("height", 0)
-        .attr("fill", "steelblue")
-        .on("mouseover", function (event, d) {
-            const tooltip = document.getElementById("tooltip");
-            tooltip.style.left = event.pageX + "px";
-            tooltip.style.top = event.pageY - 30 + "px";
-            tooltip.innerHTML = `Count: ${d.length}`;
-            tooltip.style.visibility = "visible";
-        })
-        .on("mouseout", function () {
-            document.getElementById("tooltip").style.visibility = "hidden";
-        })
-        .merge(bars) // Merge with existing bars
-        .transition().duration(1000)
-        .attr("y", d => y(d.length))
-        .attr("height", d => height - y(d.length));
-
-    // EXIT: Fade out old bars
-    bars.exit()
-        .transition().duration(500)
-        .attr("y", height)
-        .attr("height", 0)
-        .remove();
-
-    // ADD MEAN LINE (Handles negative values properly)
-    g.append("line")
+    // Enter selection: Add the mean line if it doesn't exist
+    meanLine.enter()
+        .append("line")
+        .attr("class", "mean-line")
         .attr("x1", x(meanValue))
         .attr("x2", x(meanValue))
         .attr("y1", 0)
@@ -158,12 +175,26 @@ g.append("g")
         .attr("stroke", "red")
         .attr("stroke-dasharray", "5,5")
         .attr("stroke-width", 2)
-        .transition().duration(1000)
+        .transition()
+        .duration(1000)
         .attr("x1", x(meanValue))
         .attr("x2", x(meanValue));
 
-    // ADD MEAN LABEL (Position dynamically for negative values)
-    g.append("text")
+    // Select or create the mean label
+    let meanLabel = g.selectAll(".mean-label").data([meanValue]);
+
+    // Update the existing mean label
+    meanLabel
+        .transition()
+        .duration(1000)
+        .attr("x", x(meanValue) + 5)
+        .attr("y", 20)
+        .text(`Mean: ${meanValue.toFixed(2)}`);
+
+    // Enter selection: Add the mean label if it doesn't exist
+    meanLabel.enter()
+        .append("text")
+        .attr("class", "mean-label")
         .attr("x", x(meanValue) + 5)
         .attr("y", 20)
         .attr("fill", "red")
@@ -176,7 +207,7 @@ g.append("g")
 
 function updateMeanGraph() {
     // Set up dimensions and margins
-    const margin = { top: 20, right: 30, bottom: 40, left: 150 };
+    const margin = { top: 20, right: 30, bottom: 40, left: 200 };
     const width = 800 - margin.left - margin.right;
     const height = 400 - margin.top - margin.bottom;
 
@@ -285,3 +316,48 @@ function updateMeanGraph() {
         .style("opacity", 0) // Fade out before removing
         .remove();
 }
+
+// Generate all combinations of filters
+function generateCombinations() {
+    const carbsOptions = ["all", "high", "low"];
+    const sugarOptions = ["all", "high", "low"];
+    const proteinOptions = ["all", "high", "low"];
+
+    const combinations = [];
+    carbsOptions.forEach(carbs => {
+        sugarOptions.forEach(sugar => {
+            proteinOptions.forEach(protein => {
+                combinations.push({ carbs, sugar, protein });
+            });
+        });
+    });
+    return combinations;
+}
+
+// Function to dynamically show all combinations
+function showCombinations() {
+    const combinations = generateCombinations();
+    let index = 0;
+
+    // Set interval to update the chart every 0.3 seconds
+    const interval = setInterval(() => {
+        if (index >= combinations.length) {
+            clearInterval(interval); // Stop when all combinations are shown
+            return;
+        }
+
+        // Update the filter values
+        const { carbs, sugar, protein } = combinations[index];
+        document.getElementById("carbs").value = carbs;
+        document.getElementById("sugar").value = sugar;
+        document.getElementById("protein").value = protein;
+
+        // Update the chart with the current combination
+        updateChart();
+
+        index++;
+    }, 1000); // 0.3 seconds interval
+}
+
+// Attach event listener to the button
+document.getElementById("show-combinations").addEventListener("click", showCombinations);
