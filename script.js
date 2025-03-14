@@ -75,8 +75,16 @@ function updateChart() {
         .style("font-size", "18px") // Increase font size
         .style("font-weight", "bold")
         .text("Change in Glucose (mg/dL)");
-    
-    // Y-axis label
+
+    // Add X-axis label
+    g.append("text")
+        .attr("text-anchor", "middle")
+        .attr("x", width / 2)
+        .attr("y", height + margin.bottom - 2) // Adjust for space
+        .style("font-size", "18px") // Increase font size
+        .style("font-weight", "bold")
+        .text("Change in Glucose (mg/dL)");
+    // Y-axis label 
     g.append("text")
         .attr("text-anchor", "middle")
         .attr("transform", "rotate(-90)")
@@ -93,6 +101,12 @@ function updateChart() {
     const proteinFilter = document.getElementById("protein").value;
 
     // Store mean value with filter information
+    if (!meanHistory.some(entry => entry.category === `Carbs: ${carbsFilter}, Sugar: ${sugarFilter}, Protein: ${proteinFilter}`)) {
+        meanHistory.push({ 
+            category: `Carbs: ${carbsFilter}, Sugar: ${sugarFilter}, Protein: ${proteinFilter}`, 
+            mean: meanValue 
+        });
+    }
     meanHistory.push({ 
         category: `Carbs: ${carbsFilter}, Sugar: ${sugarFilter}, Protein: ${proteinFilter}`, 
         mean: meanValue 
