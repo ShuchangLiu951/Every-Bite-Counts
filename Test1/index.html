@@ -1,0 +1,202 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Glucose Rhythm Wheel</title>
+    <script src="https://d3js.org/d3.v7.min.js"></script>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            background: #f0f0f0;
+        }
+
+        #wheel-container {
+            position: relative;
+            margin: 20px;
+        }
+
+        .food-marker {
+            transition: all 0.3s;
+            cursor: pointer;
+        }
+
+        .time-label {
+            font-size: 12px;
+            fill: #666;
+        }
+
+        .glucose-band {
+            fill: #ff6b6b;
+            opacity: 0.3;
+            mix-blend-mode: multiply;
+        }
+
+        #tooltip {
+            position: absolute;
+            padding: 10px;
+            background: white;
+            border: 1px solid #ddd;
+            pointer-events: none;
+            border-radius: 5px;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+        }
+
+        #controls {
+            margin: 20px;
+        }
+    </style>
+</head>
+<body>
+    <div id="controls">
+        <label>Time Filter: </label>
+        <input type="range" id="time-range" min="0" max="24" step="1" value="0,24" style="width: 300px;">
+        <span id="time-display">All Hours</span>
+    </div>
+    <div id="wheel-container">
+        <div id="tooltip"></div>
+    </div>
+
+<script>
+(async function() {
+    const width = 800;
+    const radius = width / 2;
+    const margin = 50;
+
+    // Load and process data
+    const rawData = await d3.csv("number1_integrate.csv");
+    
+    // Parse timestamps and filter valid glucose readings
+    const parseTime = d3.timeParse("%Y-%m-%d %H:%M:%S");
+    const data = rawData.map(d => ({
+        timestamp: parseTime(d['Timestamp (YYYY-MM-DDThh:mm:ss)']),
+        glucose: +d['Glucose Value (mg/dL)'],
+        total_carb: +d.total_carb || null,
+        sugar: +d.sugar || null,
+        protein: +d.protein || null,
+        food: d.logged_food || null
+    })).filter(d => !isNaN(d.glucose));
+
+    // Process data into hourly bins
+    const hourlyData = d3.rollups(
+        data.filter(d => d.glucose),
+        v => d3.mean(v, d => d.glucose),
+        d => d3.timeHour(d.timestamp).getHours()
+    ).map(([hour, glucose]) => ({ hour, glucose }));
+
+    // Extract food events
+    const foodEvents = data.filter(d => d.food).map(d => ({
+        hour: d.timestamp.getHours(),
+        minute: d.timestamp.getMinutes(),
+        time: d.timestamp,
+        name: d.food,
+        total_carb: d.total_carb,
+        sugar: d.sugar,
+        protein: d.protein,
+        glucose: d.glucose
+    }));
+
+    // Create SVG container
+    const svg = d3.select("#wheel-container")
+        .append("svg")
+        .attr("width", width)
+        .attr("height", width)
+        .append("g")
+        .attr("transform", `translate(${radius},${radius})`);
+
+    // Scales
+    const angleScale = d3.scaleLinear()
+        .domain([0, 24])
+        .range([0, 2 * Math.PI]);
+
+    const glucoseScale = d3.scaleLinear()
+        .domain([60, 180])
+        .range([radius * 0.3, radius * 0.8]);
+
+    // Draw clock base
+    svg.selectAll(".hour-tick")
+        .data(d3.range(0, 24))
+        .join("line")
+        .attr("class", "hour-tick")
+        .attr("x1", 0)
+        .attr("x2", 0)
+        .attr("y1", -radius * 0.9)
+        .attr("y2", -radius * 0.8)
+        .attr("transform", d => `rotate(${(angleScale(d) * 180/Math.PI)})`);
+
+    // Add time labels
+    svg.selectAll(".time-label")
+        .data(d3.range(0, 24))
+        .join("text")
+        .attr("class", "time-label")
+        .text(d => `${d}:00`)
+        .attr("text-anchor", "middle")
+        .attr("transform", d => `
+            rotate(${(angleScale(d) * 180/Math.PI)})
+            translate(0, -${radius * 0.75})
+            rotate(${-angleScale(d) * 180/Math.PI})
+        `);
+
+    // Draw glucose bands
+    const areaGenerator = d3.areaRadial()
+        .angle(d => angleScale(d.hour) + angleScale(0.5))
+        .innerRadius(d => glucoseScale(d.glucose - 10))
+        .outerRadius(d => glucoseScale(d.glucose + 10));
+
+    svg.append("path")
+        .datum(hourlyData)
+        .attr("class", "glucose-band")
+        .attr("d", areaGenerator);
+
+    // Add food markers
+    const foodMarkers = svg.selectAll(".food-marker")
+        .data(foodEvents)
+        .join("path")
+        .attr("class", "food-marker")
+        .attr("d", d3.symbol()
+            .size(80)
+            .type(d => {
+                if (d.total_carb > 50) return d3.symbolDiamond;
+                if (d.protein > 20) return d3.symbolTriangle;
+                return d3.symbolCircle;
+            }))
+        .attr("transform", d => `
+            rotate(${angleScale(d.hour + d.minute/60) * 180/Math.PI})
+            translate(0, -${glucoseScale(d.glucose)})
+        `)
+        .style("fill", d => d3.interpolateYlOrBr(d.sugar/100 || 0.5))
+        .style("stroke", "white")
+        .on("mouseover", (event, d) => {
+            d3.select("#tooltip")
+                .style("opacity", 1)
+                .html(`
+                    <strong>${d.name}</strong><br>
+                    Time: ${d.time.toLocaleTimeString()}<br>
+                    Carbs: ${d.total_carb || 'N/A'}g<br>
+                    Sugar: ${d.sugar || 'N/A'}g<br>
+                    Protein: ${d.protein || 'N/A'}g
+                `)
+                .style("left", `${event.pageX + 15}px`)
+                .style("top", `${event.pageY}px`);
+        })
+        .on("mouseout", () => {
+            d3.select("#tooltip").style("opacity", 0);
+        });
+
+    // Time filter functionality
+    d3.select("#time-range").on("input", function() {
+        const [start, end] = this.value.split(",").map(Number);
+        d3.select("#time-display").text(
+            start === end ? `Hour ${start}` : `${start}:00 - ${end}:00`
+        );
+        
+        foodMarkers.style("opacity", d => 
+            (d.hour >= start && d.hour <= end) ? 1 : 0.1
+        );
+    });
+
+})();
+</script>
+</body>
+</html>

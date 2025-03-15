@@ -319,9 +319,9 @@ function updateMeanGraph() {
 
 // Generate all combinations of filters
 function generateCombinations() {
-    const carbsOptions = ["all", "high", "low"];
-    const sugarOptions = ["all", "high", "low"];
-    const proteinOptions = ["all", "high", "low"];
+    const carbsOptions = ["high", "low"]; // Skip "all"
+    const sugarOptions = ["high", "low"]; // Skip "all"
+    const proteinOptions = ["high", "low"]; // Skip "all"
 
     const combinations = [];
     carbsOptions.forEach(carbs => {
@@ -337,7 +337,7 @@ function generateCombinations() {
 // Function to dynamically show all combinations
 function showCombinations() {
     const combinations = generateCombinations();
-    let index = 0;
+    let index = 1;
 
     // Set interval to update the chart every 0.3 seconds
     const interval = setInterval(() => {
