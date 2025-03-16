@@ -335,36 +335,63 @@ function generateCombinations() {
     return combinations;
 }
 
-// Function to dynamically show all combinations
+let interval; // Store the interval ID
+let isPaused = false; // Track whether the combinations are paused
+let index = 0; // Move index outside to make it global
+
 function showCombinations() {
     // Clear the mean graph and bars
-    const svg = d3.select("#chart-container").select("svg");
-    svg.selectAll(".bar").remove(); // Remove all bars
-    svg.selectAll(".label").remove(); // Remove all labels
-    meanHistory = [];
+    reset();
+    const button = document.getElementById("pause-combinations");
+    isPaused = false;
+    button.textContent = "Pause"; // Reset button text
+    updateCombination();
 
-    const combinations = generateCombinations();
-    let index = 0;
+    // Function to update the chart for the current combination
 
-    // Set interval to update the chart every 0.3 seconds
-    const interval = setInterval(() => {
-        if (index >= combinations.length) {
-            clearInterval(interval); // Stop when all combinations are shown
-            return;
-        }
-
-        // Update the filter values
-        const { carbs, sugar, protein } = combinations[index];
-        document.getElementById("carbs").value = carbs;
-        document.getElementById("sugar").value = sugar;
-        document.getElementById("protein").value = protein;
-
-        // Update the chart with the current combination
-        updateChart();
-
-        index++;
-    }, 2000); // 0.3 seconds interval
+    // Start the interval
+    interval = setInterval(updateCombination, 2000); // 2 seconds interval
 }
+
+function updateCombination() {
+    const combinations = generateCombinations();
+    if (index >= combinations.length) {
+        clearInterval(interval); // Stop when all combinations are shown
+        index = 0; // Reset index after finishing
+        return;
+    }
+
+    // Update the filter values
+    const { carbs, sugar, protein } = combinations[index];
+    document.getElementById("carbs").value = carbs;
+    document.getElementById("sugar").value = sugar;
+    document.getElementById("protein").value = protein;
+
+    // Update the chart with the current combination
+    updateChart();
+
+    index++;
+}
+
+// Pause/Resume Button Logic
+document.getElementById("pause-combinations").addEventListener("click", () => {
+    const button = document.getElementById("pause-combinations");
+    if (isPaused) {
+        // Resume the interval
+        interval = setInterval(() => {
+            updateCombination();
+        }
+        , 2000); // 2 seconds interval
+        isPaused = false;
+        button.textContent = "Pause"; // Update button text
+        console.log('Resumed');
+    } else {
+        clearInterval(interval); // Pause the interval
+        isPaused = true;
+        button.textContent = "Resume"; // Update button text
+        console.log('Paused');
+    }
+});
 
 // Attach event listener to the button
 document.getElementById("show-combinations").addEventListener("click", showCombinations);
@@ -385,4 +412,9 @@ function printLoggedFood() {
 }
 
 document.getElementById("print-food").addEventListener("click", printLoggedFood);
-
+function reset(){
+    const svg = d3.select("#chart-container").select("svg");
+    svg.selectAll(".bar").remove(); // Remove all bars
+    svg.selectAll(".label").remove(); // Remove all labels
+    meanHistory = [];
+}

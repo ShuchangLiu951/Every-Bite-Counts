@@ -112,7 +112,7 @@ function updateGraph(selectedFile) {
             .style("border-radius", "5px");
 
         function updateTooltip(event, d) {
-                // Find glucose values within 1 hour after food consumption
+                // Find glucose values within 2 hour after food consumption
             const twoHourLater = new Date(d.Timestamp.getTime() + 2 * 60 * 60 * 1000);
             const glucoseChanges = glucoseData.filter(g => g.Timestamp > d.Timestamp && g.Timestamp <= twoHourLater)
                 .map(g => g["Glucose Value (mg/dL)"] - d["Glucose Value (mg/dL)"]);
