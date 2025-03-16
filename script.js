@@ -337,8 +337,15 @@ function generateCombinations() {
 
 // Function to dynamically show all combinations
 function showCombinations() {
+    // Clear the mean graph and bars
+    const svg = d3.select("#chart-container").select("svg");
+    svg.selectAll(".mean-line").remove(); // Remove the mean line
+    svg.selectAll(".mean-label").remove(); // Remove the mean label
+    svg.selectAll(".bar").remove(); // Remove all bars
+    meanHistory = [];
+
     const combinations = generateCombinations();
-    let index = 1;
+    let index = 0;
 
     // Set interval to update the chart every 0.3 seconds
     const interval = setInterval(() => {
@@ -357,7 +364,7 @@ function showCombinations() {
         updateChart();
 
         index++;
-    }, 1000); // 0.3 seconds interval
+    }, 2000); // 0.3 seconds interval
 }
 
 // Attach event listener to the button
