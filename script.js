@@ -339,9 +339,8 @@ function generateCombinations() {
 function showCombinations() {
     // Clear the mean graph and bars
     const svg = d3.select("#chart-container").select("svg");
-    svg.selectAll(".mean-line").remove(); // Remove the mean line
-    svg.selectAll(".mean-label").remove(); // Remove the mean label
     svg.selectAll(".bar").remove(); // Remove all bars
+    svg.selectAll(".label").remove(); // Remove all labels
     meanHistory = [];
 
     const combinations = generateCombinations();
@@ -386,3 +385,4 @@ function printLoggedFood() {
 }
 
 document.getElementById("print-food").addEventListener("click", printLoggedFood);
+
