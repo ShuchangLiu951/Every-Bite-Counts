@@ -1,5 +1,6 @@
 let data = [];
 let meanHistory = [];
+let meanValue;
 // Fetch and process CSV data
 fetch('combination.csv')
     .then(response => {
@@ -140,7 +141,7 @@ function updateChart() {
     }
 
     // Compute the mean glucose spike
-    const meanValue = d3.mean(filteredData, d => d.maxGlucoseSpike);
+    meanValue = d3.mean(filteredData, d => d.maxGlucoseSpike);
     const carbsFilter = document.getElementById("carbs").value;
     const sugarFilter = document.getElementById("sugar").value;
     const proteinFilter = document.getElementById("protein").value;
@@ -208,7 +209,7 @@ function updateChart() {
 
 function updateMeanGraph() {
     // Set up dimensions and margins
-    const margin = { top: 20, right: 30, bottom: 40, left: 200 };
+    const margin = { top: 20, right: 40, bottom: 40, left: 200 };
     const width = 800 - margin.left - margin.right;
     const height = 400 - margin.top - margin.bottom;
 
@@ -345,11 +346,13 @@ function showCombinations() {
     const button = document.getElementById("pause-combinations");
     isPaused = false;
     button.textContent = "Pause"; // Reset button text
+    index = 0;
     updateCombination();
 
     // Function to update the chart for the current combination
 
     // Start the interval
+    clearInterval(interval); // Clear any existing interval
     interval = setInterval(updateCombination, 2000); // 2 seconds interval
 }
 
@@ -418,3 +421,17 @@ function reset(){
     svg.selectAll(".label").remove(); // Remove all labels
     meanHistory = [];
 }
+
+document.getElementById("reset-average").addEventListener("click", function() {
+    reset();
+    const carbsFilter = document.getElementById("carbs").value;
+    const sugarFilter = document.getElementById("sugar").value;
+    const proteinFilter = document.getElementById("protein").value;
+    if (!meanHistory.some(entry => entry.category === `Carbs: ${carbsFilter}, Sugar: ${sugarFilter}, Protein: ${proteinFilter}`)) {
+        meanHistory.push({ 
+            category: `Carbs: ${carbsFilter}, Sugar: ${sugarFilter}, Protein: ${proteinFilter}`, 
+            mean: meanValue 
+        });
+    }
+    updateMeanGraph();
+});
