@@ -17,7 +17,8 @@ fetch('combination.csv')
                     maxGlucoseSpike: parseFloat(cols[3]) ,  // Avoid NaN
                     totalCarbs: parseFloat(cols[4]),
                     sugar: parseFloat(cols[5]),
-                    protein: parseFloat(cols[6])
+                    protein: parseFloat(cols[6]),
+                    loggedFood: cols[1]
                 };
                 data.push(parsedData);
             }
@@ -361,3 +362,20 @@ function showCombinations() {
 
 // Attach event listener to the button
 document.getElementById("show-combinations").addEventListener("click", showCombinations);
+
+function printLoggedFood() {
+    const filteredData = filterData();
+    const carbsFilter = document.getElementById("carbs").value;
+    const sugarFilter = document.getElementById("sugar").value;
+    const proteinFilter = document.getElementById("protein").value;
+
+    return data.filter(d => {
+        return (carbsFilter === "all" || (carbsFilter === "high" ? d.totalCarbs > thresholds.carbs : d.totalCarbs <= thresholds.carbs)) &&
+               (sugarFilter === "all" || (sugarFilter === "high" ? d.sugar > thresholds.sugar : d.sugar <= thresholds.sugar)) &&
+               (proteinFilter === "all" || (proteinFilter === "high" ? d.protein > thresholds.protein : d.protein <= thresholds.protein));
+    });
+
+    // Extract and print the logged food
+}
+
+document.getElementById("print-food").addEventListener("click", printLoggedFood);
