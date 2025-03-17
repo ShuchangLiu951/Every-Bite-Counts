@@ -84,30 +84,50 @@
 
     <div id ="histogram-content">
         <h2>Glucose Spike Histogram</h2>
-        <label for="carbs">Total Carbs:</label>
+        <style>
+            /* To ensure the buttons stack horizontally below the dropdowns */
+            #button-container {
+                margin-top: 20px; /* Adds space before the buttons */
+                display: flex;
+                gap: 10px; /* Adds space between buttons */
+                justify-content: center;
+            }
+    
+            #button-container button {
+                display: inline-block; /* Ensure the buttons align horizontally */
+            }
+        </style>
+        <style>
+            label[for="carbs"], label[for="sugar"], label[for="protein"] {
+                font-weight: bold; /* Makes specific labels bold */
+            }
+        </style>
+        <label for="carbs">Total Carbs:</strong></label>
         <select id="carbs" onchange="updateChart()">
             <option value="all">All</option>
             <option value="high">High</option>
             <option value="low">Low</option>
         </select>
         
-        <label for="sugar">Sugar:</label>
+        <label for="sugar">Sugar:</strong></label>
         <select id="sugar" onchange="updateChart()">
             <option value="all">All</option>
             <option value="high">High</option>
             <option value="low">Low</option>
         </select>
         
-        <label for="protein">Protein:</label>
+        <label for="protein">Protein:</strong></label>
         <select id="protein" onchange="updateChart()">
             <option value="all">All</option>
             <option value="high">High</option>
             <option value="low">Low</option>
         </select>
-        <button id = "show-combinations">Every Combination</button>
-        <button id="pause-combinations">Pause</button>
-        <button id = "reset-average">Reset</button>
-        
+
+        <div id = "button-container">
+            <button id = "show-combinations">Every Combination</button>
+            <button id="pause-combinations">Pause</button>
+            <button id = "reset-average">Reset</button>
+        </div>
         <svg width="800" height="500"></svg>
         <div class="tooltip" id="tooltip"></div>
 
