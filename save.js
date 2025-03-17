@@ -3,7 +3,7 @@
 
 // // // // // // D3.js visualization comparing glucose levels with food intake over time, per subject
 // D3.js visualization comparing glucose levels with food intake over time, per subject
-/* const margin = { top: 50, right: 50, bottom: 50, left: 70 },
+const margin = { top: 50, right: 50, bottom: 50, left: 70 },
     width = 900 - margin.left - margin.right,
     height = 500 - margin.top - margin.bottom;
 
@@ -271,4 +271,4 @@ document.addEventListener("DOMContentLoaded", function () {
     document.getElementById("reset-button").addEventListener("click", function () {
         updateGraph(document.getElementById("data-select").value);
     });
-}); */
+});

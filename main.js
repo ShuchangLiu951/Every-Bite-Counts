@@ -206,6 +206,7 @@ function updateGraph(selectedFile) {
 }
 
 document.addEventListener("DOMContentLoaded", function () {
+    getFoodPointsWithTwoHourLater();
     // Ensure the default dataset is loaded on page load
     updateGraph(document.getElementById("data-select").value);
 
@@ -218,58 +219,77 @@ document.addEventListener("DOMContentLoaded", function () {
     document.getElementById("reset-button").addEventListener("click", function () {
         updateGraph(document.getElementById("data-select").value);
     });
+
 });
 
 
-document.addEventListener("DOMContentLoaded", () => {
-    async function getFoodPointsWithTwoHourLater() {
-        const datasetOptions = Array.from(document.querySelectorAll("#data-select option")).map(option => option.value);
-        
+async function getFoodPointsWithTwoHourLater() {
+    const datasetOptions = Array.from(document.querySelectorAll("#data-select option")).map(option => option.value);
 
-        // Array to store results
-        const results = [];
-    
+    // Array to store results
+    const results = [];
 
-        for (const dataset of datasetOptions) {
-            // Fetch and parse the dataset
-            console.log("Loading dataset:", dataset);
-            const rawData = await d3.csv(dataset);
-            console.log(rawData);
-    
-            // Parse timestamps and filter valid glucose readings
-            const parseTime = d3.timeParse("%Y-%m-%d %H:%M:%S");
-            const foodData = rawData.map(d => ({
-                Timestamp: parseTime(d['Timestamp (YYYY-MM-DDThh:mm:ss)']),
-                glucose: +d['Glucose Value (mg/dL)'],
-                total_carb: +d.total_carb || null,
-                sugar: +d.sugar || null,
-                protein: +d.protein || null,
-                logged_food: d.logged_food || null
-            })).filter(d => d.logged_food && !isNaN(d.glucose)); // Ensure valid food points
-    
-            // Process each food point
-            foodData.forEach(d => {
-                const twoHourLater = new Date(d.Timestamp.getTime() + 2 * 60 * 60 * 1000); // Add 2 hours
-                results.push({
-                    dataset,
-                    logged_food: d.logged_food,
-                    timestamp: d.Timestamp,
-                    twoHourLater: twoHourLater,
-                    glucose: d.glucose,
-                    total_carb: d.total_carb,
-                    sugar: d.sugar,
-                    protein: d.protein
-                });
-            });
-        }
-    
-        // Log the results
-        console.log("Food Points with Two-Hour Later Times:", results);
-    
-        // Optionally, return the results for further processing
-        return results;
+    for (const dataset of datasetOptions) {
+        // Fetch and parse the dataset
+        const data = await d3.csv(dataset);
+
+        // Parse timestamps and filter valid glucose readings
+        data.forEach(d => {
+            d.Timestamp = new Date(d["Timestamp (YYYY-MM-DDThh:mm:ss)"]);
+            d["Glucose Value (mg/dL)"] = +d["Glucose Value (mg/dL)"];
+            d.total_carb = d.total_carb ? +d.total_carb : null;
+            d.sugar = d.sugar ? +d.sugar : null;
+            d.protein = d.protein ? +d.protein : null;
+            d.logged_food = d.logged_food ? d.logged_food.trim() : "";
+        });
+
+        // Sort data by timestamp
+        data.sort((a, b) => a.Timestamp - b.Timestamp);
+
+        // Filter valid glucose readings
+        const glucoseData = data.filter(d => !isNaN(d["Glucose Value (mg/dL)"]));
+
+        // Use bisector to find the closest glucose reading
+        const bisectTime = d3.bisector(d => d.Timestamp).left;
+
+        // Process food data
+        const foodData = data.filter(d => d.logged_food !== "").map(d => {
+            const index = bisectTime(glucoseData, d.Timestamp);
+            d["Glucose Value (mg/dL)"] = (index > 0) ? glucoseData[index - 1]["Glucose Value (mg/dL)"] : glucoseData[index]["Glucose Value (mg/dL)"];
+
+            // Compute glucose values within 2 hours
+            const twoHourLater = new Date(d.Timestamp.getTime() + 2 * 60 * 60 * 1000);
+            const glucoseValuesWithinTwoHours = glucoseData
+                .filter(g => g.Timestamp > d.Timestamp && g.Timestamp <= twoHourLater)
+                .map(g => g["Glucose Value (mg/dL)"]);
+
+            // Compute max glucose spike within 2 hours
+            const glucoseChanges = glucoseValuesWithinTwoHours.map(glucose => glucose - d["Glucose Value (mg/dL)"]);
+            const maxGlucoseSpike = glucoseChanges.length ? d3.max(glucoseChanges) : 0;
+
+            return {
+                logged_food: d.logged_food,
+                timestamp: d.Timestamp,
+                twoHourLater: twoHourLater,
+                glucoseValuesWithinTwoHours: glucoseValuesWithinTwoHours, // Add glucose values array
+                glucose: d["Glucose Value (mg/dL)"],
+                total_carb: d.total_carb,
+                sugar: d.sugar,
+                protein: d.protein,
+                maxGlucoseSpike: maxGlucoseSpike
+            };
+        });
+
+        // Add processed food data to the results
+        results.push(...foodData);
     }
-    
-    // Call the function to process all datasets
-    getFoodPointsWithTwoHourLater();
-});
+
+    // Log the results
+    console.log("All Food Data with Two-Hour Glucose Values:", results);
+
+    // Optionally, return the results for further processing
+    return results;
+}
+
+// Call the function to process all datasets
+getFoodPointsWithTwoHourLater();
