@@ -1,6 +1,9 @@
+
 let data = [];
 let meanHistory = [];
 let meanValue;
+let lineHistory = [];
+
 // Fetch and process CSV data
 document.addEventListener("DOMContentLoaded", async function () {
     // Ensure data is fully loaded before proceeding
@@ -9,7 +12,6 @@ document.addEventListener("DOMContentLoaded", async function () {
 
     // Initialize the chart after data is loaded
     updateChart();
-    updateMotionChart();
 });
 
 // Thresholds for filtering
@@ -137,6 +139,21 @@ function updateChart() {
     const sugarFilter = document.getElementById("sugar").value;
     const proteinFilter = document.getElementById("protein").value;
 
+    // Create the current combination object
+    const currentCombination = { carbs: carbsFilter, sugar: sugarFilter, protein: proteinFilter };
+
+    // Check if the combination already exists in lineHistory
+    const isDuplicate = lineHistory.some(entry =>
+        entry.carbs === currentCombination.carbs &&
+        entry.sugar === currentCombination.sugar &&
+        entry.protein === currentCombination.protein
+    );
+
+    // Add the combination only if it's not a duplicate
+    if (!isDuplicate) {
+        lineHistory.push(filterDataByCombination(currentCombination));
+    }
+
     // Store mean value with filter information
     if (!meanHistory.some(entry => entry.category === `Carbs: ${carbsFilter}, Sugar: ${sugarFilter}, Protein: ${proteinFilter}`)) {
         meanHistory.push({ 
@@ -196,6 +213,7 @@ function updateChart() {
 
     // Update mean graph
     updateMeanGraph();
+    updateMotionChart();
 }
 
 function updateMeanGraph() {
@@ -414,6 +432,10 @@ document.addEventListener("DOMContentLoaded", function () {
             });
         }
         updateMeanGraph();
+        const currentCombination = { carbs: carbsFilter, sugar: sugarFilter, protein: proteinFilter };
+        lineHistory.push(filterDataByCombination(currentCombination));
+
+        updateMotionChart();
     });
 });
 
@@ -422,6 +444,7 @@ function reset(){
     svg.selectAll(".bar").remove(); // Remove all bars
     svg.selectAll(".label").remove(); // Remove all labels
     meanHistory = [];
+    lineHistory = [];
 }
 
 
@@ -494,31 +517,31 @@ async function getFoodPointsWithTwoHourLater() {
 }
 
 
-
 function updateMotionChart() {
     // Select the motion-image container
     const motionContainer = d3.select("#motion-image");
 
-    // Clear any existing SVG content to avoid duplication
-    motionContainer.selectAll("*").remove();
-
-    // Get the filtered data for all combinations
-    const data2 = filterDataByCombination();
-
-    // Append an SVG element to the container
-    const svg = motionContainer.append("svg")
-        .attr("width", 500) // Set the width of the SVG
-        .attr("height", 500) // Set the height of the SVG
-        .style("border", "1px solid black"); // Optional: Add a border for visibility
+    // Append an SVG element to the container if it doesn't already exist
+    let svg = motionContainer.select("svg");
+    if (svg.empty()) {
+        svg = motionContainer.append("svg")
+            .attr("width", 500) // Set the width of the SVG
+            .attr("height", 500) // Set the height of the SVG
+            .style("border", "1px solid black"); // Optional: Add a border for visibility
+    }
 
     // Define margins and dimensions for the chart
     const margin = { top: 20, right: 30, bottom: 30, left: 50 };
     const width = +svg.attr("width") - margin.left - margin.right;
     const height = +svg.attr("height") - margin.top - margin.bottom;
 
-    // Create a group element for the chart
-    const g = svg.append("g")
-        .attr("transform", `translate(${margin.left},${margin.top})`);
+    // Create a dedicated group for the motion chart
+    let motionGroup = svg.select(".motion-group");
+    if (motionGroup.empty()) {
+        motionGroup = svg.append("g")
+            .attr("class", "motion-group")
+            .attr("transform", `translate(${margin.left},${margin.top})`);
+    }
 
     // Define scales
     const xScale = d3.scaleLinear()
@@ -527,32 +550,10 @@ function updateMotionChart() {
 
     const yScale = d3.scaleLinear()
         .domain([
-            d3.min(data2, d => d3.min(d.averagedGlucoseValues)), // Minimum glucose value across all categories
-            d3.max(data2, d => d3.max(d.averagedGlucoseValues))  // Maximum glucose value across all categories
+            d3.min(lineHistory, d => d3.min(d.averagedGlucoseValues)), // Minimum glucose value across all combinations
+            d3.max(lineHistory, d => d3.max(d.averagedGlucoseValues))  // Maximum glucose value across all combinations
         ])
         .range([height, 0]);
-
-    // Add X-axis
-    g.append("g")
-        .attr("transform", `translate(0,${height})`)
-        .call(d3.axisBottom(xScale).ticks(24))
-        .append("text")
-        .attr("fill", "#000")
-        .attr("x", width / 2)
-        .attr("y", 30)
-        .attr("text-anchor", "middle")
-        .text("Time Interval (2 Hours)");
-
-    // Add Y-axis
-    g.append("g")
-        .call(d3.axisLeft(yScale))
-        .append("text")
-        .attr("fill", "#000")
-        .attr("transform", "rotate(-90)")
-        .attr("x", -height / 2)
-        .attr("y", -40)
-        .attr("text-anchor", "middle")
-        .text("Average Glucose Value");
 
     // Define a line generator
     const line = d3.line()
@@ -560,78 +561,114 @@ function updateMotionChart() {
         .y(d => yScale(d)) // Y is the glucose value
         .defined(d => d !== null); // Skip null values
 
-    // Draw a line for each category
-    data2.forEach(category => {
-        g.append("path")
-            .datum(category.averagedGlucoseValues) // Use the averaged glucose values for this category
-            .attr("fill", "none")
-            .attr("stroke", d3.schemeCategory10[Math.floor(Math.random() * 10)]) // Assign a random color
-            .attr("stroke-width", 2)
-            .attr("d", line);
+    // Bind data to paths
+    const paths = motionGroup.selectAll(".line-path")
+        .data(lineHistory, d => `${d.carbs}-${d.sugar}-${d.protein}`); // Use a unique key for each combination
 
-        // Add a label for the category
-        g.append("text")
-            .attr("x", width - 10)
-            .attr("y", yScale(category.averagedGlucoseValues[23])) // Position at the last point of the line
-            .attr("fill", "black")
-            .attr("text-anchor", "end")
-            .text(`${category.carbs}, ${category.sugar}, ${category.protein}`);
-    });
+    // Enter selection: Add new lines
+    const enterPaths = paths.enter()
+        .append("path")
+        .attr("class", "line-path")
+        .attr("fill", "none")
+        .attr("stroke", (d, i) => d3.schemeCategory10[i % 10]) // Assign a color
+        .attr("stroke-width", 2)
+        .attr("d", d => line(d.averagedGlucoseValues)) // Set the initial path
+        .attr("stroke-dasharray", function () {
+            const totalLength = this.getTotalLength();
+            return `${totalLength} ${totalLength}`;
+        })
+        .attr("stroke-dashoffset", function () {
+            const totalLength = this.getTotalLength();
+            return totalLength;
+        });
+
+    // Merge enter and update selections
+    enterPaths.merge(paths)
+        .transition() // Apply a transition
+        .duration(1000) // Duration of the transition (1 second)
+        .ease(d3.easeLinear) // Linear easing for smooth motion
+        .attr("d", d => line(d.averagedGlucoseValues)) // Update the path to the new state
+        .attr("stroke-dashoffset", 0); // Reveal the line
+
+    // Exit selection: Remove lines that are no longer in the data
+    paths.exit()
+        .transition()
+        .duration(500)
+        .style("opacity", 0) // Fade out before removing
+        .remove();
+
+    // Add labels for each line
+    const labels = motionGroup.selectAll(".line-label")
+        .data(lineHistory, d => `${d.carbs}-${d.sugar}-${d.protein}`); // Use a unique key for each combination
+
+    // Enter selection: Add new labels
+    const enterLabels = labels.enter()
+        .append("text")
+        .attr("class", "line-label")
+        .attr("fill", "black")
+        .attr("text-anchor", "end")
+        .attr("x", width - 10)
+        .attr("y", d => yScale(d.averagedGlucoseValues[23])) // Position at the last point of the line
+        .text(d => `${d.carbs}, ${d.sugar}, ${d.protein}`);
+
+    // Merge enter and update selections for labels
+    enterLabels.merge(labels)
+        .transition()
+        .duration(1000)
+        .attr("x", width - 10)
+        .attr("y", d => yScale(d.averagedGlucoseValues[23])) // Update position
+        .text(d => `${d.carbs}, ${d.sugar}, ${d.protein}`);
+
+    // Exit selection: Remove labels that are no longer in the data
+    labels.exit()
+        .transition()
+        .duration(500)
+        .style("opacity", 0) // Fade out before removing
+        .remove();
 }
 
-function filterDataByCombination() {
-    // Generate all combinations of carbs, sugar, and protein
-    const combinations = generateCombinations();
 
-    // Array to store the filtered results for each combination
-    const filteredResults = [];
+function filterDataByCombination(combination) {
+    // Destructure the specific combination
+    const { carbs, sugar, protein } = combination;
 
-    // Iterate through each combination
-    combinations.forEach(combination => {
-        const { carbs, sugar, protein } = combination;
+    // Filter the data based on the specific combination
+    const filteredData = data.filter(d => {
+        const carbsCondition = carbs === "all" || (carbs === "high" ? d.totalCarbs > thresholds.carbs : d.totalCarbs <= thresholds.carbs);
+        const sugarCondition = sugar === "all" || (sugar === "high" ? d.sugar > thresholds.sugar : d.sugar <= thresholds.sugar);
+        const proteinCondition = protein === "all" || (protein === "high" ? d.protein > thresholds.protein : d.protein <= thresholds.protein);
 
-        // Filter the data based on the current combination
-        const filteredData = data.filter(d => {
-            const carbsCondition = carbs === "all" || (carbs === "high" ? d.totalCarbs > thresholds.carbs : d.totalCarbs <= thresholds.carbs);
-            const sugarCondition = sugar === "all" || (sugar === "high" ? d.sugar > thresholds.sugar : d.sugar <= thresholds.sugar);
-            const proteinCondition = protein === "all" || (protein === "high" ? d.protein > thresholds.protein : d.protein <= thresholds.protein);
-
-            return carbsCondition && sugarCondition && proteinCondition;
-        });
-
-        // Remove `0` values and only include arrays with a length of 24
-        const validGlucoseValues = filteredData
-            .map(d => d.glucoseValuesWithinTwoHours.filter(value => value > 0)) // Remove `0` values
-            .filter(arr => arr.length === 24); // Only include arrays with a length of 24
-
-        // Calculate the mean max glucose spike for the filtered data
-        const meanMaxGlucoseSpike = validGlucoseValues.length > 0
-            ? d3.mean(filteredData, d => d.maxGlucoseSpike)
-            : 0;
-
-        // Calculate the average glucose values for each of the 24 time intervals
-        const averagedGlucoseValues = [];
-        for (let i = 0; i < 24; i++) {
-            const intervalValues = validGlucoseValues.map(arr => arr[i]); // Get the i-th value from each array
-            const intervalAverage = intervalValues.length > 0
-                ? d3.mean(intervalValues) // Calculate the mean for this interval
-                : null; // Handle cases where no values exist for this interval
-            averagedGlucoseValues.push(intervalAverage);
-        }
-
-        // Add the filtered result for this combination
-        filteredResults.push({
-            carbs,
-            sugar,
-            protein,
-            averagedGlucoseValues, // Add the averaged glucose values
-            meanMaxGlucoseSpike: meanMaxGlucoseSpike
-        });
+        return carbsCondition && sugarCondition && proteinCondition;
     });
 
-    // Return the filtered results
-    console.log(filteredResults);
-    return filteredResults;
+    // Remove `0` values and only include arrays with a length of 24
+    const validGlucoseValues = filteredData
+        .map(d => d.glucoseValuesWithinTwoHours.filter(value => value > 0)) // Remove `0` values
+        .filter(arr => arr.length === 24); // Only include arrays with a length of 24
+
+    // Calculate the mean max glucose spike for the filtered data
+    const meanMaxGlucoseSpike = validGlucoseValues.length > 0
+        ? d3.mean(filteredData, d => d.maxGlucoseSpike)
+        : 0;
+
+    // Calculate the average glucose values for each of the 24 time intervals
+    const averagedGlucoseValues = [];
+    for (let i = 0; i < 24; i++) {
+        const intervalValues = validGlucoseValues.map(arr => arr[i]); // Get the i-th value from each array
+        const intervalAverage = intervalValues.length > 0
+            ? d3.mean(intervalValues) // Calculate the mean for this interval
+            : null; // Handle cases where no values exist for this interval
+        averagedGlucoseValues.push(intervalAverage);
+    }
+
+    // Return the filtered result for the specific combination
+    return {
+        carbs,
+        sugar,
+        protein,
+        averagedGlucoseValues,
+        meanMaxGlucoseSpike
+    };
 }
 
 
