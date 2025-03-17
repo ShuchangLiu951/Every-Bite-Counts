@@ -24,6 +24,7 @@ fetch('combination.csv')
                 data.push(parsedData);
             }
         });
+        console.log(data);
         updateChart();
     })
     .catch(error => console.error("Error loading CSV:", error));
@@ -377,63 +378,51 @@ function updateCombination() {
 }
 
 // Pause/Resume Button Logic
-document.getElementById("pause-combinations").addEventListener("click", () => {
-    const button = document.getElementById("pause-combinations");
-    if (isPaused) {
-        // Resume the interval
-        interval = setInterval(() => {
-            updateCombination();
+
+document.addEventListener("DOMContentLoaded", function () {
+    // Pause/Resume Button Logic
+    document.getElementById("pause-combinations").addEventListener("click", () => {
+        const button = document.getElementById("pause-combinations");
+        if (isPaused) {
+            // Resume the interval
+            interval = setInterval(() => {
+                updateCombination();
+            }, 2000); // 2 seconds interval
+            isPaused = false;
+            button.textContent = "Pause"; // Update button text
+            console.log('Resumed');
+        } else {
+            clearInterval(interval); // Pause the interval
+            isPaused = true;
+            button.textContent = "Resume"; // Update button text
+            console.log('Paused');
         }
-        , 2000); // 2 seconds interval
-        isPaused = false;
-        button.textContent = "Pause"; // Update button text
-        console.log('Resumed');
-    } else {
-        clearInterval(interval); // Pause the interval
-        isPaused = true;
-        button.textContent = "Resume"; // Update button text
-        console.log('Paused');
-    }
-});
-
-// Attach event listener to the button
-document.getElementById("show-combinations").addEventListener("click", showCombinations);
-
-function printLoggedFood() {
-    const filteredData = filterData();
-    const carbsFilter = document.getElementById("carbs").value;
-    const sugarFilter = document.getElementById("sugar").value;
-    const proteinFilter = document.getElementById("protein").value;
-
-    return data.filter(d => {
-        return (carbsFilter === "all" || (carbsFilter === "high" ? d.totalCarbs > thresholds.carbs : d.totalCarbs <= thresholds.carbs)) &&
-               (sugarFilter === "all" || (sugarFilter === "high" ? d.sugar > thresholds.sugar : d.sugar <= thresholds.sugar)) &&
-               (proteinFilter === "all" || (proteinFilter === "high" ? d.protein > thresholds.protein : d.protein <= thresholds.protein));
     });
 
-    // Extract and print the logged food
-}
+    // Attach event listener to the "Show Combinations" button
+    document.getElementById("show-combinations").addEventListener("click", showCombinations);
 
-document.getElementById("print-food").addEventListener("click", printLoggedFood);
+    // Attach event listener to the "Reset Average" button
+    document.getElementById("reset-average").addEventListener("click", function () {
+        reset();
+        const carbsFilter = document.getElementById("carbs").value;
+        const sugarFilter = document.getElementById("sugar").value;
+        const proteinFilter = document.getElementById("protein").value;
+        if (!meanHistory.some(entry => entry.category === `Carbs: ${carbsFilter}, Sugar: ${sugarFilter}, Protein: ${proteinFilter}`)) {
+            meanHistory.push({ 
+                category: `Carbs: ${carbsFilter}, Sugar: ${sugarFilter}, Protein: ${proteinFilter}`, 
+                mean: meanValue 
+            });
+        }
+        updateMeanGraph();
+    });
+});
+
 function reset(){
     const svg = d3.select("#chart-container").select("svg");
     svg.selectAll(".bar").remove(); // Remove all bars
     svg.selectAll(".label").remove(); // Remove all labels
     meanHistory = [];
 }
-
-document.getElementById("reset-average").addEventListener("click", function() {
-    reset();
-    const carbsFilter = document.getElementById("carbs").value;
-    const sugarFilter = document.getElementById("sugar").value;
-    const proteinFilter = document.getElementById("protein").value;
-    if (!meanHistory.some(entry => entry.category === `Carbs: ${carbsFilter}, Sugar: ${sugarFilter}, Protein: ${proteinFilter}`)) {
-        meanHistory.push({ 
-            category: `Carbs: ${carbsFilter}, Sugar: ${sugarFilter}, Protein: ${proteinFilter}`, 
-            mean: meanValue 
-        });
-    }
-    updateMeanGraph();
-});
 
 

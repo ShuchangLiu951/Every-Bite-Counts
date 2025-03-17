@@ -11,6 +11,7 @@ const svg = d3.select("#chart-container").append("svg")
     .attr("transform", `translate(${margin.left},${margin.top})`);
 
 // Load data
+let cleanedData; 
 
 
 
@@ -205,8 +206,11 @@ function updateGraph(selectedFile) {
 
 }
 
+
 document.addEventListener("DOMContentLoaded", function () {
-    getFoodPointsWithTwoHourLater();
+    // save my results to a variable
+    cleanedData = getFoodPointsWithTwoHourLater();
+    console.log(cleanedData);
     // Ensure the default dataset is loaded on page load
     updateGraph(document.getElementById("data-select").value);
 
@@ -273,7 +277,7 @@ async function getFoodPointsWithTwoHourLater() {
                 twoHourLater: twoHourLater,
                 glucoseValuesWithinTwoHours: glucoseValuesWithinTwoHours, // Add glucose values array
                 glucose: d["Glucose Value (mg/dL)"],
-                total_carb: d.total_carb,
+                totalCarbs: d.total_carb,
                 sugar: d.sugar,
                 protein: d.protein,
                 maxGlucoseSpike: maxGlucoseSpike
@@ -284,12 +288,7 @@ async function getFoodPointsWithTwoHourLater() {
         results.push(...foodData);
     }
 
-    // Log the results
-    console.log("All Food Data with Two-Hour Glucose Values:", results);
 
     // Optionally, return the results for further processing
     return results;
 }
-
-// Call the function to process all datasets
-getFoodPointsWithTwoHourLater();

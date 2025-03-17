@@ -8,6 +8,7 @@
     <link rel="stylesheet" href="main.css">
     <script src="https://cdnjs.cloudflare.com/ajax/libs/plotly.js/2.24.1/plotly.min.js"></script>
     <script src="https://d3js.org/d3.v7.min.js"></script>
+    <script src="script.js"></script>
     <style>
         body { font-family: Arial, sans-serif; }
         #chart-container { display: flex; flex-wrap: wrap; justify-content: center; margin-top: 20px; }
@@ -56,6 +57,37 @@
     <option value="filtered data/number14_integrate.csv">Dataset 11</option>
 </select>
     <button id="reset-button">Reset Zoom</button>
+
+
+    <h2>Glucose Spike Histogram</h2>
+    <label for="carbs">Total Carbs:</label>
+    <select id="carbs" onchange="updateChart()">
+        <option value="all">All</option>
+        <option value="high">High</option>
+        <option value="low">Low</option>
+    </select>
+    
+    <label for="sugar">Sugar:</label>
+    <select id="sugar" onchange="updateChart()">
+        <option value="all">All</option>
+        <option value="high">High</option>
+        <option value="low">Low</option>
+    </select>
+    
+    <label for="protein">Protein:</label>
+    <select id="protein" onchange="updateChart()">
+        <option value="all">All</option>
+        <option value="high">High</option>
+        <option value="low">Low</option>
+    </select>
+    <button id = "show-combinations">every Combinations</button>
+    <button id="pause-combinations">Pause</button>
+    <button id = "reset-average">Reset</button>
+    
+    <svg width="800" height="500"></svg>
+    <div class="tooltip" id="tooltip"></div>
+
+    <div id="chart-container"></div>
 
 
     <!-- <section id="visualization-ideas">
