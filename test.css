@@ -94,6 +94,34 @@ select {
 }
 
 
+#chart-wrapper {
+    display: flex;
+    justify-content: flex-start; /* Aligns chart to the left */
+    align-items: center; /* Centers legend vertically with the chart */
+    position: relative;
+}
+
+#chart-container {
+    width: 70%;  /* Allocates space for the chart */
+    display: flex;
+    justify-content: center; /* Centers the radar chart */
+}
+
+#legend-container {
+    width: 25%; /* Allocates space for the legend */
+    display: flex;
+    flex-direction: column;
+    justify-content: center; /* Centers the legend vertically */
+    align-items: flex-start;
+    margin-left: 20px; /* Adds spacing from the chart */
+}
+
+
+.category-legend, .legend-category {
+    margin-bottom: 15px;
+}
+
+
 
 /* Align button and dropdown for glucose histogram horizontally */
 #glucose-histogram-controls {
@@ -109,7 +137,6 @@ select {
     justify-content: center;
     align-items: center;
     margin-top: 20px;
-    background-color: white;
 }
 
 svg {
