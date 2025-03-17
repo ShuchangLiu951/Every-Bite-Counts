@@ -2,6 +2,10 @@ let data = [];
 let meanHistory = [];
 let meanValue;
 let lineHistory = [];
+const blue = ["#377eb8"]
+const green = ["#4daf4a"];
+const red = ["#e41a1c"];
+
 
 // Fetch and process CSV data
 document.addEventListener("DOMContentLoaded", async function () {
@@ -292,7 +296,7 @@ function updateMeanGraph() {
         .attr("y", d => y(d.category))
         .attr("height", y.bandwidth())
         .attr("width", d => x(d.mean)) // Start with the current width
-        .attr("fill", "steelblue")
+        .attr("fill", d => getColor(d.mean))
         .merge(bars) // Merge with the update selection
         .transition() // Apply transition to both new and existing bars
         .duration(1000)
@@ -444,6 +448,7 @@ function reset(){
     svg.selectAll(".label").remove(); // Remove all labels
     meanHistory = [];
     lineHistory = [];
+    index = 0;
 }
 
 
@@ -619,8 +624,8 @@ function updateMotionChart() {
     const enterPaths = paths.enter()
         .append("path")
         .attr("class", "line-path")
-        .attr("fill", "none")
-        .attr("stroke", (d, i) => d3.schemeCategory10[i % 10]) // Assign a color
+        .attr("fill", 'none')
+        .attr("stroke",d => getColor(d.meanMaxGlucoseSpike)) // Set the line color
         .attr("stroke-width", 2)
         .attr("d", d => line(d.averagedGlucoseValues)) // Set the initial path
         .attr("stroke-dasharray", function () {
@@ -645,6 +650,36 @@ function updateMotionChart() {
         .transition()
         .duration(500)
         .style("opacity", 0)
+        .remove();
+
+    // Add labels at the end of each line
+    const labels = motionGroup.selectAll(".line-label")
+        .data(lineHistory, d => `${d.carbs}-${d.sugar}-${d.protein}`); // Use a unique key for each combination
+
+    // Enter selection: Add new labels
+    const enterLabels = labels.enter()
+        .append("text")
+        .attr("class", "line-label")
+        .attr("fill", "black")
+        .attr("text-anchor", "start")
+        .attr("x", d => xScale(23) -10) // Position slightly to the right of the last point
+        .attr("y", d => yScale(d.averagedGlucoseValues[23])) // Position at the last point of the line
+        .style("font-size", "12px")
+        .text(d => `${d.carbs}, ${d.sugar}, ${d.protein}`); // Display the combination
+
+    // Merge enter and update selections for labels
+    enterLabels.merge(labels)
+        .transition()
+        .duration(1000)
+        .attr("x", d => xScale(23) -10) // Update position slightly to the right of the last point
+        .attr("y", d => yScale(d.averagedGlucoseValues[23])) // Update position at the last point of the line
+        .text(d => `${d.carbs}, ${d.sugar}, ${d.protein}`); // Update the label text
+
+    // Exit selection: Remove labels that are no longer in the data
+    labels.exit()
+        .transition()
+        .duration(500)
+        .style("opacity", 0) // Fade out before removing
         .remove();
 }
 
@@ -693,6 +728,18 @@ function filterDataByCombination(combination) {
         averagedGlucoseValues,
         meanMaxGlucoseSpike
     };
+}
+
+
+
+function getColor(meanValue) {
+    if (meanValue < 34) {
+        return green; // Below 34
+    } else if (meanValue < 41) {
+        return blue; // Between 34 and 41
+    } else {
+        return red; // 41 and above
+    }
 }
 
 
