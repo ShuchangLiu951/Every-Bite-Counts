@@ -1,0 +1,102 @@
+body {
+    font-family: Arial, sans-serif;
+    text-align: center;
+}
+
+#chart-container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 500px;
+}
+
+.tooltip {
+    position: absolute;
+    background: white;
+    border: 1px solid #ddd;
+    padding: 8px;
+    font-size: 14px;
+    box-shadow: 2px 2px 5px rgba(0,0,0,0.3);
+    display: none;
+}
+
+.grid-label {
+    font-size: 12px;
+    fill: #555;
+}
+
+select {
+    width: 250px;
+    height: 100px;
+    font-size: 14px;
+}
+
+button {
+    margin-top: 10px;
+    padding: 5px 10px;
+    font-size: 14px;
+}
+
+
+#legend-container {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    margin-top: 20px;
+}
+
+.legend-item {
+    display: flex;
+    align-items: center;
+    margin: 5px 15px;
+    cursor: pointer;
+}
+
+
+
+/* 🎨 DROPDOWN CONTAINER */
+#dropdown-container {
+    position: relative;
+    display: inline-block;
+}
+
+/* 🎨 DROPDOWN BUTTON (Looks Like Regular Select Box) */
+#dropdown-button {
+    background-color: white;
+    border: 1px solid #ccc;
+    padding: 10px;
+    cursor: pointer;
+    width: 200px;
+    text-align: left;
+}
+
+/* 🎨 DROPDOWN MENU (Hidden by Default) */
+.dropdown-content {
+    display: none;
+    position: absolute;
+    background-color: white;
+    border: 1px solid #ccc;
+    min-width: 200px;
+    max-height: 200px;
+    overflow-y: auto;
+    z-index: 1000;
+    padding: 10px;
+}
+
+/* 🎨 SHOW DROPDOWN MENU */
+.show {
+    display: block;
+}
+
+/* 🎨 CHECKBOX ITEMS */
+.dropdown-item {
+    display: flex;
+    align-items: center;
+    padding: 5px 0;
+}
+
+/* 🎨 CHECKBOX LABEL */
+.dropdown-item label {
+    margin-left: 5px;
+    cursor: pointer;
+}

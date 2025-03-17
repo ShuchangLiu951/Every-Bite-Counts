@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Glucose Spike Radar Chart</title>
+    <link rel="stylesheet" href="style.css">
+    <script src="https://d3js.org/d3.v6.min.js"></script>
+</head>
+<body>
+    <h1>Glucose Spike Radar Chart</h1>
+    <div>
+        <label><input type="checkbox" id="filter-carbs"> Top 5 Total Carbs</label>
+        <label><input type="checkbox" id="filter-sugar"> Top 5 Sugar</label>
+    </div>
+
+    <div id="dropdown-container">
+        <button id="dropdown-button">Select Foods ▼</button>
+        <div id="dropdown-menu" class="dropdown-content"></div>
+    </div>
+    <button id="update-chart">Update Chart</button>
+    <button id="reset-chart">Reset</button>
+
+    <div id="chart-container"></div>
+    <div id="legend-container"></div>
+
+    <script src="script.js"></script>
+</body>
+</html>
