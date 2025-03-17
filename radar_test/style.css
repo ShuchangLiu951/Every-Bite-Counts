@@ -7,7 +7,16 @@ body {
     display: flex;
     justify-content: center;
     align-items: center;
-    height: 500px;
+    height: 600px; /* Ensure enough space for labels */
+    width: 100%; 
+    position: relative; /* Ensures it doesn't overlap buttons */
+    z-index: 1; /* Keeps it behind UI elements */
+}
+
+svg {
+    overflow: visible; /* 🔹 Ensures text does not get clipped */
+    position: relative; /* 🔹 Prevents overlapping buttons */
+    z-index: 0; /* 🔹 Ensures the chart is behind buttons */
 }
 
 .tooltip {
@@ -17,7 +26,9 @@ body {
     padding: 8px;
     font-size: 14px;
     box-shadow: 2px 2px 5px rgba(0,0,0,0.3);
-    display: none;
+    display: none; /* Hidden by default */
+    z-index: 1000; /* 🔹 Ensure tooltip stays on top */
+    pointer-events: none; /* 🔹 Prevent tooltip itself from blocking interactions */
 }
 
 .grid-label {
@@ -42,7 +53,9 @@ button {
     display: flex;
     flex-wrap: wrap;
     justify-content: center;
-    margin-top: 20px;
+    margin-top: -20px;  /* ✅ Move legend up */
+    margin-bottom: 10px; /* ✅ Keep some spacing */
+    
 }
 
 .legend-item {
