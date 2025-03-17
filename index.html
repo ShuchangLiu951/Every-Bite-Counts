@@ -5,48 +5,46 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Food and Glucose: A Data-Driven Look</title>
     
-    <link rel="stylesheet" href="main.css">
+    <link rel="stylesheet" href="test.css">
+    <!-- <link rel="stylesheet" href="radar.css">  -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/plotly.js/2.24.1/plotly.min.js"></script>
     <script src="https://d3js.org/d3.v7.min.js"></script>
     <script src="script.js"></script>
-    <!-- <style>
-        body { font-family: Arial, sans-serif; }
-        #chart-container { display: flex; flex-wrap: wrap; justify-content: center; margin-top: 20px; }
-        svg { margin: 10px; border: 1px solid #ccc; }
-    </style> -->
 </head> 
 <body>
 
     <header>
-        <h1>Food and Glucose: A Data-Driven Look at Metabolic Health</h1>
+        <h1>Every Bite Counts: An Analysis of How Food Affects Blood Sugar Levels</h1>
         <h2>BIG IDEAs Lab Glycemic Variability and Wearable Device Data</h2>
-        <p>We aim to explore the relationship between dietary intake and glucose regulation using interactive visualizations. By analyzing diabetic participants’ food logs—tracking what they eat, when they eat it, and the nutritional content—we will correlate these inputs with their continuous glucose readings recorded every five minutes by the Dexcom G6 sensor. Our approach will identify patterns in glucose response to different food types, meal timing, and macronutrient composition. Through dynamic charts and trend analyses, we will highlight individual variations in glucose metabolism and infer potential dietary impacts. This webpage will provide an intuitive way to examine how specific foods and meal timing influence glucose fluctuations.</p>
+        <p> For the <strong>hundreds of millions</strong> managing diabetes, food is more than just fuel—it’s a direct influence on blood sugar. But how do different meals shape glucose responses, and what’s the secret to keeping your levels steady?"
+            "By diving into real-world data from Dexcom wearers, we uncover surprising patterns in how different types of food affect blood sugar, offering insights that could change how you think about meals."</p>
     </header>
 
-    <h2>How Food Intake Influences Glucose Levels</h2>
-
-    <!-- Descriptive Exposition Before the D3 Chart -->
-    <section id="glucose-intro">
-        <h3>How Do Your Meals Shape Your Blood Sugar Levels?</h3>
-        <p>Every meal you eat sets off a cascade of metabolic responses, influencing your body's blood sugar levels in real time. But how exactly does your glucose fluctuate throughout the day, and what patterns emerge based on what and when you eat?</p>
-        <p>Using continuous glucose monitoring (CGM) data from the Dexcom G6 sensor, we can visualize these fluctuations over a full day, mapping each meal to its corresponding impact on blood sugar. By overlaying food intake onto a dynamic glucose trend line, we can see how different meals—whether rich in carbohydrates, proteins, or fats—affect glucose stability and overall metabolic health.</p>
-        <p>In the interactive graph below, each <strong>meal event</strong> is marked along the timeline. Notice how some meals trigger sharp glucose spikes, while others result in steadier, more controlled changes. Hover over a meal to explore its macronutrient composition and observe how the body responds in the minutes and hours that follow.</p>
-        <h4>🔎 What to Look For:</h4>
+    <!-- Descriptive Exposition Before the first  D3 Chart -->
+    <section id="glucose-intro" style="margin: 0 20px; text-align: left; max-width: 800px; margin-left: auto; margin-right: auto;">
+        <h2 style="text-align: center;">Exploring the Link Between Food and Glucose Response</h2>
+        <p>Every meal triggers metabolic responses that affect glucose levels, with lasting health effects. Our project uses food logs and Dexcom G6 continuous glucose monitoring (CGM) data to track glucose levels every five minutes, identifying patterns in response to different meals.</p>
+        <p>We aim to uncover how the timing, type, and composition of meals affect glucose fluctuations and provide insights into managing blood sugar. By mapping glucose changes to meals—whether high in carbs, protein, or fats—we can visualize the impact of each on glucose stability.</p>
+        <p>The graph below shows glucose fluctuations for several individuals across 1-2 weeks, with <strong>meal events</strong> marked on the timeline. Some meals cause sharp spikes, while others have more gradual or stable effects, highlighting the importance of meal timing and composition in managing glucose levels.</p>
+        <h4>🔎 Key Questions to Explore:</h4>
         <ul>
-            <li>Do certain meals lead to rapid glucose spikes or crashes?</li>
-            <li>How long does it take for glucose levels to return to baseline after eating?</li>
-            <li>Are there patterns based on meal timing, such as breakfast vs. dinner?</li>
+            <li>Which meals trigger glucose spikes or crashes?</li>
+            <li>How long does it take for glucose levels to stabilize after eating?</li>
+            <li>Are there patterns based on meal type or timing, such as breakfast versus dinner?</li>
         </ul>
-        <p>Explore the visualization below to uncover the unique story behind each meal and its impact on blood sugar regulation.</p>
+        <p>Explore the visualization below to see how meals impact blood sugar and gain insights for better glucose control.</p>
+        <p> You can change datasets with the <strong>dropdown</strong> to explore differnt people's glucose as well as <strong>reset the zoom</strong> when needed. Also try <strong> hovering </strong> over meal events for some more insights!</p>
     </section>
+    
+
         <div id ="main-content">
         <div id="main-chart"></div> <!-- D3 Chart Container -->
         
 
         <select id="data-select">
-            <option value="filtered data/number1_integrate.csv">Dataset 1</option>
+            <option value="filtered data/number1_integrate.csv" selected>Dataset 1</option>
             <option value="filtered data/number2_integrate.csv">Dataset 2</option>
-            <option value="filtered data/number4_integrate.csv" selected>Dataset 3</option>
+            <option value="filtered data/number4_integrate.csv">Dataset 3</option>
             <option value="filtered data/number5_integrate.csv">Dataset 4</option>
             <option value="filtered data/number6_integrate.csv">Dataset 5</option>
             <option value="filtered data/number8_integrate.csv">Dataset 6</option>
@@ -61,7 +59,7 @@
 
 
 
-    <div id ="radar-content">
+    <div id ="radar-content"> 
             <h1>Glucose Spike Radar Chart</h1>
         <div>
             <label><input type="checkbox" id="filter-carbs"> Top 5 Total Carbs</label>
@@ -70,6 +68,12 @@
 
         <div id="dropdown-container">
             <button id="dropdown-button">Select Foods ▼</button>
+            <style>
+                /* CSS to make the "Select Foods" text black */
+                #dropdown-button {
+                    color: black;
+                }
+            </style>
             <div id="dropdown-menu" class="dropdown-content"></div>
         </div>
         <button id="update-chart">Update Chart</button>
@@ -82,30 +86,50 @@
 
     <div id ="histogram-content">
         <h2>Glucose Spike Histogram</h2>
-        <label for="carbs">Total Carbs:</label>
+        <style>
+            /* To ensure the buttons stack horizontally below the dropdowns */
+            #button-container {
+                margin-top: 20px; /* Adds space before the buttons */
+                display: flex;
+                gap: 10px; /* Adds space between buttons */
+                justify-content: center;
+            }
+    
+            #button-container button {
+                display: inline-block; /* Ensure the buttons align horizontally */
+            }
+        </style>
+        <style>
+            label[for="carbs"], label[for="sugar"], label[for="protein"] {
+                font-weight: bold; /* Makes specific labels bold */
+            }
+        </style>
+        <label for="carbs">Total Carbs:</strong></label>
         <select id="carbs" onchange="updateChart()">
             <option value="all">All</option>
             <option value="high">High</option>
             <option value="low">Low</option>
         </select>
         
-        <label for="sugar">Sugar:</label>
+        <label for="sugar">Sugar:</strong></label>
         <select id="sugar" onchange="updateChart()">
             <option value="all">All</option>
             <option value="high">High</option>
             <option value="low">Low</option>
         </select>
         
-        <label for="protein">Protein:</label>
+        <label for="protein">Protein:</strong></label>
         <select id="protein" onchange="updateChart()">
             <option value="all">All</option>
             <option value="high">High</option>
             <option value="low">Low</option>
         </select>
-        <button id = "show-combinations">Every Combination</button>
-        <button id="pause-combinations">Pause</button>
-        <button id = "reset-average">Reset</button>
-        
+
+        <div id = "button-container">
+            <button id = "show-combinations">Every Combination</button>
+            <button id="pause-combinations">Pause</button>
+            <button id = "reset-average">Reset</button>
+        </div>
         <svg width="800" height="500"></svg>
         <div class="tooltip" id="tooltip"></div>
 
