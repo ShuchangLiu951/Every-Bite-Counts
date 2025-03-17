@@ -325,7 +325,7 @@ categoryLegend.append("div")
         <svg width="30" height="10">
             <line x1="0" y1="5" x2="30" y2="5" stroke="blue" stroke-width="3"></line>
         </svg>
-        <span style="font-size: 14px; margin-left: 5px;">Total Carbs</span>
+        <span style="font-size: 14px; margin-left: 5px; font-weight: bold;">Total Carbs</span>
     `);
 
 // 🎯 SUGAR (RED) LEGEND
@@ -336,7 +336,7 @@ categoryLegend.append("div")
         <svg width="30" height="10">
             <line x1="0" y1="5" x2="30" y2="5" stroke="red" stroke-width="3"></line>
         </svg>
-        <span style="font-size: 14px; margin-left: 5px;">Sugar</span>
+        <span style="font-size: 14px; margin-left: 5px; font-weight: bold;">Sugar</span>
     `);
 
 // 🎯 FORCE FOOD LEGEND TO A NEW LINE
@@ -365,14 +365,18 @@ if (showCarbs) {
         .style("margin-top", "10px") // ✅ Ensure spacing
         .html(`<strong>🍞 Foods in Top 5 Total Carbs:</strong>`);
 
-    carbsLegend.selectAll(".legend-item")
-        .data(carbsFoods)
-        .enter()
-        .append("div")
-        .attr("class", "legend-item")
-        .style("display", "inline-block")
-        .style("margin-right", "15px")
-        .html(d => `<span style="display:inline-block;width:12px;height:12px;background-color:${colorScale(d.food)};margin-right:5px;"></span> ${d.food}`);
+        carbsLegend.selectAll(".legend-item")
+    .data(carbsFoods)
+    .enter()
+    .append("div")
+    .attr("class", "legend-item")
+    .style("display", "flex")  // ✅ Keep items in a row
+    .style("align-items", "center")  // ✅ Align text and color boxes
+    .style("text-align", "left")  // ✅ Ensure all food names align to the left
+    .style("margin-bottom", "5px")
+    .html(d => `<span style="display:inline-block;width:12px;height:12px;background-color:${colorScale(d.food)};margin-right:10px;"></span> ${d.food}`);
+
+    
 }
 
 // 🎯 RENDER LEGEND FOR SUGAR CATEGORY IF SELECTED
@@ -382,14 +386,18 @@ if (showSugar) {
         .style("margin-top", "10px") // ✅ Ensure spacing
         .html(`<strong>🍬 Foods in Top 5 Sugar:</strong>`);
 
-    sugarLegend.selectAll(".legend-item")
-        .data(sugarFoods)
-        .enter()
-        .append("div")
-        .attr("class", "legend-item")
-        .style("display", "inline-block")
-        .style("margin-right", "15px")
-        .html(d => `<span style="display:inline-block;width:12px;height:12px;background-color:${colorScale(d.food)};margin-right:5px;"></span> ${d.food}`);
+        sugarLegend.selectAll(".legend-item")
+    .data(sugarFoods)
+    .enter()
+    .append("div")
+    .attr("class", "legend-item")
+    .style("display", "flex")
+    .style("align-items", "center")
+    .style("text-align", "left")  // ✅ Ensure all food names align to the left
+    .style("margin-bottom", "5px")
+    .html(d => `<span style="display:inline-block;width:12px;height:12px;background-color:${colorScale(d.food)};margin-right:10px;"></span> ${d.food}`);
+
+    
 }
 
         

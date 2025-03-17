@@ -22,7 +22,7 @@
 
     <!-- Descriptive Exposition Before the first  D3 Chart -->
     <section id="glucose-intro" style="margin: 0 20px; text-align: left; max-width: 800px; margin-left: auto; margin-right: auto;">
-        <h2 style="text-align: center;">Exploring the Link Between Food and Glucose Response</h2>
+        <h2 style="text-align: center;">Exploring the Glucose Response of Diabetic Individual</h2>
         <p>Every meal triggers metabolic responses that affect glucose levels, with lasting health effects. Our project uses food logs and Dexcom G6 continuous glucose monitoring (CGM) data to track glucose levels every five minutes, identifying patterns in response to different meals.</p>
         <p>We aim to uncover how the timing, type, and composition of meals affect glucose fluctuations and provide insights into managing blood sugar. By mapping glucose changes to meals—whether high in carbs, protein, or fats—we can visualize the impact of each on glucose stability.</p>
         <p>The graph below shows glucose fluctuations for several individuals across 1-2 weeks, with <strong>meal events</strong> marked on the timeline. Some meals cause sharp spikes, while others have more gradual or stable effects, highlighting the importance of meal timing and composition in managing glucose levels.</p>
@@ -58,6 +58,13 @@
     </div>
 
 
+    <section id="transition1" style="margin: 0 20px; text-align: left; max-width: 800px; margin-left: auto; margin-right: auto;">
+        <h2 style="text-align: center;">Exploring How Different Meals Spike Glucose</h2>
+        <p>Now that we've seen how glucose fluctuates throughout the day for different individuals, let’s dive deeper into the impact of specific meals. In this next visualization, we shift our focus from overall trends to individual food types, particularly those rich in carbohydrates and sugars, which are known to influence glucose levels significantly.</p>
+        <p>This chart helps highlight the importance of food choices in managing diabetes and glucose regulation.</p>
+        <p>You can explore the visualization by <strong>toggling</strong> between Top Carb and Top Sugars, and then manually <strong> selecting </strong>  specific foods from the <strong>dropdown</strong>. After <strong>selecting</strong> the foods you want, <strong>update</strong> the chart and <strong> reset</strong> to try different combinations!</p>
+    </section>
+
 
     <div id ="radar-content"> 
             <h1>Glucose Spike Radar Chart</h1>
@@ -79,8 +86,11 @@
         <button id="update-chart">Update Chart</button>
         <button id="reset-chart">Reset</button>
 
-        <div id="chart-container"></div>
-        <div id="legend-container"></div>
+        <div id="chart-wrapper">
+            <div id="chart-container"></div>  <!-- Radar chart -->
+            <div id="legend-container"></div> <!-- Legend section -->
+        </div>
+        
     </div>
 
 
