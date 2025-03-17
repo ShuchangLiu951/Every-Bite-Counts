@@ -9,6 +9,7 @@ document.addEventListener("DOMContentLoaded", async function () {
 
     // Initialize the chart after data is loaded
     updateChart();
+    updateMotionChart();
 });
 
 // Thresholds for filtering
@@ -25,6 +26,7 @@ function filterData() {
                (proteinFilter === "all" || (proteinFilter === "high" ? d.protein > thresholds.protein : d.protein <= thresholds.protein));
     });
 }
+
 
 function updateChart() {
     const filteredData = filterData();
@@ -384,7 +386,7 @@ document.addEventListener("DOMContentLoaded", function () {
             // Resume the interval
             interval = setInterval(() => {
                 updateCombination();
-            }, 2000); // 2 seconds interval
+            }, 1500); // 2 seconds interval
             isPaused = false;
             button.textContent = "Pause"; // Update button text
             console.log('Resumed');
@@ -490,3 +492,148 @@ async function getFoodPointsWithTwoHourLater() {
     // Optionally, return the results for further processing
     return results;
 }
+
+
+
+function updateMotionChart() {
+    // Select the motion-image container
+    const motionContainer = d3.select("#motion-image");
+
+    // Clear any existing SVG content to avoid duplication
+    motionContainer.selectAll("*").remove();
+
+    // Get the filtered data for all combinations
+    const data2 = filterDataByCombination();
+
+    // Append an SVG element to the container
+    const svg = motionContainer.append("svg")
+        .attr("width", 500) // Set the width of the SVG
+        .attr("height", 500) // Set the height of the SVG
+        .style("border", "1px solid black"); // Optional: Add a border for visibility
+
+    // Define margins and dimensions for the chart
+    const margin = { top: 20, right: 30, bottom: 30, left: 50 };
+    const width = +svg.attr("width") - margin.left - margin.right;
+    const height = +svg.attr("height") - margin.top - margin.bottom;
+
+    // Create a group element for the chart
+    const g = svg.append("g")
+        .attr("transform", `translate(${margin.left},${margin.top})`);
+
+    // Define scales
+    const xScale = d3.scaleLinear()
+        .domain([0, 23]) // 24 intervals (0 to 23)
+        .range([0, width]);
+
+    const yScale = d3.scaleLinear()
+        .domain([
+            d3.min(data2, d => d3.min(d.averagedGlucoseValues)), // Minimum glucose value across all categories
+            d3.max(data2, d => d3.max(d.averagedGlucoseValues))  // Maximum glucose value across all categories
+        ])
+        .range([height, 0]);
+
+    // Add X-axis
+    g.append("g")
+        .attr("transform", `translate(0,${height})`)
+        .call(d3.axisBottom(xScale).ticks(24))
+        .append("text")
+        .attr("fill", "#000")
+        .attr("x", width / 2)
+        .attr("y", 30)
+        .attr("text-anchor", "middle")
+        .text("Time Interval (2 Hours)");
+
+    // Add Y-axis
+    g.append("g")
+        .call(d3.axisLeft(yScale))
+        .append("text")
+        .attr("fill", "#000")
+        .attr("transform", "rotate(-90)")
+        .attr("x", -height / 2)
+        .attr("y", -40)
+        .attr("text-anchor", "middle")
+        .text("Average Glucose Value");
+
+    // Define a line generator
+    const line = d3.line()
+        .x((d, i) => xScale(i)) // X is the time interval index
+        .y(d => yScale(d)) // Y is the glucose value
+        .defined(d => d !== null); // Skip null values
+
+    // Draw a line for each category
+    data2.forEach(category => {
+        g.append("path")
+            .datum(category.averagedGlucoseValues) // Use the averaged glucose values for this category
+            .attr("fill", "none")
+            .attr("stroke", d3.schemeCategory10[Math.floor(Math.random() * 10)]) // Assign a random color
+            .attr("stroke-width", 2)
+            .attr("d", line);
+
+        // Add a label for the category
+        g.append("text")
+            .attr("x", width - 10)
+            .attr("y", yScale(category.averagedGlucoseValues[23])) // Position at the last point of the line
+            .attr("fill", "black")
+            .attr("text-anchor", "end")
+            .text(`${category.carbs}, ${category.sugar}, ${category.protein}`);
+    });
+}
+
+function filterDataByCombination() {
+    // Generate all combinations of carbs, sugar, and protein
+    const combinations = generateCombinations();
+
+    // Array to store the filtered results for each combination
+    const filteredResults = [];
+
+    // Iterate through each combination
+    combinations.forEach(combination => {
+        const { carbs, sugar, protein } = combination;
+
+        // Filter the data based on the current combination
+        const filteredData = data.filter(d => {
+            const carbsCondition = carbs === "all" || (carbs === "high" ? d.totalCarbs > thresholds.carbs : d.totalCarbs <= thresholds.carbs);
+            const sugarCondition = sugar === "all" || (sugar === "high" ? d.sugar > thresholds.sugar : d.sugar <= thresholds.sugar);
+            const proteinCondition = protein === "all" || (protein === "high" ? d.protein > thresholds.protein : d.protein <= thresholds.protein);
+
+            return carbsCondition && sugarCondition && proteinCondition;
+        });
+
+        // Remove `0` values and only include arrays with a length of 24
+        const validGlucoseValues = filteredData
+            .map(d => d.glucoseValuesWithinTwoHours.filter(value => value > 0)) // Remove `0` values
+            .filter(arr => arr.length === 24); // Only include arrays with a length of 24
+
+        // Calculate the mean max glucose spike for the filtered data
+        const meanMaxGlucoseSpike = validGlucoseValues.length > 0
+            ? d3.mean(filteredData, d => d.maxGlucoseSpike)
+            : 0;
+
+        // Calculate the average glucose values for each of the 24 time intervals
+        const averagedGlucoseValues = [];
+        for (let i = 0; i < 24; i++) {
+            const intervalValues = validGlucoseValues.map(arr => arr[i]); // Get the i-th value from each array
+            const intervalAverage = intervalValues.length > 0
+                ? d3.mean(intervalValues) // Calculate the mean for this interval
+                : null; // Handle cases where no values exist for this interval
+            averagedGlucoseValues.push(intervalAverage);
+        }
+
+        // Add the filtered result for this combination
+        filteredResults.push({
+            carbs,
+            sugar,
+            protein,
+            averagedGlucoseValues, // Add the averaged glucose values
+            meanMaxGlucoseSpike: meanMaxGlucoseSpike
+        });
+    });
+
+    // Return the filtered results
+    console.log(filteredResults);
+    return filteredResults;
+}
+
+
+
+
