@@ -219,3 +219,57 @@ document.addEventListener("DOMContentLoaded", function () {
         updateGraph(document.getElementById("data-select").value);
     });
 });
+
+
+document.addEventListener("DOMContentLoaded", () => {
+    async function getFoodPointsWithTwoHourLater() {
+        const datasetOptions = Array.from(document.querySelectorAll("#data-select option")).map(option => option.value);
+        
+
+        // Array to store results
+        const results = [];
+    
+
+        for (const dataset of datasetOptions) {
+            // Fetch and parse the dataset
+            console.log("Loading dataset:", dataset);
+            const rawData = await d3.csv(dataset);
+            console.log(rawData);
+    
+            // Parse timestamps and filter valid glucose readings
+            const parseTime = d3.timeParse("%Y-%m-%d %H:%M:%S");
+            const foodData = rawData.map(d => ({
+                Timestamp: parseTime(d['Timestamp (YYYY-MM-DDThh:mm:ss)']),
+                glucose: +d['Glucose Value (mg/dL)'],
+                total_carb: +d.total_carb || null,
+                sugar: +d.sugar || null,
+                protein: +d.protein || null,
+                logged_food: d.logged_food || null
+            })).filter(d => d.logged_food && !isNaN(d.glucose)); // Ensure valid food points
+    
+            // Process each food point
+            foodData.forEach(d => {
+                const twoHourLater = new Date(d.Timestamp.getTime() + 2 * 60 * 60 * 1000); // Add 2 hours
+                results.push({
+                    dataset,
+                    logged_food: d.logged_food,
+                    timestamp: d.Timestamp,
+                    twoHourLater: twoHourLater,
+                    glucose: d.glucose,
+                    total_carb: d.total_carb,
+                    sugar: d.sugar,
+                    protein: d.protein
+                });
+            });
+        }
+    
+        // Log the results
+        console.log("Food Points with Two-Hour Later Times:", results);
+    
+        // Optionally, return the results for further processing
+        return results;
+    }
+    
+    // Call the function to process all datasets
+    getFoodPointsWithTwoHourLater();
+});

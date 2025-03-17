@@ -435,3 +435,5 @@ document.getElementById("reset-average").addEventListener("click", function() {
     }
     updateMeanGraph();
 });
+
+
