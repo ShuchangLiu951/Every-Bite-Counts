@@ -1,4 +1,4 @@
-/* General Styles */
+/* General Styles
 body {
     font-family: Arial, sans-serif;
     margin: 0;
@@ -8,7 +8,7 @@ body {
     line-height: 1.6;
 }
 
-/* Header */
+
 header {
     background-color: #0073e6;
     color: white;
@@ -16,7 +16,7 @@ header {
     padding: 2rem;
 }
 
-/* Sections */
+
 main {
     max-width: 800px;
     margin: 20px auto;
@@ -34,7 +34,7 @@ h2 {
     color: black;
 }
 
-/* Footer */
+
 footer {
     text-align: center;
     padding: 10px;
@@ -52,7 +52,7 @@ footer a {
 
 @keyframes marching-ants {
     to {
-      stroke-dashoffset: -8; /* 5 + 3 */
+      stroke-dashoffset: -8;
     }
   }
   
@@ -65,7 +65,7 @@ footer a {
   }
   
   circle.selected {
-    fill: #ff6b6b; /* Color for selected food points */
+    fill: #ff6b6b;
   }
   #heatmap-container {
     display: flex;
@@ -76,13 +76,13 @@ footer a {
 
 
 #glucose-intro {
-    margin-left: 50px; /* Adjust as needed for more spacing */
-    font-size: 1.2em; /* Slightly bigger font */
+    margin-left: 50px; 
+    font-size: 1.2em; 
 }
 
 h3{
     color: black;
-    margin-left: 50px; /* Adjust as needed for more spacing */
+    margin-left: 50px;
     font-size: 1.2em;
 }
 
@@ -90,11 +90,11 @@ h3{
 
 #reset-button {
     display: block;
-    margin: 20px auto; /* Centers it */
-    font-size: 18px; /* Increases text size */
-    padding: 10px 20px; /* Adds more padding */
-    width: 150px; /* Makes button larger */
-    background-color: steelblue; /* Optional: Better visibility */
+    margin: 20px auto;
+    font-size: 18px; 
+    padding: 10px 20px; 
+    width: 150px; 
+    background-color: steelblue; 
     color: white;
     border: none;
     border-radius: 5px;
@@ -102,30 +102,29 @@ h3{
 }
 
 #reset-button:hover {
-    background-color: darkblue; /* Optional: Hover effect */
+    background-color: darkblue; 
 }
 
 
 #data-select {
     display: block;
-    margin: 20px auto; /* Centers it */
-    font-size: 18px; /* Matches button text size */
-    padding: 10px 20px; /* Matches button padding */
-    width: 180px; /* Slightly wider for better appearance */
-    background-color: steelblue; /* Matches button background */
+    margin: 20px auto;
+    font-size: 18px;
+    padding: 10px 20px; 
+    width: 180px; 
+    background-color: steelblue;
     color: white;
     border: none;
     border-radius: 5px;
     cursor: pointer;
-    text-align: center; /* Ensures text is centered */
+    text-align: center;
 }
 
-/* Hover effect to match the button */
 #data-select:hover {
     background-color: darkblue;
 }
 
-/* Optional: Remove default dropdown arrow and style it */
+
 #data-select::-ms-expand {
     display: none;
 }
@@ -138,8 +137,259 @@ h3{
 
 
 svg {
-    display: block; /* Ensures it behaves like a block element */
-    margin: 0 auto; /* Centers it horizontally */
+    display: block; 
+    margin: 0 auto; 
+} */
+
+
+
+/* Applies only to main-content and histogram-content */
+#main-content, #histogram-content {
+    font-family: Arial, sans-serif;
+    margin: 0;
+    padding: 0;
+    background-color: #f9f9f9;
+    color: #333;
+    line-height: 1.6;
+}
+
+/* Header */
+#main-content header, #histogram-content header {
+    background-color: #0073e6;
+    color: white;
+    text-align: center;
+    padding: 2rem;
+}
+
+/* Sections */
+#main-content main, #histogram-content main {
+    max-width: 800px;
+    margin: 20px auto;
+    padding: 20px;
+    background: white;
+    border-radius: 8px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+}
+
+#main-content section, #histogram-content section {
+    margin-bottom: 20px;
+}
+
+#main-content h2, #histogram-content h2 {
+    color: black;
+}
+
+/* Footer */
+#main-content footer, #histogram-content footer {
+    text-align: center;
+    padding: 10px;
+    background: #0073e6;
+    color: white;
+    margin-top: 20px;
+}
+
+#main-content footer a, #histogram-content footer a {
+    color: white;
+    text-decoration: none;
+    font-weight: bold;
+}
+
+@keyframes marching-ants {
+    to {
+      stroke-dashoffset: -8; /* 5 + 3 */
+    }
+}
+  
+#main-content .selection, #histogram-content .selection {
+    fill-opacity: 0.1;
+    stroke: black;
+    stroke-opacity: 0.7;
+    stroke-dasharray: 5 3;
+    animation: marching-ants 2s linear infinite;
+}
+  
+#main-content circle.selected, #histogram-content circle.selected {
+    fill: #ff6b6b; /* Color for selected food points */
+}
+
+#heatmap-container {
+    display: flex;
+    justify-content: center;
+    margin-top: 20px;
+    background-color: lightgray;
+}
+
+#glucose-intro, #main-content #glucose-intro, #histogram-content #glucose-intro {
+    margin-left: 50px; /* Adjust as needed for more spacing */
+    font-size: 1.2em;
+}
+
+h3, #main-content h3, #histogram-content h3 {
+    color: black;
+    margin-left: 50px; /* Adjust as needed for more spacing */
+    font-size: 1.2em;
+}
+
+#reset-button, #main-content #reset-button, #histogram-content #reset-button {
+    display: block;
+    margin: 20px auto;
+    font-size: 18px;
+    padding: 10px 20px;
+    width: 150px;
+    background-color: steelblue;
+    color: white;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+}
+
+#reset-button:hover, #main-content #reset-button:hover, #histogram-content #reset-button:hover {
+    background-color: darkblue;
+}
+
+#data-select, #main-content #data-select, #histogram-content #data-select {
+    display: block;
+    margin: 20px auto;
+    font-size: 18px;
+    padding: 10px 20px;
+    width: 180px;
+    background-color: steelblue;
+    color: white;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    text-align: center;
+}
+
+#data-select:hover, #main-content #data-select:hover, #histogram-content #data-select:hover {
+    background-color: darkblue;
+}
+
+#data-select::-ms-expand, #main-content #data-select::-ms-expand, #histogram-content #data-select::-ms-expand {
+    display: none;
+}
+
+#data-select, #main-content #data-select, #histogram-content #data-select {
+    appearance: none;
+    -webkit-appearance: none;
+    -moz-appearance: none;
+}
+
+svg, #main-content svg, #histogram-content svg {
+    display: block;
+    margin: 0 auto;
 }
 
 
+
+body, #radar-content {
+    font-family: Arial, sans-serif;
+    text-align: center;
+}
+
+#chart-container, #radar-content #chart-container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 600px; /* Ensure enough space for labels */
+    width: 100%; 
+    position: relative; /* Ensures it doesn't overlap buttons */
+    z-index: 1; /* Keeps it behind UI elements */
+}
+
+svg, #radar-content svg {
+    overflow: visible; /* 🔹 Ensures text does not get clipped */
+    position: relative; /* 🔹 Prevents overlapping buttons */
+    z-index: 0; /* 🔹 Ensures the chart is behind buttons */
+}
+
+.tooltip, #radar-content .tooltip {
+    position: absolute;
+    background: white;
+    border: 1px solid #ddd;
+    padding: 8px;
+    font-size: 14px;
+    box-shadow: 2px 2px 5px rgba(0,0,0,0.3);
+    display: none; /* Hidden by default */
+    z-index: 1000; /* 🔹 Ensure tooltip stays on top */
+    pointer-events: none; /* 🔹 Prevent tooltip itself from blocking interactions */
+}
+
+.grid-label, #radar-content .grid-label {
+    font-size: 12px;
+    fill: whitesmoke;
+}
+
+select, #radar-content select {
+    width: 250px;
+    height: 100px;
+    font-size: 14px;
+}
+
+button, #radar-content button {
+    margin-top: 10px;
+    padding: 5px 10px;
+    font-size: 14px;
+}
+
+#legend-container, #radar-content #legend-container {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    margin-top: -20px;  /* ✅ Move legend up */
+    margin-bottom: 10px; /* ✅ Keep some spacing */
+}
+
+.legend-item, #radar-content .legend-item {
+    display: flex;
+    align-items: center;
+    margin: 5px 15px;
+    cursor: pointer;
+}
+
+/* 🎨 DROPDOWN CONTAINER */
+#dropdown-container, #radar-content #dropdown-container {
+    position: relative;
+    display: inline-block;
+}
+
+/* 🎨 DROPDOWN BUTTON (Looks Like Regular Select Box) */
+#dropdown-button, #radar-content #dropdown-button {
+    background-color: white;
+    border: 1px solid #ccc;
+    padding: 10px;
+    cursor: pointer;
+    width: 200px;
+    text-align: left;
+}
+
+/* 🎨 DROPDOWN MENU (Hidden by Default) */
+.dropdown-content, #radar-content .dropdown-content {
+    display: none;
+    position: absolute;
+    background-color: white;
+    border: 1px solid #ccc;
+    min-width: 200px;
+    max-height: 200px;
+    overflow-y: auto;
+    z-index: 1000;
+    padding: 10px;
+}
+
+/* 🎨 SHOW DROPDOWN MENU */
+.show, #radar-content .show {
+    display: block;
+}
+
+/* 🎨 CHECKBOX ITEMS */
+.dropdown-item, #radar-content .dropdown-item {
+    display: flex;
+    align-items: center;
+    padding: 5px 0;
+}
+
+/* 🎨 CHECKBOX LABEL */
+.dropdown-item label, #radar-content .dropdown-item label {
+    margin-left: 5px;
+    cursor: pointer;
+}

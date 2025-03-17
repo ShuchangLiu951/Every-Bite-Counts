@@ -5,15 +5,11 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Food and Glucose: A Data-Driven Look</title>
     
-    <link rel="stylesheet" href="main.css">
+    <link rel="stylesheet" href="test.css">
+    <!-- <link rel="stylesheet" href="radar.css">  -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/plotly.js/2.24.1/plotly.min.js"></script>
     <script src="https://d3js.org/d3.v7.min.js"></script>
     <script src="script.js"></script>
-    <!-- <style>
-        body { font-family: Arial, sans-serif; }
-        #chart-container { display: flex; flex-wrap: wrap; justify-content: center; margin-top: 20px; }
-        svg { margin: 10px; border: 1px solid #ccc; }
-    </style> -->
 </head> 
 <body>
 
@@ -61,7 +57,7 @@
 
 
 
-    <div id ="radar-content">
+    <div id ="radar-content"> 
             <h1>Glucose Spike Radar Chart</h1>
         <div>
             <label><input type="checkbox" id="filter-carbs"> Top 5 Total Carbs</label>
@@ -70,6 +66,12 @@
 
         <div id="dropdown-container">
             <button id="dropdown-button">Select Foods ▼</button>
+            <style>
+                /* CSS to make the "Select Foods" text black */
+                #dropdown-button {
+                    color: black;
+                }
+            </style>
             <div id="dropdown-menu" class="dropdown-content"></div>
         </div>
         <button id="update-chart">Update Chart</button>

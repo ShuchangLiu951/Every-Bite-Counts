@@ -1,0 +1,174 @@
+/* General Styles */
+body {
+    font-family: Arial, sans-serif;
+    margin: 0;
+    padding: 0;
+    background-color: #f9f9f9;
+    color: #333;
+    line-height: 1.6;
+    text-align: center;
+}
+
+/* Header */
+header {
+    background-color: #0073e6;
+    color: white;
+    text-align: center;
+    padding: 2rem;
+}
+
+/* Main Content and Sections */
+main {
+    max-width: 800px;
+    margin: 20px auto;
+    padding: 20px;
+    background: white;
+    border-radius: 8px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+}
+
+section {
+    margin-bottom: 20px;
+}
+
+h2, h3 {
+    color: black;
+    margin-left: 50px;
+    font-size: 1.2em;
+}
+
+/* Footer */
+footer {
+    text-align: center;
+    padding: 10px;
+    background: #0073e6;
+    color: white;
+    margin-top: 20px;
+}
+
+footer a {
+    color: white;
+    text-decoration: none;
+    font-weight: bold;
+}
+
+/* Button Styles */
+button {
+    font-size: 14px;
+    padding: 8px 16px;
+    width: 140px;
+    background-color: steelblue;
+    color: white;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+}
+
+button:hover {
+    background-color: darkblue;
+}
+
+/* Dropdown Styles */
+select {
+    font-size: 14px;
+    padding: 8px 16px;
+    width: 160px;
+    background-color: steelblue;
+    color: white;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    text-align: center;
+    appearance: none;
+}
+
+/* Radar Chart Customizations */
+#radar-glucose-chart {
+    background-color: white !important; /* Ensure the background is white */
+}
+
+/* Radar Chart Dropdown Title */
+#radar-dropdown-title {
+    color: black;
+    font-weight: bold;
+}
+
+/* Align button and dropdown for glucose histogram horizontally */
+#glucose-histogram-controls {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 10px; /* Adds spacing between elements */
+}
+
+/* Chart and Visualization */
+#chart-container, #heatmap-container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin-top: 20px;
+    background-color: lightgray;
+}
+
+svg {
+    display: block;
+    margin: 0 auto;
+    overflow: visible;
+    position: relative;
+    z-index: 0;
+}
+
+/* Tooltip */
+.tooltip {
+    position: absolute;
+    background: white;
+    border: 1px solid #ddd;
+    padding: 8px;
+    font-size: 14px;
+    box-shadow: 2px 2px 5px rgba(0,0,0,0.3);
+    display: none;
+    z-index: 1000;
+    pointer-events: none;
+}
+
+/* Dropdown Menu */
+#dropdown-container {
+    position: relative;
+    display: inline-block;
+}
+
+#dropdown-button {
+    background-color: white;
+    border: 1px solid #ccc;
+    padding: 8px;
+    cursor: pointer;
+    width: 160px;
+    text-align: left;
+}
+
+.dropdown-content {
+    display: none;
+    position: absolute;
+    background-color: white;
+    border: 1px solid #ccc;
+    min-width: 160px;
+    max-height: 150px;
+    overflow-y: auto;
+    z-index: 1000;
+    padding: 8px;
+}
+
+.show {
+    display: block;
+}
+
+.dropdown-item {
+    display: flex;
+    align-items: center;
+    padding: 5px 0;
+}
+
+.dropdown-item label {
+    margin-left: 5px;
+    cursor: pointer;
+}
