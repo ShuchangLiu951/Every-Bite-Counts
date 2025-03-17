@@ -31,8 +31,8 @@ function updateChart() {
     // const svg = d3.select("svg");
     const svg = d3.select("#histogram-content").select("svg")
     // histogramSvg
-    .attr("width", 800)  // Make sure you adjust the size as needed
-    .attr("height", 500);
+    .attr("width", 900)  // Make sure you adjust the size as needed
+    .attr("height", 600);
 
     const margin = { top: 20, right: 30, bottom: 30, left: 40 };
     const width = +svg.attr("width") - margin.left - margin.right;
@@ -111,8 +111,9 @@ function updateChart() {
             .attr("text-anchor", "middle")
             .attr("x", width / 2)
             .attr("y", height + margin.bottom - 10)
-            .style("font-size", "12px")
-            .text("Glucose Spike");
+            .style("font-size", "14px")
+            .style("font-weight", "bold")
+            .text("Maximum Glucose Change Within 2 Hrs (mg/dL)");
     }
 
     // Add y-axis label (if not already added)
@@ -123,7 +124,8 @@ function updateChart() {
             .attr("transform", "rotate(-90)")
             .attr("x", -height / 2)
             .attr("y", -margin.left + 10)
-            .style("font-size", "12px")
+            .style("font-size", "14px")
+            .style("font-weight", "bold")
             .text("Count");
     }
 
@@ -243,6 +245,15 @@ function updateMeanGraph() {
         .transition()
         .duration(1000)
         .call(d3.axisBottom(x).ticks(5));
+
+    svg.append("text")
+            .attr("text-anchor", "middle")
+            .attr("x", width / 2)
+            .attr("y", height + 30)
+            .style("font-size", "18px") // Increase font size
+            .style("font-weight", "bold")
+            .text("Average Maximum Glucose Change Within 2 Hrs");
+
 
     // Update y-axis
     svg.select(".y-axis")
