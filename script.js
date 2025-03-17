@@ -1,4 +1,3 @@
-
 let data = [];
 let meanHistory = [];
 let meanValue;
@@ -38,7 +37,7 @@ function updateChart() {
     .attr("width", 900)  // Make sure you adjust the size as needed
     .attr("height", 600);
 
-    const margin = { top: 20, right: 30, bottom: 30, left: 40 };
+    const margin = { top: 20, right: 30, bottom: 60, left: 40 };
     const width = +svg.attr("width") - margin.left - margin.right;
     const height = +svg.attr("height") - margin.top - margin.bottom;
 
@@ -218,7 +217,7 @@ function updateChart() {
 
 function updateMeanGraph() {
     // Set up dimensions and margins
-    const margin = { top: 20, right: 40, bottom: 40, left: 200 };
+    const margin = { top: 20, right: 40, bottom: 50, left: 200 };
     const width = 800 - margin.left - margin.right;
     const height = 400 - margin.top - margin.bottom;
 
@@ -269,7 +268,7 @@ function updateMeanGraph() {
     svg.append("text")
             .attr("text-anchor", "middle")
             .attr("x", width / 2)
-            .attr("y", height + 30)
+            .attr("y", height + 40)
             .style("font-size", "18px") // Increase font size
             .style("font-weight", "bold")
             .text("Average Maximum Glucose Change Within 2 Hrs");
@@ -526,13 +525,13 @@ function updateMotionChart() {
     let svg = motionContainer.select("svg");
     if (svg.empty()) {
         svg = motionContainer.append("svg")
-            .attr("width", 500) // Set the width of the SVG
-            .attr("height", 500) // Set the height of the SVG
+            .attr("width", 600) // Set the width of the SVG
+            .attr("height", 600) // Set the height of the SVG
             .style("border", "1px solid black"); // Optional: Add a border for visibility
     }
 
     // Define margins and dimensions for the chart
-    const margin = { top: 20, right: 30, bottom: 30, left: 50 };
+    const margin = { top: 20, right: 120, bottom: 50, left: 50 }; // Increased bottom margin for the X-axis label
     const width = +svg.attr("width") - margin.left - margin.right;
     const height = +svg.attr("height") - margin.top - margin.bottom;
 
@@ -555,6 +554,56 @@ function updateMotionChart() {
             d3.max(lineHistory, d => d3.max(d.averagedGlucoseValues))  // Maximum glucose value across all combinations
         ])
         .range([height, 0]);
+
+    // Add X-axis
+    let xAxis = motionGroup.select(".x-axis");
+    if (xAxis.empty()) {
+        xAxis = motionGroup.append("g")
+            .attr("class", "x-axis")
+            .attr("transform", `translate(0,${height})`)
+            .call(d3.axisBottom(xScale).ticks(12).tickFormat(d => `${d * 10}`));
+    } else {
+        xAxis.transition()
+            .duration(1000)
+            .call(d3.axisBottom(xScale).ticks(12).tickFormat(d => `${d * 10}`));
+    }
+
+    // Add X-axis label
+    if (motionGroup.select(".x-axis-label").empty()) {
+        motionGroup.append("text")
+            .attr("class", "x-axis-label")
+            .attr("text-anchor", "middle")
+            .attr("x", width / 2) // Center the label horizontally
+            .attr("y", height + margin.bottom - 10) // Position below the X-axis
+            .style("font-size", "14px")
+            .style("font-weight", "bold")
+            .text("Time Interval (Minutes)");
+    }
+
+    // Add Y-axis
+    let yAxis = motionGroup.select(".y-axis");
+    if (yAxis.empty()) {
+        yAxis = motionGroup.append("g")
+            .attr("class", "y-axis")
+            .call(d3.axisLeft(yScale));
+    } else {
+        yAxis.transition()
+            .duration(1000)
+            .call(d3.axisLeft(yScale));
+    }
+
+    // Add Y-axis label
+    if (motionGroup.select(".y-axis-label").empty()) {
+        motionGroup.append("text")
+            .attr("class", "y-axis-label")
+            .attr("text-anchor", "middle")
+            .attr("transform", "rotate(-90)")
+            .attr("x", -height / 2) // Center the label vertically
+            .attr("y", -margin.left + 15) // Position to the left of the Y-axis
+            .style("font-size", "14px")
+            .style("font-weight", "bold")
+            .text("Glucose Level (mg/dL)");
+    }
 
     // Define a line generator
     const line = d3.line()
@@ -585,46 +634,17 @@ function updateMotionChart() {
 
     // Merge enter and update selections
     enterPaths.merge(paths)
-        .transition() // Apply a transition
-        .duration(1000) // Duration of the transition (1 second)
-        .ease(d3.easeLinear) // Linear easing for smooth motion
-        .attr("d", d => line(d.averagedGlucoseValues)) // Update the path to the new state
-        .attr("stroke-dashoffset", 0); // Reveal the line
+        .transition()
+        .duration(1000)
+        .ease(d3.easeLinear)
+        .attr("d", d => line(d.averagedGlucoseValues))
+        .attr("stroke-dashoffset", 0);
 
     // Exit selection: Remove lines that are no longer in the data
     paths.exit()
         .transition()
         .duration(500)
-        .style("opacity", 0) // Fade out before removing
-        .remove();
-
-    // Add labels for each line
-    const labels = motionGroup.selectAll(".line-label")
-        .data(lineHistory, d => `${d.carbs}-${d.sugar}-${d.protein}`); // Use a unique key for each combination
-
-    // Enter selection: Add new labels
-    const enterLabels = labels.enter()
-        .append("text")
-        .attr("class", "line-label")
-        .attr("fill", "black")
-        .attr("text-anchor", "end")
-        .attr("x", width - 10)
-        .attr("y", d => yScale(d.averagedGlucoseValues[23])) // Position at the last point of the line
-        .text(d => `${d.carbs}, ${d.sugar}, ${d.protein}`);
-
-    // Merge enter and update selections for labels
-    enterLabels.merge(labels)
-        .transition()
-        .duration(1000)
-        .attr("x", width - 10)
-        .attr("y", d => yScale(d.averagedGlucoseValues[23])) // Update position
-        .text(d => `${d.carbs}, ${d.sugar}, ${d.protein}`);
-
-    // Exit selection: Remove labels that are no longer in the data
-    labels.exit()
-        .transition()
-        .duration(500)
-        .style("opacity", 0) // Fade out before removing
+        .style("opacity", 0)
         .remove();
 }
 
