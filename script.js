@@ -512,6 +512,7 @@ async function getFoodPointsWithTwoHourLater() {
     }
 
 
+    console.log(results);
     // Optionally, return the results for further processing
     return results;
 }
@@ -660,12 +661,15 @@ function filterDataByCombination(combination) {
             : null; // Handle cases where no values exist for this interval
         averagedGlucoseValues.push(intervalAverage);
     }
+    // add logged food too
+    const loggedFood = filteredData.map(d => d.logged_food);
 
     // Return the filtered result for the specific combination
     return {
         carbs,
         sugar,
         protein,
+        loggedFood,
         averagedGlucoseValues,
         meanMaxGlucoseSpike
     };
