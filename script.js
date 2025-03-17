@@ -525,6 +525,11 @@ async function getFoodPointsWithTwoHourLater() {
 function updateMotionChart() {
     // Select the motion-image container
     const motionContainer = d3.select("#motion-image");
+    // Define a line generator
+const line = d3.line()
+.x((d, i) => xScale(i)) // X is the time interval index
+.y(d => yScale(d)) // Y is the glucose value
+.defined(d => d !== null); // Skip null values
 
     // Append an SVG element to the container if it doesn't already exist
     let svg = motionContainer.select("svg");
@@ -585,7 +590,6 @@ function updateMotionChart() {
             .text("Time Interval (Minutes)");
     }
 
-    // Add Y-axis
     let yAxis = motionGroup.select(".y-axis");
     if (yAxis.empty()) {
         yAxis = motionGroup.append("g")
@@ -610,22 +614,43 @@ function updateMotionChart() {
             .text("Glucose Level (mg/dL)");
     }
 
-    // Define a line generator
-    const line = d3.line()
-        .x((d, i) => xScale(i)) // X is the time interval index
-        .y(d => yScale(d)) // Y is the glucose value
-        .defined(d => d !== null); // Skip null values
+    
+    // Group lines by color
+    const groupedLines = d3.group(lineHistory, d => getColor(d.meanMaxGlucoseSpike));
+
+    if (motionGroup.select(".x-axis-label").empty()) {
+        motionGroup.append("text")
+            .attr("class", "x-axis-label")
+            .attr("text-anchor", "middle")
+            .attr("x", width / 2)
+            .attr("y", height + margin.bottom - 10) // Position below the X-axis
+            .style("font-size", "12px")
+            .text("Time Interval (Hours)");
+    }
+
+    
+
+    // Calculate the average line for each group
+    const averagedLines = Array.from(groupedLines, ([color, lines]) => {
+        const averagedGlucoseValues = [];
+        for (let i = 0; i < 24; i++) {
+            const values = lines.map(line => line.averagedGlucoseValues[i]).filter(v => v !== null);
+            const average = values.length > 0 ? d3.mean(values) : null;
+            averagedGlucoseValues.push(average);
+        }
+        return { color, averagedGlucoseValues };
+    });
 
     // Bind data to paths
     const paths = motionGroup.selectAll(".line-path")
-        .data(lineHistory, d => `${d.carbs}-${d.sugar}-${d.protein}`); // Use a unique key for each combination
+        .data(averagedLines, d => d.color); // Use color as the unique key for each group
 
     // Enter selection: Add new lines
     const enterPaths = paths.enter()
         .append("path")
         .attr("class", "line-path")
-        .attr("fill", 'none')
-        .attr("stroke",d => getColor(d.meanMaxGlucoseSpike)) // Set the line color
+        .attr("fill", "none")
+        .attr("stroke", d => d.color) // Use the group color
         .attr("stroke-width", 2)
         .attr("d", d => line(d.averagedGlucoseValues)) // Set the initial path
         .attr("stroke-dasharray", function () {
@@ -650,36 +675,6 @@ function updateMotionChart() {
         .transition()
         .duration(500)
         .style("opacity", 0)
-        .remove();
-
-    // Add labels at the end of each line
-    const labels = motionGroup.selectAll(".line-label")
-        .data(lineHistory, d => `${d.carbs}-${d.sugar}-${d.protein}`); // Use a unique key for each combination
-
-    // Enter selection: Add new labels
-    const enterLabels = labels.enter()
-        .append("text")
-        .attr("class", "line-label")
-        .attr("fill", "black")
-        .attr("text-anchor", "start")
-        .attr("x", d => xScale(23) -10) // Position slightly to the right of the last point
-        .attr("y", d => yScale(d.averagedGlucoseValues[23])) // Position at the last point of the line
-        .style("font-size", "12px")
-        .text(d => `${d.carbs}, ${d.sugar}, ${d.protein}`); // Display the combination
-
-    // Merge enter and update selections for labels
-    enterLabels.merge(labels)
-        .transition()
-        .duration(1000)
-        .attr("x", d => xScale(23) -10) // Update position slightly to the right of the last point
-        .attr("y", d => yScale(d.averagedGlucoseValues[23])) // Update position at the last point of the line
-        .text(d => `${d.carbs}, ${d.sugar}, ${d.protein}`); // Update the label text
-
-    // Exit selection: Remove labels that are no longer in the data
-    labels.exit()
-        .transition()
-        .duration(500)
-        .style("opacity", 0) // Fade out before removing
         .remove();
 }
 
