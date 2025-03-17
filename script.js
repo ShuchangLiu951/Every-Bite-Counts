@@ -46,7 +46,11 @@ function filterData() {
 
 function updateChart() {
     const filteredData = filterData();
-    const svg = d3.select("svg");
+    // const svg = d3.select("svg");
+    const svg = d3.select("#histogram-content").select("svg")
+    // histogramSvg
+    .attr("width", 800)  // Make sure you adjust the size as needed
+    .attr("height", 500);
 
     const margin = { top: 20, right: 30, bottom: 30, left: 40 };
     const width = +svg.attr("width") - margin.left - margin.right;
@@ -228,11 +232,11 @@ function updateMeanGraph() {
         .padding(0.2); // Add padding between bars (adjust value as needed)
 
     // Select the SVG container or create it if it doesn't exist
-    let svg = d3.select("#chart-container").select("svg");
+    let svg = d3.select("#chart-container2").select("svg");
 
     if (svg.empty()) {
         // Create SVG container if it doesn't exist
-        svg = d3.select("#chart-container")
+        svg = d3.select("#chart-container2")
             .append("svg")
             .attr("width", width + margin.left + margin.right)
             .attr("height", height + margin.top + margin.bottom)
@@ -419,7 +423,7 @@ document.addEventListener("DOMContentLoaded", function () {
 });
 
 function reset(){
-    const svg = d3.select("#chart-container").select("svg");
+    const svg = d3.select("#chart-container2").select("svg");
     svg.selectAll(".bar").remove(); // Remove all bars
     svg.selectAll(".label").remove(); // Remove all labels
     meanHistory = [];

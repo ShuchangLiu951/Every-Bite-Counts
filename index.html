@@ -39,73 +39,64 @@
         </ul>
         <p>Explore the visualization below to uncover the unique story behind each meal and its impact on blood sugar regulation.</p>
     </section>
-
-    <div id="chart-container"></div> <!-- D3 Chart Container -->
-    <script src="main.js"></script>
-
-<select id="data-select">
-    <option value="filtered data/number1_integrate.csv">Dataset 1</option>
-    <option value="filtered data/number2_integrate.csv">Dataset 2</option>
-    <option value="filtered data/number4_integrate.csv" selected>Dataset 3</option>
-    <option value="filtered data/number5_integrate.csv">Dataset 4</option>
-    <option value="filtered data/number6_integrate.csv">Dataset 5</option>
-    <option value="filtered data/number8_integrate.csv">Dataset 6</option>
-    <option value="filtered data/number9_integrate.csv">Dataset 7</option>
-    <option value="filtered data/number10_integrate.csv">Dataset 8</option>
-    <option value="filtered data/number11_integrate.csv">Dataset 9</option>
-    <option value="filtered data/number12_integrate.csv">Dataset 10</option>
-    <option value="filtered data/number14_integrate.csv">Dataset 11</option>
-</select>
-    <button id="reset-button">Reset Zoom</button>
-
-
-    <h2>Glucose Spike Histogram</h2>
-    <label for="carbs">Total Carbs:</label>
-    <select id="carbs" onchange="updateChart()">
-        <option value="all">All</option>
-        <option value="high">High</option>
-        <option value="low">Low</option>
-    </select>
-    
-    <label for="sugar">Sugar:</label>
-    <select id="sugar" onchange="updateChart()">
-        <option value="all">All</option>
-        <option value="high">High</option>
-        <option value="low">Low</option>
-    </select>
-    
-    <label for="protein">Protein:</label>
-    <select id="protein" onchange="updateChart()">
-        <option value="all">All</option>
-        <option value="high">High</option>
-        <option value="low">Low</option>
-    </select>
-    <button id = "show-combinations">every Combinations</button>
-    <button id="pause-combinations">Pause</button>
-    <button id = "reset-average">Reset</button>
-    
-    <svg width="800" height="500"></svg>
-    <div class="tooltip" id="tooltip"></div>
-
-    <div id="chart-container"></div>
-
-
-    <!-- <section id="visualization-ideas">
-        <h3>Glucose Trends and Macronutrient Effects</h3>
-        <p> After Exploring our data, we wanted to gain a deeper understanding of how meals impact blood sugar levels, we propose visualizations that reveal insights from the data collected via continuous glucose monitoring. These visualizations will help answer critical questions about glucose fluctuations and the effects of different macronutrient compositions.</p>
-        <h4>Glucose Response to Macronutrient Ratios</h4>
-        <p>The second visualization employs a histogram to compare the effects of different macronutrient categories on glucose levels. This analysis aims to determine if higher carbohydrate meals induce more substantial glucose spikes compared to high-protein meals. Key components of this histogram include:</p>
-        <ul>
-            <li><strong>X-axis:</strong> Macronutrient categories such as High-Carb, Low-Carb, and High-Protein.</li>
-            <li><strong>Y-axis:</strong> Average glucose change observed within 30-60 minutes post-meal, quantifying the impact of each meal type.</li>
-            <li><strong>Bars:</strong> Visual representation of average glucose responses, allowing for quick comparisons across meal categories.</li>
-        </ul>
-        <p>This histogram will feature interactive elements where users can hover over bars to reveal sample meals within each category and click to filter corresponding data in the line graph. This dual visualization approach will facilitate a comprehensive exploration of how macronutrient composition affects glucose regulation.</p>
-
-        <div id="chart2-container"></div> D3 Chart Container -->
-        <!-- <script src="glucose.js"></script>
+        <div id ="main-content">
+        <div id="main-chart"></div> <!-- D3 Chart Container -->
         
-    </section> --> 
+
+        <select id="data-select">
+            <option value="filtered data/number1_integrate.csv">Dataset 1</option>
+            <option value="filtered data/number2_integrate.csv">Dataset 2</option>
+            <option value="filtered data/number4_integrate.csv" selected>Dataset 3</option>
+            <option value="filtered data/number5_integrate.csv">Dataset 4</option>
+            <option value="filtered data/number6_integrate.csv">Dataset 5</option>
+            <option value="filtered data/number8_integrate.csv">Dataset 6</option>
+            <option value="filtered data/number9_integrate.csv">Dataset 7</option>
+            <option value="filtered data/number10_integrate.csv">Dataset 8</option>
+            <option value="filtered data/number11_integrate.csv">Dataset 9</option>
+            <option value="filtered data/number12_integrate.csv">Dataset 10</option>
+            <option value="filtered data/number14_integrate.csv">Dataset 11</option>
+        </select>
+            <button id="reset-button">Reset Zoom</button>
+    </div>
+
+
+    <div id ="histogram-content">
+        <h2>Glucose Spike Histogram</h2>
+        <label for="carbs">Total Carbs:</label>
+        <select id="carbs" onchange="updateChart()">
+            <option value="all">All</option>
+            <option value="high">High</option>
+            <option value="low">Low</option>
+        </select>
+        
+        <label for="sugar">Sugar:</label>
+        <select id="sugar" onchange="updateChart()">
+            <option value="all">All</option>
+            <option value="high">High</option>
+            <option value="low">Low</option>
+        </select>
+        
+        <label for="protein">Protein:</label>
+        <select id="protein" onchange="updateChart()">
+            <option value="all">All</option>
+            <option value="high">High</option>
+            <option value="low">Low</option>
+        </select>
+        <button id = "show-combinations">every Combinations</button>
+        <button id="pause-combinations">Pause</button>
+        <button id = "reset-average">Reset</button>
+        
+        <svg width="800" height="500"></svg>
+        <div class="tooltip" id="tooltip"></div>
+
+        <div id="chart-container2"></div>
+
+    </div>
+
+
+    <script src="main.js"></script>
+    <script src="script.js"></script>
+
     
     
 
