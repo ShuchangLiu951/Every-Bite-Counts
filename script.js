@@ -2,32 +2,14 @@ let data = [];
 let meanHistory = [];
 let meanValue;
 // Fetch and process CSV data
-fetch('combination.csv')
-    .then(response => {
-        if (!response.ok) {
-            throw new Error("Failed to load CSV file.");
-        }
-        return response.text();
-    })
-    .then(csvText => {
-        const rows = csvText.trim().split("\n").slice(1); // Remove header
-        rows.forEach(row => {
-            const cols = row.split(",");
-            if (cols.length >= 4) { // Ensure there are enough columns
-                const parsedData = {
-                    maxGlucoseSpike: parseFloat(cols[3]) ,  // Avoid NaN
-                    totalCarbs: parseFloat(cols[4]),
-                    sugar: parseFloat(cols[5]),
-                    protein: parseFloat(cols[6]),
-                    loggedFood: cols[1]
-                };
-                data.push(parsedData);
-            }
-        });
-        console.log(data);
-        updateChart();
-    })
-    .catch(error => console.error("Error loading CSV:", error));
+document.addEventListener("DOMContentLoaded", async function () {
+    // Ensure data is fully loaded before proceeding
+    data = await getFoodPointsWithTwoHourLater();
+    console.log("Loaded Data:", data);
+
+    // Initialize the chart after data is loaded
+    updateChart();
+});
 
 // Thresholds for filtering
 const thresholds = { carbs: 10, sugar: 2.7, protein: 3.1 };
@@ -430,3 +412,70 @@ function reset(){
 }
 
 
+
+
+async function getFoodPointsWithTwoHourLater() {
+    const datasetOptions = Array.from(document.querySelectorAll("#data-select option")).map(option => option.value);
+
+    // Array to store results
+    const results = [];
+
+    for (const dataset of datasetOptions) {
+        // Fetch and parse the dataset
+        const data = await d3.csv(dataset);
+
+        // Parse timestamps and filter valid glucose readings
+        data.forEach(d => {
+            d.Timestamp = new Date(d["Timestamp (YYYY-MM-DDThh:mm:ss)"]);
+            d["Glucose Value (mg/dL)"] = +d["Glucose Value (mg/dL)"];
+            d.total_carb = d.total_carb ? +d.total_carb : null;
+            d.sugar = d.sugar ? +d.sugar : null;
+            d.protein = d.protein ? +d.protein : null;
+            d.logged_food = d.logged_food ? d.logged_food.trim() : "";
+        });
+
+        // Sort data by timestamp
+        data.sort((a, b) => a.Timestamp - b.Timestamp);
+
+        // Filter valid glucose readings
+        const glucoseData = data.filter(d => !isNaN(d["Glucose Value (mg/dL)"]));
+
+        // Use bisector to find the closest glucose reading
+        const bisectTime = d3.bisector(d => d.Timestamp).left;
+
+        // Process food data
+        const foodData = data.filter(d => d.logged_food !== "").map(d => {
+            const index = bisectTime(glucoseData, d.Timestamp);
+            d["Glucose Value (mg/dL)"] = (index > 0) ? glucoseData[index - 1]["Glucose Value (mg/dL)"] : glucoseData[index]["Glucose Value (mg/dL)"];
+
+            // Compute glucose values within 2 hours
+            const twoHourLater = new Date(d.Timestamp.getTime() + 2 * 60 * 60 * 1000);
+            const glucoseValuesWithinTwoHours = glucoseData
+                .filter(g => g.Timestamp > d.Timestamp && g.Timestamp <= twoHourLater)
+                .map(g => g["Glucose Value (mg/dL)"]);
+
+            // Compute max glucose spike within 2 hours
+            const glucoseChanges = glucoseValuesWithinTwoHours.map(glucose => glucose - d["Glucose Value (mg/dL)"]);
+            const maxGlucoseSpike = glucoseChanges.length ? d3.max(glucoseChanges) : 0;
+
+            return {
+                logged_food: d.logged_food,
+                timestamp: d.Timestamp,
+                twoHourLater: twoHourLater,
+                glucoseValuesWithinTwoHours: glucoseValuesWithinTwoHours, // Add glucose values array
+                glucose: d["Glucose Value (mg/dL)"],
+                totalCarbs: d.total_carb,
+                sugar: d.sugar,
+                protein: d.protein,
+                maxGlucoseSpike: maxGlucoseSpike
+            };
+        });
+
+        // Add processed food data to the results
+        results.push(...foodData);
+    }
+
+
+    // Optionally, return the results for further processing
+    return results;
+}
