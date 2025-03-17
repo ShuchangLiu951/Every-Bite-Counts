@@ -1,7 +1,4 @@
 ,Timestamp (YYYY-MM-DDThh:mm:ss),total_carb,sugar,protein,logged_food,Glucose Value (mg/dL)
-0,2020-02-28 08:10:00,5.8,0.1,5.0,Quest Bar cookie dough,
-1,2020-02-28 09:15:00,17.3,0.4,15.0,Quest Bar cookie dough,
-2,2020-02-28 11:25:00,5.0,1.0,30.0,Premier protein choc shake,
 12,2020-02-28 12:18:14,,,,,105.0
 13,2020-02-28 12:23:14,,,,,108.0
 14,2020-02-28 12:28:15,,,,,108.0

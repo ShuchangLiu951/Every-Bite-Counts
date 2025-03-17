@@ -1,6 +1,4 @@
 ,Timestamp (YYYY-MM-DDThh:mm:ss),total_carb,sugar,protein,logged_food,Glucose Value (mg/dL)
-0,2020-02-21 10:09:00,48.0,48.0,0.0,Mello Yello,
-1,2020-02-21 10:11:00,32.0,3.0,13.0,(Jimmy Dean) Chicken Biscuit,
 12,2020-02-21 11:08:36,,,,,186.0
 13,2020-02-21 11:13:36,,,,,181.0
 14,2020-02-21 11:18:36,,,,,175.0

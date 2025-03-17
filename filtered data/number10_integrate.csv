@@ -1,6 +1,4 @@
 ,Timestamp (YYYY-MM-DDThh:mm:ss),total_carb,sugar,protein,logged_food,Glucose Value (mg/dL)
-0,2020-03-22 10:32:00,0.4,0.0,0.0,Diet Coke,
-1,2020-03-22 10:52:00,1.1,1.1,12.6,Hard Boiled Egg,
 12,2020-03-22 11:29:17,,,,,102.0
 13,2020-03-22 11:34:17,,,,,100.0
 14,2020-03-22 11:39:17,,,,,98.0
