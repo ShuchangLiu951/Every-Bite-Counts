@@ -93,6 +93,8 @@ select {
     font-weight: bold;
 }
 
+
+
 /* Align button and dropdown for glucose histogram horizontally */
 #glucose-histogram-controls {
     display: flex;
@@ -107,7 +109,7 @@ select {
     justify-content: center;
     align-items: center;
     margin-top: 20px;
-    background-color: lightgray;
+    background-color: white;
 }
 
 svg {
