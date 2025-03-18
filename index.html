@@ -163,7 +163,6 @@
     <div id="chart-container2"></div>
 
     <section id="transition4" style="margin: 0 20px; text-align: left; max-width: 800px; margin-left: auto; margin-right: auto;">
-        <h2 style="text-align: center;">Tracking Glucose Trends Over Time</h2>
         <p>After categorizing meals by their glucose impact, we now examine how blood sugar changes over time for each category. The <strong>Glucose Trends Over 2 Hours</strong> motion chart dynamically visualizes the average glucose response for low, medium, and high spike foods across a two-hour window post-meal.</p>
         <p>Each line in the chart represents one of the three previously categorie. This visualization builds upon our previous insights. The Mean Glucose Spike Bar Chart summarized glucose responses by meal category, and now, the motion chart extends this understanding by mapping how glucose levels evolve over time for each category.</p>
         <p>By transitioning to this time-based view, we can observe how different meal compositions influence glucose stability beyond just the initial spike, offering a clearer picture of which foods promote sustained, healthy glucose levels.</p>
@@ -174,6 +173,33 @@
         <div id = "motion-image"></div>
     </div>
 
+
+
+    <section id="final-exploration" style="margin: 40px auto; max-width: 1200px;">
+        <h2 style="text-align: center;">Explore All Visualizations Together</h2>
+        <p>Now that we've explored each visualization individually, you can analyze them side by side. This section allows you to simultaneously compare the histogram, the mean glucose spike bar chart, and the motion chart.</p>
+    
+        <div id="combined-charts" style="display: grid; grid-template-columns: 2fr 1fr; grid-template-rows: auto auto; gap: 20px;">
+            <!-- Histogram on the left -->
+            <div id="histogram-container" style="grid-row: 1 / span 2;">
+                <h3>Glucose Change Histogram</h3>
+                <svg width="600" height="400"></svg>
+            </div>
+    
+            <!-- Mean Bar Chart on the Top Right -->
+            <div id="mean-bar-container">
+                <h3>Mean Glucose Spike</h3>
+                <div id="chart-container2"></div>
+            </div>
+    
+            <!-- Motion Chart on the Bottom Right -->
+            <div id="motion-chart-container">
+                <h3>Glucose Trends Over Time</h3>
+                <div id="motion-image"></div>
+            </div>
+        </div>
+    </section>
+    
 
     <script src="main.js"></script>
     <script src="script.js"></script>

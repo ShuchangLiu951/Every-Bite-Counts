@@ -552,7 +552,7 @@ const line = d3.line()
     }
 
     // Define margins and dimensions for the chart
-    const margin = { top: 20, right: 120, bottom: 50, left: 50 }; // Increased bottom margin for the X-axis label
+    const margin = { top: 20, right: 200, bottom: 50, left: 50 }; // Increased bottom margin for the X-axis label
     const width = +svg.attr("width") - margin.left - margin.right;
     const height = +svg.attr("height") - margin.top - margin.bottom;
 
