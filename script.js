@@ -258,6 +258,15 @@ function updateMeanGraph() {
         // Add y-axis group
         svg.append("g")
             .attr("class", "y-axis");
+             // Add title (only once)
+        svg.append("text")
+            .attr("class", "chart-title")
+            .attr("text-anchor", "middle")
+            .attr("x", (width + margin.left + margin.right) / 2 - 150)
+            .attr("y", margin.top / 2)
+            .style("font-size", "18px")
+            .style("font-weight", "bold")
+            .text("Average Maximum Glucose Change Within 2 Hours");
     } else {
         // Select the inner group if the SVG already exists
         svg = svg.select("g");
@@ -275,7 +284,7 @@ function updateMeanGraph() {
             .attr("y", height + 40)
             .style("font-size", "18px") // Increase font size
             .style("font-weight", "bold")
-            .text("Average Maximum Glucose Change Within 2 Hrs");
+            .text("Glucose Change Within 2 Hrs (mg/dL)");
 
 
     // Update y-axis
@@ -548,7 +557,15 @@ const line = d3.line()
         svg = motionContainer.append("svg")
             .attr("width", 600) // Set the width of the SVG
             .attr("height", 600) // Set the height of the SVG
-            .style("border", "1px solid black"); // Optional: Add a border for visibility
+            .style("border", "1px solid black");
+            svg.append("text")
+                .attr("class", "chart-title")
+                .attr("text-anchor", "middle")
+                .attr("x", 600 / 2) // Centered horizontally
+                .attr("y", 20) // Positioned near the top
+                .style("font-size", "18px")
+                .style("font-weight", "bold")
+                .text("Glucose Response Over Time by Meal Spike Category"); // Optional: Add a border for visibility
     }
 
     // Define margins and dimensions for the chart
