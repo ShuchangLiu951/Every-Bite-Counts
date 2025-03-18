@@ -291,7 +291,10 @@ function updateMeanGraph() {
     svg.select(".y-axis")
         .transition()
         .duration(1000)
-        .call(d3.axisLeft(y));
+        .call(d3.axisLeft(y))
+        .selectAll("text")  // Select all category labels
+        .style("font-size", "16px")  // Make text larger
+        .style("font-weight", "bold"); ;
 
     // Bind data to bars
     const bars = svg.selectAll(".bar")
@@ -306,6 +309,8 @@ function updateMeanGraph() {
         .attr("height", y.bandwidth())
         .attr("width", d => x(d.mean)) // Start with the current width
         .attr("fill", d => getColor(d.mean))
+        .style("font-size", "16px")  // Increased font size
+        .style("font-weight", "bold")
         .merge(bars) // Merge with the update selection
         .transition() // Apply transition to both new and existing bars
         .duration(1000)
@@ -331,8 +336,10 @@ function updateMeanGraph() {
         .attr("x", d => x(d.mean) + 5)
         .attr("y", d => y(d.category) + y.bandwidth() / 2)
         .attr("dy", "0.35em")
-        .style("font-size", "12px")
-        .style("fill", "black")
+        // .style("font-size", "12px")
+        // .style("fill", "black")
+        .style("font-size", "16px")  // Increased font size
+        .style("font-weight", "bold")
         .text(d => d.mean.toFixed(2))
         .merge(labels) // Merge with the update selection
         .transition() // Apply transition to both new and existing labels
