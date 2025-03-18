@@ -127,30 +127,30 @@
             }
         </style>
         <label for="carbs">Total Carbs:</strong></label>
-        <select class="carbs" onchange="updateChart()">
+        <select id="carbs" onchange="updateChart()">
             <option value="all">All</option>
             <option value="high">High</option>
             <option value="low">Low</option>
         </select>
         
         <label for="sugar">Sugar:</strong></label>
-        <select class="sugar" onchange="updateChart()">
+        <select id="sugar" onchange="updateChart()">
             <option value="all">All</option>
             <option value="high">High</option>
             <option value="low">Low</option>
         </select>
         
         <label for="protein">Protein:</strong></label>
-        <select class="protein" onchange="updateChart()">
+        <select id="protein" onchange="updateChart()">
             <option value="all">All</option>
             <option value="high">High</option>
             <option value="low">Low</option>
         </select>
 
-        <div class = "button-container">
-            <button class = "show-combinations">Every Combination</button>
-            <button class="pause-combinations">Pause</button>
-            <button class = "reset-average">Reset</button>
+        <div id = "button-container">
+            <button id = "show-combinations">Every Combination</button>
+            <button id="pause-combinations">Pause</button>
+            <button id = "reset-average">Reset</button>
         </div>
         <svg width="800" height="500"></svg>
         <div class="tooltip" class="tooltip"></div>

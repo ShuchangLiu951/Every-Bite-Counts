@@ -20,9 +20,9 @@ document.addEventListener("DOMContentLoaded", async function () {
 const thresholds = { carbs: 10, sugar: 2.7, protein: 3.1 };
 
 function filterData() {
-    const carbsFilter = document.querySelector(".carbs").value;
-    const sugarFilter = document.querySelector(".sugar").value;
-    const proteinFilter = document.querySelector(".protein").value;
+    const carbsFilter = document.getElementById("carbs").value;
+    const sugarFilter = document.getElementById("sugar").value;
+    const proteinFilter = document.getElementById("protein").value;
 
     return data.filter(d => {
         return (carbsFilter === "all" || (carbsFilter === "high" ? d.totalCarbs > thresholds.carbs : d.totalCarbs <= thresholds.carbs)) &&
@@ -35,13 +35,11 @@ function updateChart() {
     const filteredData = filterData();
 
     // Select all SVG elements under the class `.histogram-content`
-    console.log(d3.selectAll(".histogram-content svg"));
     d3.selectAll(".histogram-content svg").each(function () {
         const svg = d3.select(this)
             .attr("width", 900)  // Adjust the size as needed
             .attr("height", 600);
 
-        console.log('hihihi');
         const margin = { top: 20, right: 30, bottom: 60, left: 40 };
         const width = +svg.attr("width") - margin.left - margin.right;
         const height = +svg.attr("height") - margin.top - margin.bottom;
@@ -139,9 +137,9 @@ function updateChart() {
 
     // Compute the mean glucose spike
     meanValue = d3.mean(filteredData, d => d.maxGlucoseSpike);
-    const carbsFilter = document.querySelector(".carbs").value;
-    const sugarFilter = document.querySelector(".sugar").value;
-    const proteinFilter = document.querySelector(".protein").value;
+    const carbsFilter = document.getElementById("carbs").value;
+    const sugarFilter = document.getElementById("sugar").value;
+    const proteinFilter = document.getElementById("protein").value;
 
     // Create the current combination object
     const currentCombination = { carbs: carbsFilter, sugar: sugarFilter, protein: proteinFilter };
@@ -379,7 +377,7 @@ let index = 0; // Move index outside to make it global
 function showCombinations() {
     // Clear the mean graph and bars
     reset();
-    const button = document.querySelectorAll("pause-combinations");
+    const button = document.getElementById("pause-combinations");
     isPaused = false;
     button.textContent = "Pause"; // Reset button text
     index = 0;
@@ -392,6 +390,8 @@ function showCombinations() {
     interval = setInterval(updateCombination, 2000); // 2 seconds interval
 }
 
+
+
 function updateCombination() {
     const combinations = generateCombinations();
     if (index >= combinations.length) {
@@ -402,9 +402,9 @@ function updateCombination() {
 
     // Update the filter values
     const { carbs, sugar, protein } = combinations[index];
-    document.querySelectorAll("carbs").value = carbs;
-    document.querySelectorAll("sugar").value = sugar;
-    document.querySelectorAll("protein").value = protein;
+    document.getElementById("carbs").value = carbs;
+    document.getElementById("sugar").value = sugar;
+    document.getElementById("protein").value = protein;
 
     // Update the chart with the current combination
     updateChart();
@@ -412,12 +412,14 @@ function updateCombination() {
     index++;
 }
 
+
+
 // Pause/Resume Button Logic
 
 document.addEventListener("DOMContentLoaded", function () {
     // Pause/Resume Button Logic
-    document.querySelectorAll("pause-combinations").addEventListener("click", () => {
-        const button = document.querySelectorAll("pause-combinations");
+    document.getElementById("pause-combinations").addEventListener("click", () => {
+        const button = document.getElementById("pause-combinations");
         if (isPaused) {
             // Resume the interval
             interval = setInterval(() => {
@@ -435,14 +437,14 @@ document.addEventListener("DOMContentLoaded", function () {
     });
 
     // Attach event listener to the "Show Combinations" button
-    document.querySelectorAll("show-combinations").addEventListener("click", showCombinations);
+    document.getElementById("show-combinations").addEventListener("click", showCombinations);
 
     // Attach event listener to the "Reset Average" button
-    document.querySelectorAll("reset-average").addEventListener("click", function () {
+    document.getElementById("reset-average").addEventListener("click", function () {
         reset();
-        const carbsFilter = document.querySelectorAll("carbs").value;
-        const sugarFilter = document.querySelectorAll("sugar").value;
-        const proteinFilter = document.querySelectorAll("protein").value;
+        const carbsFilter = document.getElementById("carbs").value;
+        const sugarFilter = document.getElementById("sugar").value;
+        const proteinFilter = document.getElementById("protein").value;
         if (!meanHistory.some(entry => entry.category === `Carbs: ${carbsFilter}, Sugar: ${sugarFilter}, Protein: ${proteinFilter}`)) {
             meanHistory.push({ 
                 category: `Carbs: ${carbsFilter}, Sugar: ${sugarFilter}, Protein: ${proteinFilter}`, 
@@ -458,7 +460,7 @@ document.addEventListener("DOMContentLoaded", function () {
 });
 
 function reset(){
-    const svg = d3.select(".chart-container2").select("svg");
+    const svg = d3.select("#chart-container2").select("svg");
     svg.selectAll(".bar").remove(); // Remove all bars
     svg.selectAll(".label").remove(); // Remove all labels
     meanHistory = [];
@@ -466,9 +468,9 @@ function reset(){
     index = 0;
     // reset my filter to ALL
 
-    document.querySelectorAll("carbs").value = "all";
-    document.querySelectorAll("sugar").value = "all";
-    document.querySelectorAll("protein").value = "all";
+    document.getElementById("carbs").value = "all";
+    document.getElementById("sugar").value = "all";
+    document.getElementById("protein").value = "all";
     button = document.getElementById("pause-combinations");
     clearInterval(interval); // Pause the interval
     isPaused = true;
@@ -476,7 +478,6 @@ function reset(){
     updateChart();
 
 }
-
 
 
 
