@@ -26,9 +26,9 @@ function filterData() {
     const proteinFilter = document.getElementById("protein").value;
 
     return data.filter(d => {
-        return (carbsFilter === "All" || (carbsFilter === "High" ? d.totalCarbs > thresholds.carbs : d.totalCarbs <= thresholds.carbs)) &&
-               (sugarFilter === "All" || (sugarFilter === "High" ? d.sugar > thresholds.sugar : d.sugar <= thresholds.sugar)) &&
-               (proteinFilter === "All" || (proteinFilter === "High" ? d.protein > thresholds.protein : d.protein <= thresholds.protein));
+        return (carbsFilter === "all" || (carbsFilter === "high" ? d.totalCarbs > thresholds.carbs : d.totalCarbs <= thresholds.carbs)) &&
+               (sugarFilter === "all" || (sugarFilter === "high" ? d.sugar > thresholds.sugar : d.sugar <= thresholds.sugar)) &&
+               (proteinFilter === "all" || (proteinFilter === "high" ? d.protein > thresholds.protein : d.protein <= thresholds.protein));
     });
 }
 
@@ -352,9 +352,9 @@ function updateMeanGraph() {
 
 // Generate all combinations of filters
 function generateCombinations() {
-    const carbsOptions = ["High", "Low"]; // Skip "all"
-    const sugarOptions = ["High", "Low"]; // Skip "all"
-    const proteinOptions = ["High", "Low"]; // Skip "all"
+    const carbsOptions = ["high", "low"]; // Skip "all"
+    const sugarOptions = ["high", "low"]; // Skip "all"
+    const proteinOptions = ["high", "low"]; // Skip "all"
 
     const combinations = [];
     carbsOptions.forEach(carbs => {
