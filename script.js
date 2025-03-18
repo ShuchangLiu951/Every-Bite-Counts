@@ -275,17 +275,7 @@ function updateMeanGraph() {
             .attr("y", height + 40)
             .style("font-size", "18px") // Increase font size
             .style("font-weight", "bold")
-            .text("Average Maximum Glucose Change Within 2 Hrs (mg/dL)");
-    if (svg.select(".chart-title").empty()) {
-    svg.append("text")
-        .attr("class", "chart-title")
-        .attr("x", width / 2)
-        .attr("y", -10) // Position above the chart
-        .attr("text-anchor", "middle")
-        .style("font-size", "20px")
-        .style("font-weight", "bold")
-        .text("Mean Glucose Spike by Category");
-}
+            .text("Average Maximum Glucose Change Within 2 Hrs");
 
 
     // Update y-axis
@@ -740,9 +730,9 @@ function filterDataByCombination(combination) {
 
     // Filter the data based on the specific combination
     const filteredData = data.filter(d => {
-        const carbsCondition = carbs === "All" || (carbs === "High" ? d.totalCarbs > thresholds.carbs : d.totalCarbs <= thresholds.carbs);
-        const sugarCondition = sugar === "All" || (sugar === "High" ? d.sugar > thresholds.sugar : d.sugar <= thresholds.sugar);
-        const proteinCondition = protein === "All" || (protein === "High" ? d.protein > thresholds.protein : d.protein <= thresholds.protein);
+        const carbsCondition = carbs === "all" || (carbs === "high" ? d.totalCarbs > thresholds.carbs : d.totalCarbs <= thresholds.carbs);
+        const sugarCondition = sugar === "all" || (sugar === "high" ? d.sugar > thresholds.sugar : d.sugar <= thresholds.sugar);
+        const proteinCondition = protein === "all" || (protein === "high" ? d.protein > thresholds.protein : d.protein <= thresholds.protein);
 
         return carbsCondition && sugarCondition && proteinCondition;
     });
