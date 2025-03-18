@@ -322,7 +322,7 @@ d3.selectAll(".chart-container2").each(function () {
         .attr("width", d => x(d.mean))
         .attr("height", y.bandwidth())
         .attr("fill", d => getColor(d.mean))
-        .style("font-size", "16px")  // Increased font size
+        .style("font-size", "13px")  // Increased font size
         .style("font-weight", "bold") // Use getColor to set the initial color
         .merge(bars) // Merge with the update selection
         .transition() // Apply transition to both new and existing bars
