@@ -300,11 +300,8 @@ d3.selectAll(".chart-container2").each(function () {
         .transition()
         .duration(1000)
         .call(d3.axisLeft(y))
-
-        .style("font-size", "13px")  // Increased font size
-        .style("font-weight", "bold");
-
-        .selectAll("text")  // Select all category labels
+        // .style("font-size", "13px")  // Increased font size
+        // .style("font-weight", "bold") // Select all category labels
         .style("font-size", "16px")  // Make text larger
         .style("font-weight", "bold"); ;
 
