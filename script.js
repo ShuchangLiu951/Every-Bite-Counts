@@ -848,6 +848,13 @@ document.addEventListener("DOMContentLoaded", function () {
 
     document.getElementById("pause-combinations1").addEventListener("click", function() {
         document.getElementById("pause-combinations").click();
+        const button = document.getElementById("pause-combinations1");
+        if (isPaused){
+            button.textContent = "Resume"; // Reset button text
+        }else{
+            button.textContent = "Pause"; // Reset button text
+        }
+
     });
 
     document.getElementById("show-combinations1").addEventListener("click", function() {
