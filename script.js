@@ -488,6 +488,9 @@ function reset(){
     document.getElementById("carbs").value = "all";
     document.getElementById("sugar").value = "all";
     document.getElementById("protein").value = "all";
+    document.getElementById("carbs1").value = "all";
+    document.getElementById("sugar1").value = "all";
+    document.getElementById("protein1").value = "all";
     button = document.getElementById("pause-combinations");
     clearInterval(interval); // Pause the interval
     isPaused = true;
@@ -575,16 +578,14 @@ function updateMotionChart() {
 
     
     if (svg.select("*").empty()) {
-        svg = svg
-            .style("border", "1px solid black");
-            svg.append("text")
-                .attr("class", "chart-title")
-                .attr("text-anchor", "middle")
-                .attr("x", 600 / 2) // Centered horizontally
-                .attr("y", ) // Positioned near the top
-                .style("font-size", "18px")
-                .style("font-weight", "bold")
-                .text("Glucose Response Over Time by Meal Spike Category"); // Optional: Add a border for visibility
+        svg = svg.style('border', 'none')
+        svg.append("text")
+            .attr("class", "chart-title")
+            .attr("text-anchor", "middle")
+            .attr("x", 200)
+            .style("font-size", "18px")
+            .style("font-weight", "bold")
+            .text("Glucose Response Over Time by Meal Spike Category"); // Optional: Add a border for visibility
     }
 
     // Define margins and dimensions for the chart
@@ -822,37 +823,36 @@ function getColor(meanValue) {
     }
 }
 
+
+
 document.addEventListener("DOMContentLoaded", function () {
-    console.log(document.getElementById("pause-combinations1"))
-        document.getElementById("pause-combinations1").addEventListener("click", function() {
-            console.log('hihihi')
-            document.getElementById("pause-combinations").click();
-        });
-    
-        document.getElementById("show-combinations1").addEventListener("click", function() {
-            document.getElementById("show-combinations").click();
-        });
-    
-        document.getElementById("reset-average1").addEventListener("click", function() {
-            document.getElementById("reset-average").click();
-        });
-    
-        document.getElementById("carbs1").addEventListener("change", function() {
-            document.getElementById("carbs").value = document.getElementById("carbs1").value;
-            updateChart();
-        });
-    
-        document.getElementById("sugar1").addEventListener("click", function() {
-            document.getElementById("sugar").value = document.getElementById("sugar1").value;
-            updateChart();
-        });
-    
-        document.getElementById("protein1").addEventListener("click", function() {
-            document.getElementById("protein").value = document.getElementById("protein1").value;
-            updateChart();
-        });
-    })
 
+    document.getElementById("pause-combinations1").addEventListener("click", function() {
+        document.getElementById("pause-combinations").click();
+    });
 
+    document.getElementById("show-combinations1").addEventListener("click", function() {
+        document.getElementById("show-combinations").click();
+    });
+
+    document.getElementById("reset-average1").addEventListener("click", function() {
+        document.getElementById("reset-average").click();
+    });
+
+    document.getElementById("carbs1").addEventListener("change", function() {
+        document.getElementById("carbs").value = this.value;
+        updateChart();
+    });
+
+    document.getElementById("sugar1").addEventListener("change", function() {
+        document.getElementById("sugar").value = this.value;
+        updateChart();
+    });
+
+    document.getElementById("protein1").addEventListener("change", function() {
+        document.getElementById("protein").value = this.value;
+        updateChart();
+    });
+});
 
 
