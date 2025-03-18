@@ -263,7 +263,7 @@ function updateMeanGraph() {
             .attr("class", "chart-title")
             .attr("text-anchor", "middle")
             .attr("x", (width + margin.left + margin.right) / 2 - 150)
-            .attr("y", margin.top / 2)
+            .attr("y", margin.top / 2 + - 15) 
             .style("font-size", "18px")
             .style("font-weight", "bold")
             .text("Average Maximum Glucose Change Within 2 Hours");
