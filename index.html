@@ -9,20 +9,21 @@
     <!-- <link rel="stylesheet" href="radar.css">  -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/plotly.js/2.24.1/plotly.min.js"></script>
     <script src="https://d3js.org/d3.v7.min.js"></script>
-    <script src="script.js"></script>
+    <!-- <script src="script.js"></script> -->
 </head> 
 <body>
 
     <header>
         <h1>Every Bite Counts: An Analysis of How Food Affects Blood Sugar Levels</h1>
         <h2>BIG IDEAs Lab Glycemic Variability and Wearable Device Data</h2>
-        <p> For the <strong>hundreds of millions</strong> managing diabetes, food is more than just fuel—it’s a direct influence on blood sugar. But how do different meals shape glucose responses, and what’s the secret to keeping your levels steady?"
-            "By diving into real-world data from Dexcom wearers, we uncover surprising patterns in how different types of food affect blood sugar, offering insights that could change how you think about meals."</p>
+        <h2>Aryan Kanuparti, Keqing Li, Shuchang Liu, Kevin Myo</h2>
+        <p> For the <strong>hundreds of millions</strong> managing diabetes, food is more than just fuel—it’s a direct influence on blood sugar. But how do different meals shape glucose responses, and what’s the secret to keeping your levels steady?
+            By diving into real-world data from Dexcom wearers, we uncover surprising patterns in how different types of food affect blood sugar, offering insights that could change how you think about every single meal.</p>
     </header>
 
     <!-- Descriptive Exposition Before the first  D3 Chart -->
     <section id="glucose-intro" style="margin: 0 20px; text-align: left; max-width: 800px; margin-left: auto; margin-right: auto;">
-        <h2 style="text-align: center;">Exploring the Glucose Response of Diabetic Individual</h2>
+        <h2 style="text-align: center;">Exploring the Glucose Response of Diabetic Individuals</h2>
         <p>Every meal triggers metabolic responses that affect glucose levels, with lasting health effects. Our project uses food logs and Dexcom G6 continuous glucose monitoring (CGM) data to track glucose levels every five minutes, identifying patterns in response to different meals.</p>
         <p>We aim to uncover how the timing, type, and composition of meals affect glucose fluctuations and provide insights into managing blood sugar. By mapping glucose changes to meals—whether high in carbs, protein, or fats—we can visualize the impact of each on glucose stability.</p>
         <p>The graph below shows glucose fluctuations for several individuals across 1-2 weeks, with <strong>meal events</strong> marked on the timeline. Some meals cause sharp spikes, while others have more gradual or stable effects, highlighting the importance of meal timing and composition in managing glucose levels.</p>
@@ -42,10 +43,10 @@
         
 
         <select id="data-select">
-            <option value="filtered data/number1_integrate.csv" selected>Dataset 1</option>
+            <option value="filtered data/number1_integrate.csv">Dataset 1</option>
             <option value="filtered data/number2_integrate.csv">Dataset 2</option>
             <option value="filtered data/number4_integrate.csv">Dataset 3</option>
-            <option value="filtered data/number5_integrate.csv">Dataset 4</option>
+            <option value="filtered data/number5_integrate.csv" selected>Dataset 4</option>
             <option value="filtered data/number6_integrate.csv">Dataset 5</option>
             <option value="filtered data/number8_integrate.csv">Dataset 6</option>
             <option value="filtered data/number9_integrate.csv">Dataset 7</option>
@@ -57,6 +58,12 @@
             <button id="reset-button">Reset Zoom</button>
     </div>
 
+
+
+    <section id="transition6" style="margin: 0 20px; text-align: left; max-width: 800px; margin-left: auto; margin-right: auto;">
+        <p>For instance, despite having <strong>more carbs and sugars</strong> than <strong>Cornflakes</strong>, a <strong>Granola Bar</strong> raises glucose less and slower; likely due to its increased <strong>protein</strong> content. This also highlights how<strong> late-night meals keep glucose elevated for longer than earlier ones</strong>, indicated by Cornflakes relative steep dropoff as opposed to the Granola Bar. 
+        <strong>   You can check Dataset 4 from Thu 05 to Fri 06 to see this!</strong> </p>
+    </section>
 
     <section id="transition1" style="margin: 0 20px; text-align: left; max-width: 800px; margin-left: auto; margin-right: auto;">
         <h2 style="text-align: center;">Exploring How Different Meals Spike Glucose</h2>
@@ -95,11 +102,10 @@
 
 
     <section id="transition2" style="margin: 0 20px; text-align: left; max-width: 800px; margin-left: auto; margin-right: auto;">
-        <h2 style="text-align: center; font-weight: bold;">From Food-Specific Analysis to Overall Glucose Distribution: A Deeper Look</h2>
         <p>
-            From the <span style="font-weight: bold;">radar chart</span>, we gained insights into how the foods with the <span style="font-weight: bold;">highest Total Carbs</span> and <span style="font-weight: bold;">Sugar</span> impact <span style="font-weight: bold;">glucose spikes</span>. However, while the radar chart is great for comparing <span style="font-weight: bold;">individual foods</span>, it does not provide a <span style="font-weight: bold;">broader perspective</span> on how different <span style="font-weight: bold;">food compositions</span> contribute to <span style="font-weight: bold;">overall glucose spike distributions. </span>.  
+            From the radar chart, we gained insights into how the foods with the <span style="font-weight: bold;">highest Total Carbs</span> and <span style="font-weight: bold;">Sugar</span> impact <span style="font-weight: bold;">glucose spikes</span>. However, while the radar chart is great for comparing individual foods, it does not provide a broader perspective on how different food compositions contribute to overall glucose spike distributions.  
             <br><br>
-            To bridge this gap, we introduced the <span style="font-weight: bold;">histogram plot</span>, which aggregates <span style="font-weight: bold;">average glucose responses</span> across different <span style="font-weight: bold;">nutrient combinations</span>. This enables us to observe <span style="font-weight: bold;">general trends</span> and compare <span style="font-weight: bold;">multiple categories simultaneously</span>. Here, users can <span style="font-weight: bold;">filter data</span> based on <span style="font-weight: bold;">Total Carbs, Sugar, and Protein levels</span>, providing a <span style="font-weight: bold;">more comprehensive view</span> of how different <span style="font-weight: bold;">nutrient compositions</span> affect <span style="font-weight: bold;">glucose responses</span>.
+            To bridge this gap, we introduced the <span style="font-weight: bold;">histogram</span>, which aggregates <span style="font-weight: bold;">maximum glucose change</span> across different nutrient combinations. This enables us to observe <span style="font-weight: bold;">general trends</span> and compare <span style="font-weight: bold;">multiple categories simultaneously</span>. Users can select specific levels of <strong>Total Carbs</strong>, <strong>Sugar</strong>, and <strong>Protein</strong> by clicking on the corresponding buttons to toggle between <strong>high</strong>, <strong>low</strong> and <strong>all</strong> values (determined from median). To further enhance exploration, the <strong>Every Combination</strong> button animates the histogram, sequentially displaying all possible nutrient combinations. If needed, users can <strong>pause</strong> the animation at any time or <strong>reset</strong> the selection to return to the initial state. This interactive functionality provides a comprehensive view of glucose variability across different dietary compositions. <strong>Make sure to click "Every Combination" to populate the remaining visualizations! </strong></span>
         </p>
     </section>
     
@@ -197,6 +203,7 @@
 
 
 
+
     <section id="final-exploration" style="margin: 40px auto; max-width: 1200px;">
         <h2 style="text-align: center;">Explore All Visualizations Together</h2>
         <p>Now that we've explored each visualization individually, you can analyze them side by side. This section allows you to simultaneously compare the histogram, the mean glucose spike bar chart, and the motion chart.</p>
@@ -256,18 +263,14 @@
     </section>
     
 
+
     <script src="main.js"></script>
     <script src="radar.js"></script>
 
     
-    
-
-
-
-
 
     <section id="conclusion" style="margin: 40px auto; max-width: 800px; text-align: left;">
-        <h2 style="text-align: center;">Final Takeaways</h2>
+        <h2 style="text-align: center;">Takeaways</h2>
         <p>Through a series of visualizations, we've uncovered key insights into how different meal compositions affect glucose levels over time. From tracking individual glucose fluctuations to categorizing meals by their macronutrient profiles, our analysis reveals actionable strategies for maintaining stable blood sugar levels.</p>
     
         <h3>🔑 Key Insights:</h3>
@@ -281,17 +284,23 @@
         <h3>🌟 How Our Visualizations Explain This:</h3>
         <p>Our interactive visualizations take you through a step-by-step exploration of glucose responses:</p>
         <ol>
-            <li><strong>Glucose Time Series:</strong> Showcases how individual glucose levels change in response to meals.</li>
+            <li><strong>Glucose Time Series:</strong> Showcases how individual glucose levels change in response to meals. We began to see the impact of <strong>protein</strong> as well as <strong> meal timing</strong>.</li>
             <li><strong>Glucose Spike Radar Chart</strong> Highlighting the importance of food choice by comparing influential meals.</li>
             <li><strong>Glucose Spike Histogram:</strong> Categorizes meals based on their macronutrient composition and their glucose impact.</li>
-            <li><strong>Mean Glucose Spike Bar Chart:</strong> Summarizes glucose impact by averaging responses within meal categories.</li>
-            <li><strong>Glucose Trends Motion Chart:</strong> Illustrates how glucose changes over time for low, medium, and high glucose spike foods.</li>
+            <li><strong>Mean Glucose Spike Bar Chart:</strong> Summarizes glucose impact by averaging responses within meal categories. Showed us that<strong> high carb and high sugar foods consistently raised glucose higher</strong>.</li>
+            <li><strong>Glucose Trends Motion Chart:</strong> Illustrates how glucose changes over time for low, medium, and high glucose spike foods.<strong> Helped us generalize the glycemic quality of foods based on their macronutrient category</strong>. </li>
         </ol>
         
         <p>Together, these visualizations tell a compelling story: the food we eat directly shapes our glucose stability, and making informed dietary choices can lead to better blood sugar control.</p>
     
         <h3>🚀 Final Thoughts:</h3>
-        <p>Managing glucose isn’t just about avoiding sugar—it's about understanding how different nutrients interact with the body. By choosing protein-rich, low-carb meals and timing meals strategically, individuals can take control of their glucose health and improve long-term metabolic stability.</p>
+        <p>Managing glucose is not just about avoiding sugar—it’s about making smart dietary choices that promote stability and long-term health. Our analysis underscores the importance of <strong> protein-rich</strong> meals, <strong> lower carbohydrate intake</strong>, and <strong>eating earlier in the day</strong>as effective strategies for minimizing blood sugar fluctuations.</p>
+           
+        <p>Ultimately, our findings highlight a crucial takeaway:
+            <strong> Being mindful of macronutrient composition and meal timing empowers individuals to optimize glucose control. By reducing large glucose spikes, people can enhance metabolic stability and lower long-term health risks.</strong> 
+            </p>
+
+            Through these insights, we hope to encourage better eating habits and more informed food choices that contribute to sustained energy and overall well-being.</p>
     </section>
     
 </body>
