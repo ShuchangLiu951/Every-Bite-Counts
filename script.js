@@ -449,6 +449,17 @@ function reset(){
     meanHistory = [];
     lineHistory = [];
     index = 0;
+    // reset my filter to ALL
+
+    document.getElementById("carbs").value = "all";
+    document.getElementById("sugar").value = "all";
+    document.getElementById("protein").value = "all";
+    button = document.getElementById("pause-combinations");
+    clearInterval(interval); // Pause the interval
+    isPaused = true;
+    button.textContent = "Resume"; // Update button text
+    updateChart();
+
 }
 
 
@@ -618,18 +629,6 @@ const line = d3.line()
     // Group lines by color
     const groupedLines = d3.group(lineHistory, d => getColor(d.meanMaxGlucoseSpike));
 
-    if (motionGroup.select(".x-axis-label").empty()) {
-        motionGroup.append("text")
-            .attr("class", "x-axis-label")
-            .attr("text-anchor", "middle")
-            .attr("x", width / 2)
-            .attr("y", height + margin.bottom - 10) // Position below the X-axis
-            .style("font-size", "12px")
-            .text("Time Interval (Hours)");
-    }
-
-    
-
     // Calculate the average line for each group
     const averagedLines = Array.from(groupedLines, ([color, lines]) => {
         const averagedGlucoseValues = [];
@@ -638,7 +637,7 @@ const line = d3.line()
             const average = values.length > 0 ? d3.mean(values) : null;
             averagedGlucoseValues.push(average);
         }
-        return { color, averagedGlucoseValues };
+        return { color, lines, averagedGlucoseValues };
     });
 
     // Bind data to paths
@@ -672,6 +671,52 @@ const line = d3.line()
 
     // Exit selection: Remove lines that are no longer in the data
     paths.exit()
+        .transition()
+        .duration(500)
+        .style("opacity", 0)
+        .remove();
+
+    // Add labels for each line
+    const labels = motionGroup.selectAll(".line-label")
+        .data(averagedLines, d => d.color); // Use color as the unique key for each group
+
+    // Enter selection: Add new labels
+    const enterLabels = labels.enter()
+        .append("text")
+        .attr("class", "line-label")
+        .attr("fill", d => d.color) // Red for red lines, black for others
+        .attr("text-anchor", "start")
+        .attr("x", d => xScale(23) + 5) // Position slightly to the right of the last point
+        .attr("y", d => yScale(d.averagedGlucoseValues[23])) // Position at the last point of the line
+        .style("font-size", "12px")
+        .text(d => {
+            if (d.color === red) {
+                return `High Glucose Spike 41+ mg/dL`; // One label for all red lines
+            } else if (d.color === blue) {
+                return `Medium Glucose Spike 34-41 mg/dL`; // One label for all blue lines
+            } else {
+                return `Low Glucose Spike <34 mg/dL`; // One label for all green lines
+            }
+        });
+
+    // Merge enter and update selections for labels
+    enterLabels.merge(labels)
+        .transition()
+        .duration(1000)
+        .attr("x", d => xScale(23) + 5)
+        .attr("y", d => yScale(d.averagedGlucoseValues[23]))
+        .text(d => {
+            if (d.color === red) {
+                return `High Glucose Spike 41+ mg/dL`; // One label for all red lines
+            } else if (d.color === blue) {
+                return `Medium Glucose Spike 34-41 mg/dL`; // One label for all blue lines
+            } else {
+                return `Low Glucose Spike <34 mg/dL`; // One label for all green lines
+            }
+        });
+
+    // Exit selection: Remove labels that are no longer in the data
+    labels.exit()
         .transition()
         .duration(500)
         .style("opacity", 0)
