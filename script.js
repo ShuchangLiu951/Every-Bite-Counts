@@ -37,8 +37,6 @@ function updateChart() {
     // Select all SVG elements under the class `.histogram-content`
     d3.selectAll(".histogram-content svg").each(function () {
         const svg = d3.select(this)
-            .attr("width", 900)  // Adjust the size as needed
-            .attr("height", 600);
 
         const margin = { top: 20, right: 30, bottom: 60, left: 40 };
         const width = +svg.attr("width") - margin.left - margin.right;
@@ -223,8 +221,53 @@ function updateMeanGraph() {
     // Set up dimensions and margins
 
     //sort the meanHistory array
-    meanHistory.sort((a, b) => a.mean - b.mean);
 
+// Select the SVG container or create it if it doesn't exist
+d3.selectAll(".chart-container2").each(function () {
+    let container = d3.select(this);
+    let svg = container.select("svg");
+
+    // Get the existing width and height of the SVG
+    const svgWidth = +svg.attr("width");
+    const svgHeight = +svg.attr("height");
+
+    // Define margins and calculate inner width and height
+    const margin = { top: 20, right: 40, bottom: 50, left: 10 };
+    const width = svgWidth - margin.left - margin.right;
+    const height = svgHeight - margin.top - margin.bottom;
+
+    // Check if the SVG has any child elements
+    if (svg.select("*").empty()) {
+        // Create the inner group if it doesn't exist
+        svg = svg
+            .append("g")
+            .attr("transform", `translate(${margin.left},${margin.top})`);
+
+        // Add x-axis group
+        svg.append("g")
+            .attr("class", "x-axis")
+            .attr("transform", `translate(0,${height})`);
+
+        // Add y-axis group
+        svg.append("g")
+            .attr("class", "y-axis");
+
+        // Add title (only once)
+        svg.append("text")
+            .attr("class", "chart-title")
+            .attr("text-anchor", "middle")
+            .attr("x", svgWidth / 2) // Centered horizontally
+            .attr("y", margin.top / 2 - 10) // Positioned near the top
+            .style("font-size", "18px")
+            .style("font-weight", "bold")
+            .text("Average Maximum Glucose Change Within 2 Hours");
+    } else {
+        // Select the inner group if the SVG already exists
+        svg = svg.select("g");
+    }
+
+    // Sort the meanHistory array
+    meanHistory.sort((a, b) => a.mean - b.mean);
 
     // Create scales
     const x = d3.scaleLinear()
@@ -234,94 +277,67 @@ function updateMeanGraph() {
     const y = d3.scaleBand()
         .domain(meanHistory.map(d => d.category)) // Categories as domain
         .range([0, height])
-        .padding(0.2); // Add padding between bars (adjust value as needed)
-
-    // Select the SVG container or create it if it doesn't exist
-    d3.selectAll(".chart-container2").each(function () {
-        let container = d3.select(this);
-        let svg = container.select("svg");
-        //check element of this svg
-
-        if (svg.select("*").empty()) {
-            // Create SVG container if it doesn't exist
-            svg = svg
-                .attr("width", width + margin.left + margin.right)
-                .attr("height", height + margin.top + margin.bottom)
-                .append("g")
-                .attr("transform", `translate(${margin.left},${margin.top})`);
-    
-            // Add x-axis group
-            svg.append("g")
-                .attr("class", "x-axis")
-                .attr("transform", `translate(0,${height})`);
-    
-            // Add y-axis group
-            svg.append("g")
-                .attr("class", "y-axis");
-                 // Add title (only once)
-            svg.append("text")
-                .attr("class", "chart-title")
-                .attr("text-anchor", "middle")
-                .attr("x", (width + margin.left + margin.right) / 2 - 150)
-                .attr("y", margin.top / 2 + - 15) 
-                .style("font-size", "18px")
-                .style("font-weight", "bold")
-                .text("Average Maximum Glucose Change Within 2 Hours");
-        } else {
-            // Select the inner group if the SVG already exists
-            svg = svg.select("g");
-        }
-
-
-
-
+        .padding(0.2); // Add padding between bars
 
     // Update x-axis
     svg.select(".x-axis")
-    .transition()
-    .duration(1000)
-    .call(d3.axisBottom(x).ticks(5));
+        .transition()
+        .duration(1000)
+        .call(d3.axisBottom(x).ticks(5));
 
-svg.append("text")
-        .attr("text-anchor", "middle")
-        .attr("x", width / 2)
-        .attr("y", height + 40)
-        .style("font-size", "18px") // Increase font size
-        .style("font-weight", "bold")
-        .text("Glucose Change Within 2 Hrs (mg/dL)");
+    // Update y-axis
+    svg.select(".y-axis")
+        .transition()
+        .duration(1000)
+        .call(d3.axisLeft(y));
 
+    // Bind data to bars
+    const bars = svg.selectAll(".bar")
+        .data(meanHistory);
 
-// Update y-axis
-svg.select(".y-axis")
-    .transition()
-    .duration(1000)
-    .call(d3.axisLeft(y));
+    // Remove existing labels before updating
+    svg.selectAll(".bar-label").remove();
 
-// Bind data to bars
-const bars = svg.selectAll(".bar")
-    .data(meanHistory, d => d.category); // Use category as the key for data binding
-
-
+    // Enter selection: Add new bars
     bars.enter()
         .append("rect")
         .attr("class", "bar")
         .attr("x", 0)
         .attr("y", d => y(d.category))
+        .attr("width", d => x(d.mean))
         .attr("height", y.bandwidth())
-        .attr("width", d => x(d.mean)) // Start with the current width
-        .attr("fill", d => getColor(d.mean))
+        .attr("fill", d => getColor(d.mean)) // Use getColor to set the initial color
         .merge(bars) // Merge with the update selection
         .transition() // Apply transition to both new and existing bars
         .duration(1000)
-        .attr("y", d => y(d.category)) // Update position
-        .attr("height", y.bandwidth()) // Ensure height matches the band
-        .attr("width", d => x(d.mean)); // Update width
+        .attr("x", 0)
+        .attr("y", d => y(d.category))
+        .attr("width", d => x(d.mean))
+        .attr("height", y.bandwidth())
+        .attr("fill", d => getColor(d.mean)); // Update color dynamically using getColor
 
     // Exit selection: Remove bars that are no longer in the data
     bars.exit()
         .transition()
         .duration(1000)
-        .attr("width", 0) // Shrink bars to width 0 before removing
+        .attr("width", 0)
+        .remove();
+
+    // Add labels to bars after updating
+    bars.enter()
+        .append("text")
+        .attr("class", "bar-label")
+        .attr("x", d => x(d.mean) + 5) // Position slightly to the right of the bar
+        .attr("y", d => y(d.category) + y.bandwidth() / 2 + 4) // Center vertically
+        .text(d => d.mean.toFixed(2)) // Display the mean value
+        .style("font-size", "12px")
+        .style("fill", "black");
+
+    // Exit selection: Remove bars that are no longer in the data
+    bars.exit()
+        .transition()
+        .duration(1000)
+        .attr("width", 0)
         .remove();
 
     // Bind data to labels
@@ -351,7 +367,7 @@ const bars = svg.selectAll(".bar")
         .duration(1000)
         .style("opacity", 0) // Fade out before removing
         .remove();
-});
+    });
 }
 
 // Generate all combinations of filters
