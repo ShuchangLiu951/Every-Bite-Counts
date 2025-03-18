@@ -106,7 +106,7 @@
     
 
 
-    <div id ="histogram-content">
+    <div class ="histogram-content">
         <h2>Maximum Glucose Change Histogram</h2>
         <style>
             /* To ensure the buttons stack horizontally below the dropdowns */
@@ -127,35 +127,35 @@
             }
         </style>
         <label for="carbs">Total Carbs:</strong></label>
-        <select id="carbs" onchange="updateChart()">
+        <select class="carbs" onchange="updateChart()">
             <option value="all">All</option>
             <option value="high">High</option>
             <option value="low">Low</option>
         </select>
         
         <label for="sugar">Sugar:</strong></label>
-        <select id="sugar" onchange="updateChart()">
+        <select class="sugar" onchange="updateChart()">
             <option value="all">All</option>
             <option value="high">High</option>
             <option value="low">Low</option>
         </select>
         
         <label for="protein">Protein:</strong></label>
-        <select id="protein" onchange="updateChart()">
+        <select class="protein" onchange="updateChart()">
             <option value="all">All</option>
             <option value="high">High</option>
             <option value="low">Low</option>
         </select>
 
-        <div id = "button-container">
-            <button id = "show-combinations">Every Combination</button>
-            <button id="pause-combinations">Pause</button>
-            <button id = "reset-average">Reset</button>
+        <div class = "button-container">
+            <button class = "show-combinations">Every Combination</button>
+            <button class="pause-combinations">Pause</button>
+            <button class = "reset-average">Reset</button>
         </div>
         <svg width="800" height="500"></svg>
-        <div class="tooltip" id="tooltip"></div>
+        <div class="tooltip" class="tooltip"></div>
 
-        <!-- <div id="chart-container2"></div> -->
+        <!-- <div class="chart-container2"></div> -->
 
     </div>
 
@@ -173,7 +173,8 @@
     </section>
     
 
-    <div id="chart-container2"></div>
+    <div class="chart-container2">
+    </div>
 
 
     <section id="transition4" style="margin: 0 20px; text-align: left; max-width: 800px; margin-left: auto; margin-right: auto;">
@@ -183,8 +184,9 @@
     </section>
 
     
-    <div id ="motion-content">
-        <div id = "motion-image"></div>
+    <div class ="motion-content">
+        <div class = "motion-image">
+        </div>
     </div>
 
 
@@ -193,23 +195,24 @@
         <h2 style="text-align: center;">Explore All Visualizations Together</h2>
         <p>Now that we've explored each visualization individually, you can analyze them side by side. This section allows you to simultaneously compare the histogram, the mean glucose spike bar chart, and the motion chart.</p>
     
-        <div id="combined-charts" style="display: grid; grid-template-columns: 2fr 1fr; grid-template-rows: auto auto; gap: 20px;">
+        <div class="combined-charts" style="display: grid; grid-template-columns: 2fr 1fr; grid-template-rows: auto auto; gap: 20px;">
             <!-- Histogram on the left -->
-            <div id="histogram-container" style="grid-row: 1 / span 2;">
+            <div class="histogram-content" style="grid-row: 1 / span 2;">
                 <h3>Glucose Change Histogram</h3>
                 <svg width="600" height="400"></svg>
             </div>
     
             <!-- Mean Bar Chart on the Top Right -->
-            <div id="mean-bar-container">
+            <div class="mean-bar-container">
                 <h3>Mean Glucose Spike</h3>
-                <div id="chart-container2"></div>
+                <div class="chart-container2">
+                </div>
             </div>
     
             <!-- Motion Chart on the Bottom Right -->
-            <div id="motion-chart-container">
-                <h3>Glucose Trends Over Time</h3>
-                <div id="motion-image"></div>
+            <div class ="motion-content">
+                <div class = "motion-image">
+                </div>
             </div>
         </div>
     </section>
