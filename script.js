@@ -286,6 +286,15 @@ d3.selectAll(".chart-container2").each(function () {
         .call(d3.axisBottom(x).ticks(5));
         
 
+
+    svg.append("text")
+        .attr("text-anchor", "middle")
+        .attr("x", width / 2)
+        .attr("y", height + 40)
+        .style("font-size", "18px") // Increase font size
+        .style("font-weight", "bold")
+        .text("Glucose Change Within 2 Hrs (mg/dL)");
+
     // Update y-axis
     svg.select(".y-axis")
         .transition()
