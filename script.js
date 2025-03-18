@@ -370,10 +370,8 @@ d3.selectAll(".chart-container2").each(function () {
         .attr("x", d => x(d.mean) + 5)
         .attr("y", d => y(d.category) + y.bandwidth() / 2)
         .attr("dy", "0.35em")
-        // .style("font-size", "12px")
-        // .style("fill", "black")
-        .style("font-size", "16px")  // Increased font size
-        .style("font-weight", "bold")
+        .style("font-size", "12px")
+        .style("fill", "black")
         .text(d => d.mean.toFixed(2))
         .merge(labels) // Merge with the update selection
         .transition() // Apply transition to both new and existing labels
