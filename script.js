@@ -575,24 +575,21 @@ function updateMotionChart() {
 
     
     if (svg.select("*").empty()) {
-        svg = svg
-            .style("border", "1px solid black");
-            svg.append("text")
-                .attr("class", "chart-title")
-                .attr("text-anchor", "middle")
-                .attr("x", 0) // Centered horizontally
-                .attr("y", 0) // Positioned near the top
-                .style("font-size", "18px")
-                .style("font-weight", "bold")
-                .text("Glucose Response Over Time by Meal Spike Category"); // Optional: Add a border for visibility
-    }
+        svg.style("border", "none");
+        svg.append("text")
+            .attr("class", "chart-title")
+            .attr("text-anchor", "middle")
+            .style("font-size", "18px")
+            .style("font-weight", "bold")
+            .text("Glucose Response Over Time by Meal Spike Category"); // Optional: Add a border for visibility
+}
+
 
     // Define margins and dimensions for the chart
     const margin = { top: 20, right: 10, bottom: 50, left: 50 }; // Increased bottom margin for the X-axis label
     const width = +svg.attr("width") - margin.left - margin.right;
     const height = +svg.attr("height") - margin.top - margin.bottom;
 
-    // Create a dedicated group for the motion chart
     let motionGroup = svg.select(".motion-group");
     if (motionGroup.empty()) {
         motionGroup = svg.append("g")
