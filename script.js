@@ -575,21 +575,24 @@ function updateMotionChart() {
 
     
     if (svg.select("*").empty()) {
-        svg.style("border", "none");
-        svg.append("text")
-            .attr("class", "chart-title")
-            .attr("text-anchor", "middle")
-            .style("font-size", "18px")
-            .style("font-weight", "bold")
-            .text("Glucose Response Over Time by Meal Spike Category"); // Optional: Add a border for visibility
-}
-
+        svg = svg
+            .style("border", "1px solid black");
+            svg.append("text")
+                .attr("class", "chart-title")
+                .attr("text-anchor", "middle")
+                .attr("x", 600 / 2) // Centered horizontally
+                .attr("y", ) // Positioned near the top
+                .style("font-size", "18px")
+                .style("font-weight", "bold")
+                .text("Glucose Response Over Time by Meal Spike Category"); // Optional: Add a border for visibility
+    }
 
     // Define margins and dimensions for the chart
     const margin = { top: 20, right: 10, bottom: 50, left: 50 }; // Increased bottom margin for the X-axis label
     const width = +svg.attr("width") - margin.left - margin.right;
     const height = +svg.attr("height") - margin.top - margin.bottom;
 
+    // Create a dedicated group for the motion chart
     let motionGroup = svg.select(".motion-group");
     if (motionGroup.empty()) {
         motionGroup = svg.append("g")
@@ -631,7 +634,7 @@ function updateMotionChart() {
         motionGroup.append("text")
             .attr("class", "x-axis-label")
             .attr("text-anchor", "middle")
-            .attr("x",  600 / 2) // Center the label horizontally
+            .attr("x", width / 2) // Center the label horizontally
             .attr("y", height + margin.bottom - 10) // Position below the X-axis
             .style("font-size", "14px")
             .style("font-weight", "bold")
@@ -818,6 +821,37 @@ function getColor(meanValue) {
         return red; // 41 and above
     }
 }
+
+document.addEventListener("DOMContentLoaded", function () {
+    console.log(document.getElementById("pause-combinations1"))
+        document.getElementById("pause-combinations1").addEventListener("click", function() {
+            console.log('hihihi')
+            document.getElementById("pause-combinations").click();
+        });
+    
+        document.getElementById("show-combinations1").addEventListener("click", function() {
+            document.getElementById("show-combinations").click();
+        });
+    
+        document.getElementById("reset-average1").addEventListener("click", function() {
+            document.getElementById("reset-average").click();
+        });
+    
+        document.getElementById("carbs1").addEventListener("change", function() {
+            document.getElementById("carbs").value = document.getElementById("carbs1").value;
+            updateChart();
+        });
+    
+        document.getElementById("sugar1").addEventListener("click", function() {
+            document.getElementById("sugar").value = document.getElementById("sugar1").value;
+            updateChart();
+        });
+    
+        document.getElementById("protein1").addEventListener("click", function() {
+            document.getElementById("protein").value = document.getElementById("protein1").value;
+            updateChart();
+        });
+    })
 
 
 
