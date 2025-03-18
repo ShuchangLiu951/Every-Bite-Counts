@@ -284,12 +284,15 @@ d3.selectAll(".chart-container2").each(function () {
         .transition()
         .duration(1000)
         .call(d3.axisBottom(x).ticks(5));
+        
 
     // Update y-axis
     svg.select(".y-axis")
         .transition()
         .duration(1000)
-        .call(d3.axisLeft(y));
+        .call(d3.axisLeft(y))
+        .style("font-size", "13px")  // Increased font size
+        .style("font-weight", "bold");
 
     // Bind data to bars
     const bars = svg.selectAll(".bar")
@@ -306,7 +309,9 @@ d3.selectAll(".chart-container2").each(function () {
         .attr("y", d => y(d.category))
         .attr("width", d => x(d.mean))
         .attr("height", y.bandwidth())
-        .attr("fill", d => getColor(d.mean)) // Use getColor to set the initial color
+        .attr("fill", d => getColor(d.mean))
+        .style("font-size", "16px")  // Increased font size
+        .style("font-weight", "bold") // Use getColor to set the initial color
         .merge(bars) // Merge with the update selection
         .transition() // Apply transition to both new and existing bars
         .duration(1000)
@@ -330,8 +335,10 @@ d3.selectAll(".chart-container2").each(function () {
         .attr("x", d => x(d.mean) + 5) // Position slightly to the right of the bar
         .attr("y", d => y(d.category) + y.bandwidth() / 2 + 4) // Center vertically
         .text(d => d.mean.toFixed(2)) // Display the mean value
-        .style("font-size", "12px")
-        .style("fill", "black");
+        // .style("font-size", "12px")
+        // .style("fill", "black");
+        .style("font-size", "16px")  // Increased font size
+        .style("font-weight", "bold")
 
     // Exit selection: Remove bars that are no longer in the data
     bars.exit()
@@ -351,8 +358,10 @@ d3.selectAll(".chart-container2").each(function () {
         .attr("x", d => x(d.mean) + 5)
         .attr("y", d => y(d.category) + y.bandwidth() / 2)
         .attr("dy", "0.35em")
-        .style("font-size", "12px")
-        .style("fill", "black")
+        // .style("font-size", "12px")
+        // .style("fill", "black")
+        .style("font-size", "16px")  // Increased font size
+        .style("font-weight", "bold")
         .text(d => d.mean.toFixed(2))
         .merge(labels) // Merge with the update selection
         .transition() // Apply transition to both new and existing labels
