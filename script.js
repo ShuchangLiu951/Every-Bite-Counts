@@ -2,10 +2,9 @@ let data = [];
 let meanHistory = [];
 let meanValue;
 let lineHistory = [];
-const blue = ["#377eb8"]
+const blue = ["#377eb8"];
 const green = ["#4daf4a"];
 const red = ["#e41a1c"];
-
 
 // Fetch and process CSV data
 document.addEventListener("DOMContentLoaded", async function () {
@@ -32,109 +31,107 @@ function filterData() {
     });
 }
 
-
 function updateChart() {
     const filteredData = filterData();
-    // const svg = d3.select("svg");
-    const svg = d3.select("#histogram-content").select("svg")
-    // histogramSvg
-    .attr("width", 900)  // Make sure you adjust the size as needed
-    .attr("height", 600);
 
-    const margin = { top: 20, right: 30, bottom: 60, left: 40 };
-    const width = +svg.attr("width") - margin.left - margin.right;
-    const height = +svg.attr("height") - margin.top - margin.bottom;
+    // Select all SVG elements under the class `.histogram-content`
+    d3.selectAll(".histogram-content svg").each(function () {
+        const svg = d3.select(this)
 
-    // Select or create the main group container
-    let g = svg.select("g");
-    if (g.empty()) {
-        g = svg.append("g").attr("transform", `translate(${margin.left},${margin.top})`);
-    }
+        const margin = { top: 20, right: 30, bottom: 60, left: 10 };
+        const width = +svg.attr("width") - margin.left - margin.right;
+        const height = +svg.attr("height") - margin.top - margin.bottom;
 
-    // Adjust domain to account for negative values
-    const xMin = d3.min(filteredData, d => d.maxGlucoseSpike);
-    const xMax = d3.max(filteredData, d => d.maxGlucoseSpike);
+        // Select or create the main group container
+        let g = svg.select("g");
+        if (g.empty()) {
+            g = svg.append("g").attr("transform", `translate(${margin.left},${margin.top})`);
+        }
 
-    const x = d3.scaleLinear()
-        .domain([xMin, xMax]) // Adjusted for negative values
-        .range([0, width]);
+        // Adjust domain to account for negative values
+        const xMin = d3.min(filteredData, d => d.maxGlucoseSpike);
+        const xMax = d3.max(filteredData, d => d.maxGlucoseSpike);
 
-    const bins = d3.bin()
-        .domain(x.domain())
-        .thresholds(x.ticks(20))
-        (filteredData.map(d => d.maxGlucoseSpike));
+        const x = d3.scaleLinear()
+            .domain([xMin, xMax]) // Adjusted for negative values
+            .range([0, width]);
 
-    const y = d3.scaleLinear()
-        .domain([0, d3.max(bins, d => d.length)]) 
-        .range([height, 0]);
+        const bins = d3.bin()
+            .domain(x.domain())
+            .thresholds(x.ticks(20))
+            (filteredData.map(d => d.maxGlucoseSpike));
 
-    // Update x-axis
-    let xAxis = g.select(".x-axis");
-    if (xAxis.empty()) {
-        xAxis = g.append("g").attr("class", "x-axis").attr("transform", `translate(0,${height})`);
-    }
-    xAxis.transition().duration(1000).call(d3.axisBottom(x));
+        const y = d3.scaleLinear()
+            .domain([0, d3.max(bins, d => d.length)]) 
+            .range([height, 0]);
 
-    // Update y-axis
-    let yAxis = g.select(".y-axis");
-    if (yAxis.empty()) {
-        yAxis = g.append("g").attr("class", "y-axis");
-    }
-    yAxis.transition().duration(1000).call(d3.axisLeft(y));
+        // Update x-axis
+        let xAxis = g.select(".x-axis");
+        if (xAxis.empty()) {
+            xAxis = g.append("g").attr("class", "x-axis").attr("transform", `translate(0,${height})`);
+        }
+        xAxis.transition().duration(1000).call(d3.axisBottom(x));
 
-    // Bind data to bars
-    const bars = g.selectAll(".bar")
-        .data(bins);
+        // Update y-axis
+        let yAxis = g.select(".y-axis");
+        if (yAxis.empty()) {
+            yAxis = g.append("g").attr("class", "y-axis");
+        }
+        yAxis.transition().duration(1000).call(d3.axisLeft(y));
 
-    // Enter selection: Add new bars
-    bars.enter()
-        .append("rect")
-        .attr("class", "bar")
-        .attr("x", d => x(d.x0)) // Initial position
-        .attr("y", height) // Start at the bottom
-        .attr("width", d => Math.max(0, x(d.x1) - x(d.x0) - 1)) // Bar width
-        .attr("height", 0) // Start with height 0
-        .attr("fill", "steelblue")
-        .merge(bars) // Merge with the update selection
-        .transition() // Apply transition to both new and existing bars
-        .duration(1000)
-        .attr("x", d => x(d.x0)) // Update position
-        .attr("y", d => y(d.length)) // Update height
-        .attr("height", d => height - y(d.length)) // Update height
-        .attr("width", d => Math.max(0, x(d.x1) - x(d.x0) - 1)); // Update width
+        // Bind data to bars
+        const bars = g.selectAll(".bar")
+            .data(bins);
 
-    // Exit selection: Remove bars that are no longer in the data
-    bars.exit()
-        .transition()
-        .duration(1000)
-        .attr("y", height) // Shrink bars to the bottom
-        .attr("height", 0) // Shrink height to 0
-        .remove();
+        // Enter selection: Add new bars
+        bars.enter()
+            .append("rect")
+            .attr("class", "bar")
+            .attr("x", d => x(d.x0)) // Initial position
+            .attr("y", height) // Start at the bottom
+            .attr("width", d => Math.max(0, x(d.x1) - x(d.x0) - 1)) // Bar width
+            .attr("height", 0) // Start with height 0
+            .attr("fill", "steelblue")
+            .merge(bars) // Merge with the update selection
+            .transition() // Apply transition to both new and existing bars
+            .duration(1000)
+            .attr("x", d => x(d.x0)) // Update position
+            .attr("y", d => y(d.length)) // Update height
+            .attr("height", d => height - y(d.length)) // Update height
+            .attr("width", d => Math.max(0, x(d.x1) - x(d.x0) - 1)); // Update width
 
-    // Add x-axis label (if not already added)
-    if (g.select(".x-axis-label").empty()) {
-        g.append("text")
-            .attr("class", "x-axis-label")
-            .attr("text-anchor", "middle")
-            .attr("x", width / 2)
-            .attr("y", height + margin.bottom - 10)
-            .style("font-size", "14px")
-            .style("font-weight", "bold")
-            .text("Maximum Glucose Change Within 2 Hrs (mg/dL)");
-    }
+        // Exit selection: Remove bars that are no longer in the data
+        bars.exit()
+            .transition()
+            .duration(1000)
+            .attr("y", height) // Shrink bars to the bottom
+            .attr("height", 0) // Shrink height to 0
+            .remove();
 
-    // Add y-axis label (if not already added)
-    if (g.select(".y-axis-label").empty()) {
-        g.append("text")
-            .attr("class", "y-axis-label")
-            .attr("text-anchor", "middle")
-            .attr("transform", "rotate(-90)")
-            .attr("x", -height / 2)
-            .attr("y", -margin.left + 10)
-            .style("font-size", "14px")
-            .style("font-weight", "bold")
-            .text("Count");
-    }
+        // Add x-axis label (if not already added)
+        if (g.select(".x-axis-label").empty()) {
+            g.append("text")
+                .attr("class", "x-axis-label")
+                .attr("text-anchor", "middle")
+                .attr("x", width / 2)
+                .attr("y", height + margin.bottom - 10)
+                .style("font-size", "14px")
+                .style("font-weight", "bold")
+                .text("Maximum Glucose Change Within 2 Hrs (mg/dL)");
+        }
+
+        // Add y-axis label (if not already added)
+        if (g.select(".y-axis-label").empty()) {
+            g.append("text")
+                .attr("class", "y-axis-label")
+                .attr("text-anchor", "middle")
+                .attr("transform", "rotate(-90)")
+                .attr("x", -height / 2)
+                .attr("y", -margin.left + 10)
+                .style("font-size", "14px")
+                .style("font-weight", "bold")
+                .text("Count");
+        }
 
     // Compute the mean glucose spike
     meanValue = d3.mean(filteredData, d => d.maxGlucoseSpike);
@@ -217,36 +214,32 @@ function updateChart() {
     // Update mean graph
     updateMeanGraph();
     updateMotionChart();
+});
 }
 
 function updateMeanGraph() {
     // Set up dimensions and margins
-    const margin = { top: 20, right: 40, bottom: 50, left: 200 };
-    const width = 800 - margin.left - margin.right;
-    const height = 400 - margin.top - margin.bottom;
 
     //sort the meanHistory array
-    meanHistory.sort((a, b) => a.mean - b.mean);
 
-    // Create scales
-    const x = d3.scaleLinear()
-        .domain([0, d3.max(meanHistory, d => d.mean)]) // Domain based on max mean value
-        .range([0, width]);
+// Select the SVG container or create it if it doesn't exist
+d3.selectAll(".chart-container2").each(function () {
+    let container = d3.select(this);
+    let svg = container.select("svg");
 
-    const y = d3.scaleBand()
-        .domain(meanHistory.map(d => d.category)) // Categories as domain
-        .range([0, height])
-        .padding(0.2); // Add padding between bars (adjust value as needed)
+    // Get the existing width and height of the SVG
+    const svgWidth = +svg.attr("width");
+    const svgHeight = +svg.attr("height");
 
-    // Select the SVG container or create it if it doesn't exist
-    let svg = d3.select("#chart-container2").select("svg");
+    // Define margins and calculate inner width and height
+    const margin = { top: 20, right: 40, bottom: 50, left: 10 };
+    const width = svgWidth - margin.left - margin.right;
+    const height = svgHeight - margin.top - margin.bottom;
 
-    if (svg.empty()) {
-        // Create SVG container if it doesn't exist
-        svg = d3.select("#chart-container2")
-            .append("svg")
-            .attr("width", width + margin.left + margin.right)
-            .attr("height", height + margin.top + margin.bottom)
+    // Check if the SVG has any child elements
+    if (svg.select("*").empty()) {
+        // Create the inner group if it doesn't exist
+        svg = svg
             .append("g")
             .attr("transform", `translate(${margin.left},${margin.top})`);
 
@@ -258,12 +251,13 @@ function updateMeanGraph() {
         // Add y-axis group
         svg.append("g")
             .attr("class", "y-axis");
-             // Add title (only once)
+
+        // Add title (only once)
         svg.append("text")
             .attr("class", "chart-title")
             .attr("text-anchor", "middle")
-            .attr("x", (width + margin.left + margin.right) / 2 - 150)
-            .attr("y", margin.top / 2 + - 15) 
+            .attr("x", svgWidth / 2) // Centered horizontally
+            .attr("y", margin.top / 2 - 10) // Positioned near the top
             .style("font-size", "18px")
             .style("font-weight", "bold")
             .text("Average Maximum Glucose Change Within 2 Hours");
@@ -272,33 +266,55 @@ function updateMeanGraph() {
         svg = svg.select("g");
     }
 
+    // Sort the meanHistory array
+    meanHistory.sort((a, b) => a.mean - b.mean);
+
+    // Create scales
+    const x = d3.scaleLinear()
+        .domain([0, d3.max(meanHistory, d => d.mean)]) // Domain based on max mean value
+        .range([0, width]);
+
+    const y = d3.scaleBand()
+        .domain(meanHistory.map(d => d.category)) // Categories as domain
+        .range([0, height])
+        .padding(0.2); // Add padding between bars
+
     // Update x-axis
     svg.select(".x-axis")
         .transition()
         .duration(1000)
         .call(d3.axisBottom(x).ticks(5));
+        
+
 
     svg.append("text")
-            .attr("text-anchor", "middle")
-            .attr("x", width / 2)
-            .attr("y", height + 40)
-            .style("font-size", "18px") // Increase font size
-            .style("font-weight", "bold")
-            .text("Glucose Change Within 2 Hrs (mg/dL)");
-
+        .attr("text-anchor", "middle")
+        .attr("x", width / 2)
+        .attr("y", height + 40)
+        .style("font-size", "18px") // Increase font size
+        .style("font-weight", "bold")
+        .text("Glucose Change Within 2 Hrs (mg/dL)");
 
     // Update y-axis
     svg.select(".y-axis")
         .transition()
         .duration(1000)
         .call(d3.axisLeft(y))
+
+        .style("font-size", "13px")  // Increased font size
+        .style("font-weight", "bold");
+
         .selectAll("text")  // Select all category labels
         .style("font-size", "16px")  // Make text larger
         .style("font-weight", "bold"); ;
 
+
     // Bind data to bars
     const bars = svg.selectAll(".bar")
-        .data(meanHistory, d => d.category); // Use category as the key for data binding
+        .data(meanHistory);
+
+    // Remove existing labels before updating
+    svg.selectAll(".bar-label").remove();
 
     // Enter selection: Add new bars
     bars.enter()
@@ -306,23 +322,48 @@ function updateMeanGraph() {
         .attr("class", "bar")
         .attr("x", 0)
         .attr("y", d => y(d.category))
+        .attr("width", d => x(d.mean))
         .attr("height", y.bandwidth())
-        .attr("width", d => x(d.mean)) // Start with the current width
         .attr("fill", d => getColor(d.mean))
         .style("font-size", "16px")  // Increased font size
+
+        .style("font-weight", "bold") // Use getColor to set the initial color
+
         .style("font-weight", "bold")
+
         .merge(bars) // Merge with the update selection
         .transition() // Apply transition to both new and existing bars
         .duration(1000)
-        .attr("y", d => y(d.category)) // Update position
-        .attr("height", y.bandwidth()) // Ensure height matches the band
-        .attr("width", d => x(d.mean)); // Update width
+        .attr("x", 0)
+        .attr("y", d => y(d.category))
+        .attr("width", d => x(d.mean))
+        .attr("height", y.bandwidth())
+        .attr("fill", d => getColor(d.mean)); // Update color dynamically using getColor
 
     // Exit selection: Remove bars that are no longer in the data
     bars.exit()
         .transition()
         .duration(1000)
-        .attr("width", 0) // Shrink bars to width 0 before removing
+        .attr("width", 0)
+        .remove();
+
+    // Add labels to bars after updating
+    bars.enter()
+        .append("text")
+        .attr("class", "bar-label")
+        .attr("x", d => x(d.mean) + 5) // Position slightly to the right of the bar
+        .attr("y", d => y(d.category) + y.bandwidth() / 2 + 4) // Center vertically
+        .text(d => d.mean.toFixed(2)) // Display the mean value
+        // .style("font-size", "12px")
+        // .style("fill", "black");
+        .style("font-size", "16px")  // Increased font size
+        .style("font-weight", "bold")
+
+    // Exit selection: Remove bars that are no longer in the data
+    bars.exit()
+        .transition()
+        .duration(1000)
+        .attr("width", 0)
         .remove();
 
     // Bind data to labels
@@ -354,6 +395,7 @@ function updateMeanGraph() {
         .duration(1000)
         .style("opacity", 0) // Fade out before removing
         .remove();
+    });
 }
 
 // Generate all combinations of filters
@@ -393,6 +435,8 @@ function showCombinations() {
     interval = setInterval(updateCombination, 2000); // 2 seconds interval
 }
 
+
+
 function updateCombination() {
     const combinations = generateCombinations();
     if (index >= combinations.length) {
@@ -412,6 +456,8 @@ function updateCombination() {
 
     index++;
 }
+
+
 
 // Pause/Resume Button Logic
 
@@ -470,6 +516,9 @@ function reset(){
     document.getElementById("carbs").value = "all";
     document.getElementById("sugar").value = "all";
     document.getElementById("protein").value = "all";
+    document.getElementById("carbs1").value = "all";
+    document.getElementById("sugar1").value = "all";
+    document.getElementById("protein1").value = "all";
     button = document.getElementById("pause-combinations");
     clearInterval(interval); // Pause the interval
     isPaused = true;
@@ -480,9 +529,8 @@ function reset(){
 
 
 
-
 async function getFoodPointsWithTwoHourLater() {
-    const datasetOptions = Array.from(document.querySelectorAll("#data-select option")).map(option => option.value);
+    const datasetOptions = Array.from(document.querySelectorAll(".data-select option")).map(option => option.value);
 
     // Array to store results
     const results = [];
@@ -551,32 +599,25 @@ async function getFoodPointsWithTwoHourLater() {
 
 function updateMotionChart() {
     // Select the motion-image container
-    const motionContainer = d3.select("#motion-image");
+    d3.selectAll(".motion-image").each(function () {
+    let container = d3.select(this);
+    let svg = container.select("svg");
     // Define a line generator
-const line = d3.line()
-.x((d, i) => xScale(i)) // X is the time interval index
-.y(d => yScale(d)) // Y is the glucose value
-.defined(d => d !== null); // Skip null values
 
-    // Append an SVG element to the container if it doesn't already exist
-    let svg = motionContainer.select("svg");
-    if (svg.empty()) {
-        svg = motionContainer.append("svg")
-            .attr("width", 600) // Set the width of the SVG
-            .attr("height", 600) // Set the height of the SVG
-            .style("border", "1px solid black");
-            svg.append("text")
-                .attr("class", "chart-title")
-                .attr("text-anchor", "middle")
-                .attr("x", 600 / 2) // Centered horizontally
-                .attr("y", 20) // Positioned near the top
-                .style("font-size", "18px")
-                .style("font-weight", "bold")
-                .text("Glucose Response Over Time by Meal Spike Category"); // Optional: Add a border for visibility
+    
+    if (svg.select("*").empty()) {
+        svg = svg.style('border', 'none')
+        svg.append("text")
+            .attr("class", "chart-title")
+            .attr("text-anchor", "middle")
+            .attr("x", 200)
+            .style("font-size", "18px")
+            .style("font-weight", "bold")
+            .text("Glucose Response Over Time by Meal Spike Category"); // Optional: Add a border for visibility
     }
 
     // Define margins and dimensions for the chart
-    const margin = { top: 20, right: 200, bottom: 50, left: 50 }; // Increased bottom margin for the X-axis label
+    const margin = { top: 20, right: 10, bottom: 50, left: 50 }; // Increased bottom margin for the X-axis label
     const width = +svg.attr("width") - margin.left - margin.right;
     const height = +svg.attr("height") - margin.top - margin.bottom;
 
@@ -588,6 +629,10 @@ const line = d3.line()
             .attr("transform", `translate(${margin.left},${margin.top})`);
     }
 
+    const line = d3.line()
+.x((d, i) => xScale(i)) // X is the time interval index
+.y(d => yScale(d)) // Y is the glucose value
+.defined(d => d !== null); // Skip null values
     // Define scales
     const xScale = d3.scaleLinear()
         .domain([0, 23]) // 24 intervals (0 to 23)
@@ -649,7 +694,6 @@ const line = d3.line()
             .text("Glucose Level (mg/dL)");
     }
 
-    
     // Group lines by color
     const groupedLines = d3.group(lineHistory, d => getColor(d.meanMaxGlucoseSpike));
 
@@ -745,7 +789,8 @@ const line = d3.line()
         .duration(500)
         .style("opacity", 0)
         .remove();
-}
+    });
+};
 
 
 function filterDataByCombination(combination) {
@@ -807,5 +852,35 @@ function getColor(meanValue) {
 }
 
 
+
+document.addEventListener("DOMContentLoaded", function () {
+
+    document.getElementById("pause-combinations1").addEventListener("click", function() {
+        document.getElementById("pause-combinations").click();
+    });
+
+    document.getElementById("show-combinations1").addEventListener("click", function() {
+        document.getElementById("show-combinations").click();
+    });
+
+    document.getElementById("reset-average1").addEventListener("click", function() {
+        document.getElementById("reset-average").click();
+    });
+
+    document.getElementById("carbs1").addEventListener("change", function() {
+        document.getElementById("carbs").value = this.value;
+        updateChart();
+    });
+
+    document.getElementById("sugar1").addEventListener("change", function() {
+        document.getElementById("sugar").value = this.value;
+        updateChart();
+    });
+
+    document.getElementById("protein1").addEventListener("change", function() {
+        document.getElementById("protein").value = this.value;
+        updateChart();
+    });
+});
 
 
