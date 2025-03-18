@@ -825,3 +825,30 @@ function getColor(meanValue) {
 
 
 
+document.addEventListener("DOMContentLoaded", function () {
+console.log(document.getElementById("pause-combinations1"))
+    document.getElementById("pause-combinations1").addEventListener("click", function() {
+        console.log('hihihi')
+        document.getElementById("pause-combinations").click();
+    });
+
+    document.getElementById("show-combinations1").addEventListener("click", function() {
+        document.getElementById("show-combinations").click();
+    });
+
+    document.getElementById("reset-average1").addEventListener("click", function() {
+        document.getElementById("reset-average").click();
+    });
+
+    document.getElementById("carbs1").addEventListener("click", function() {
+        document.getElementById("carbs").click();
+    });
+
+    document.getElementById("sugar1").addEventListener("click", function() {
+        document.getElementById("sugar").click();
+    });
+
+    document.getElementById("protein1").addEventListener("click", function() {
+        document.getElementById("protein").click();
+    });
+})

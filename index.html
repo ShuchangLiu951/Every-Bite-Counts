@@ -9,7 +9,7 @@
     <!-- <link rel="stylesheet" href="radar.css">  -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/plotly.js/2.24.1/plotly.min.js"></script>
     <script src="https://d3js.org/d3.v7.min.js"></script>
-    <script src="script.js"></script>
+    <script src="updated_script.js"></script>
 </head> 
 <body>
 
@@ -184,6 +184,8 @@
         <p>By transitioning to this time-based view, we can observe how different meal compositions influence glucose stability beyond just the initial spike, offering a clearer picture of which foods promote sustained, healthy glucose levels.</p>
     </section>
 
+
+
     
     <div class ="motion-content">
         <div class = "motion-image">
@@ -193,11 +195,44 @@
 
 
 
+
+
     <section id="final-exploration" style="margin: 40px auto; max-width: 1200px;">
         <h2 style="text-align: center;">Explore All Visualizations Together</h2>
         <p>Now that we've explored each visualization individually, you can analyze them side by side. This section allows you to simultaneously compare the histogram, the mean glucose spike bar chart, and the motion chart.</p>
     
+        
+        <label for="carbs1">Total Carbs:</strong></label>
+        <select id="carbs1" onchange="updateChart()">
+            <option value="all">All</option>
+            <option value="high">High</option>
+            <option value="low">Low</option>
+        </select>
+        
+        <label for="sugar1">Sugar:</strong></label>
+        <select id="sugar1" onchange="updateChart()">
+            <option value="all">All</option>
+            <option value="high">High</option>
+            <option value="low">Low</option>
+        </select>
+        
+        <label for="protein1">Protein:</strong></label>
+        <select id="protein1" onchange="updateChart()">
+            <option value="all">All</option>
+            <option value="high">High</option>
+            <option value="low">Low</option>
+        </select>
+
+        <div id = "button-container1">
+            <button id = "show-combinations1">Every Combination</button>
+            <button id="pause-combinations1">Pause</button>
+            <button id = "reset-average1">Reset</button>
+        </div>
+        <svg width="800" height="500"></svg>
+        <div class="tooltip" class="tooltip"></div>
+    
         <div class="combined-charts" style="display: grid; grid-template-columns: 2fr 1fr; grid-template-rows: auto auto; gap: 20px;">
+            
             <!-- Histogram on the left -->
             <div class="histogram-content" style="grid-row: 1 / span 2;">
                 <h3>Glucose Change Histogram</h3>
@@ -224,7 +259,6 @@
     
 
     <script src="main.js"></script>
-    <script src="script.js"></script>
     <script src="radar.js"></script>
 
     
