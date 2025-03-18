@@ -240,10 +240,11 @@ function updateMeanGraph() {
     d3.selectAll(".chart-container2").each(function () {
         let container = d3.select(this);
         let svg = container.select("svg");
-        if (svg.empty()) {
+        //check element of this svg
+
+        if (svg.select("*").empty()) {
             // Create SVG container if it doesn't exist
-            svg = container
-                .append("svg")
+            svg = svg
                 .attr("width", width + margin.left + margin.right)
                 .attr("height", height + margin.top + margin.bottom)
                 .append("g")
@@ -557,22 +558,21 @@ function updateMotionChart() {
     // Define a line generator
 
     
-    if (svg.empty()) {
-        svg = container
-        .append("svg")
+    if (svg.select("*").empty()) {
+        svg = svg
             .style("border", "1px solid black");
             svg.append("text")
                 .attr("class", "chart-title")
                 .attr("text-anchor", "middle")
                 .attr("x", 600 / 2) // Centered horizontally
-                .attr("y", 20) // Positioned near the top
+                .attr("y", 200) // Positioned near the top
                 .style("font-size", "18px")
                 .style("font-weight", "bold")
                 .text("Glucose Response Over Time by Meal Spike Category"); // Optional: Add a border for visibility
     }
 
     // Define margins and dimensions for the chart
-    const margin = { top: 20, right: 200, bottom: 50, left: 50 }; // Increased bottom margin for the X-axis label
+    const margin = { top: 20, right: 10, bottom: 50, left: 50 }; // Increased bottom margin for the X-axis label
     const width = +svg.attr("width") - margin.left - margin.right;
     const height = +svg.attr("height") - margin.top - margin.bottom;
 
