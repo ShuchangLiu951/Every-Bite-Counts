@@ -639,35 +639,6 @@ const line = d3.line()
     // Group lines by color
     const groupedLines = d3.group(lineHistory, d => getColor(d.meanMaxGlucoseSpike));
 
-<<<<<<< Updated upstream
-=======
-    if (motionGroup.select(".x-axis-label").empty()) {
-        motionGroup.append("text")
-            .attr("class", "x-axis-label")
-            .attr("text-anchor", "middle")
-            .attr("x", width / 2)
-            .attr("y", height + margin.bottom - 10) // Position below the X-axis
-            .style("font-size", "12px")
-            .text("Time Interval (Hours)");
-    }
-
-    let title = svg.select(".chart-title");
-    if (title.empty()) {
-    title = svg.append("text")
-        .attr("class", "chart-title")
-        .attr("x", width / 2 + margin.left + 30) // Shifted slightly to the right
-        .attr("y", margin.top / 2 + 10)  // Positioning the title
-        .attr("text-anchor", "middle")
-        .style("font-size", "16px")
-        .style("font-weight", "bold")
-        .text("Glucose Trends Over 2 Hours for Low, Medium, and High Spike Foods");
-} else {
-    title.text("Glucose Trends Over 2 Hours for Low, Medium, and High Spike Foods");
-}
-
-    
-
->>>>>>> Stashed changes
     // Calculate the average line for each group
     const averagedLines = Array.from(groupedLines, ([color, lines]) => {
         const averagedGlucoseValues = [];
