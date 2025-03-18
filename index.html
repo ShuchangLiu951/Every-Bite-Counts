@@ -9,7 +9,7 @@
     <!-- <link rel="stylesheet" href="radar.css">  -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/plotly.js/2.24.1/plotly.min.js"></script>
     <script src="https://d3js.org/d3.v7.min.js"></script>
-    <!-- <script src="script.js"></script> -->
+    <script src="script.js"></script>
 </head> 
 <body>
 
@@ -179,8 +179,8 @@
     </section>
     
 
-    <div id="chart-container2">
-        <svg width="800" height="500"></svg>
+    <div class="chart-container2">
+        <svg width="400" height="300"> </svg>
     </div>
 
 
@@ -193,69 +193,12 @@
 
 
     
-    <div id ="motion-content">
-        <div id = "motion-image">
-            <svg width="800" height="500"></svg>
+    <div class ="motion-content">
+        <div class = "motion-image">
+            <svg class="motion-chart-svg" width="400" height="300"></svg>
         </div>
     </div>
 
-    <section id="final-exploration" style="margin: 40px auto; max-width: 1200px;">
-        <h2 style="text-align: center;">Explore All Visualizations Together</h2>
-        <p>Now that we've explored each visualization individually, you can analyze them side by side. This section allows you to simultaneously compare the histogram, the mean glucose spike bar chart, and the motion chart.</p>
-    
-        <label for="carbs1">Total Carbs:</strong></label>
-        <select id="carbs1" onchange="updateChart()">
-            <option value="all">All</option>
-            <option value="high">High</option>
-            <option value="low">Low</option>
-        </select>
-        
-        <label for="sugar1">Sugar:</strong></label>
-        <select id="sugar1" onchange="updateChart()">
-            <option value="all">All</option>
-            <option value="high">High</option>
-            <option value="low">Low</option>
-        </select>
-        
-        <label for="protein1">Protein:</strong></label>
-        <select id="protein1" onchange="updateChart()">
-            <option value="all">All</option>
-            <option value="high">High</option>
-            <option value="low">Low</option>
-        </select>
-
-        <div id = "button-container1">
-            <button id = "show-combinations1">Every Combination</button>
-            <button id="pause-combinations1">Pause</button>
-            <button id = "reset-average1">Reset</button>
-        </div>
-        <div class="tooltip" class="tooltip"></div>
-    
-        <div class="combined-charts" style="display: grid; grid-template-columns: 2fr 1fr; grid-template-rows: auto auto; gap: 10px;">
-            
-            <!-- Histogram on the left -->
-            <div class="histogram-content" style="grid-row: 1 / span 2; margin-top: 30px;">
-                <h3>Glucose Change Histogram</h3>
-                <svg class="histogram-svg" width="600" height="500"></svg>
-            </div>
-    
-            <!-- Mean Bar Chart on the Top Right -->
-            <div class="mean-bar-container" style = "margin-left: -100px;">
-                <h3>Mean Glucose Spike</h3>
-                <div class="chart-container2">
-                    <svg class="mean-bar-svg" width="400" height="300"></svg>
-                </div>
-            </div>
-    
-            <!-- Motion Chart on the Bottom Right -->
-            <div class="motion-content" style = "margin-left: -140px;">
-                <h3>Motion Chart</h3>
-                <div class="motion-image">
-                    <svg class="motion-chart-svg" width="400" height="300"></svg>
-                </div>
-            </div>
-        </div>
-    </section>
 
 
 
