@@ -26,9 +26,9 @@ function filterData() {
     const proteinFilter = document.getElementById("protein").value;
 
     return data.filter(d => {
-        return (carbsFilter === "all" || (carbsFilter === "high" ? d.totalCarbs > thresholds.carbs : d.totalCarbs <= thresholds.carbs)) &&
-               (sugarFilter === "all" || (sugarFilter === "high" ? d.sugar > thresholds.sugar : d.sugar <= thresholds.sugar)) &&
-               (proteinFilter === "all" || (proteinFilter === "high" ? d.protein > thresholds.protein : d.protein <= thresholds.protein));
+        return (carbsFilter === "All" || (carbsFilter === "High" ? d.totalCarbs > thresholds.carbs : d.totalCarbs <= thresholds.carbs)) &&
+               (sugarFilter === "All" || (sugarFilter === "High" ? d.sugar > thresholds.sugar : d.sugar <= thresholds.sugar)) &&
+               (proteinFilter === "All" || (proteinFilter === "High" ? d.protein > thresholds.protein : d.protein <= thresholds.protein));
     });
 }
 
@@ -275,7 +275,17 @@ function updateMeanGraph() {
             .attr("y", height + 40)
             .style("font-size", "18px") // Increase font size
             .style("font-weight", "bold")
-            .text("Average Maximum Glucose Change Within 2 Hrs");
+            .text("Average Maximum Glucose Change Within 2 Hrs (mg/dL)");
+    if (svg.select(".chart-title").empty()) {
+    svg.append("text")
+        .attr("class", "chart-title")
+        .attr("x", width / 2)
+        .attr("y", -10) // Position above the chart
+        .attr("text-anchor", "middle")
+        .style("font-size", "20px")
+        .style("font-weight", "bold")
+        .text("Mean Glucose Spike by Category");
+}
 
 
     // Update y-axis
@@ -342,9 +352,9 @@ function updateMeanGraph() {
 
 // Generate all combinations of filters
 function generateCombinations() {
-    const carbsOptions = ["high", "low"]; // Skip "all"
-    const sugarOptions = ["high", "low"]; // Skip "all"
-    const proteinOptions = ["high", "low"]; // Skip "all"
+    const carbsOptions = ["High", "Low"]; // Skip "all"
+    const sugarOptions = ["High", "Low"]; // Skip "all"
+    const proteinOptions = ["High", "Low"]; // Skip "all"
 
     const combinations = [];
     carbsOptions.forEach(carbs => {
@@ -629,6 +639,35 @@ const line = d3.line()
     // Group lines by color
     const groupedLines = d3.group(lineHistory, d => getColor(d.meanMaxGlucoseSpike));
 
+<<<<<<< Updated upstream
+=======
+    if (motionGroup.select(".x-axis-label").empty()) {
+        motionGroup.append("text")
+            .attr("class", "x-axis-label")
+            .attr("text-anchor", "middle")
+            .attr("x", width / 2)
+            .attr("y", height + margin.bottom - 10) // Position below the X-axis
+            .style("font-size", "12px")
+            .text("Time Interval (Hours)");
+    }
+
+    let title = svg.select(".chart-title");
+    if (title.empty()) {
+    title = svg.append("text")
+        .attr("class", "chart-title")
+        .attr("x", width / 2 + margin.left + 30) // Shifted slightly to the right
+        .attr("y", margin.top / 2 + 10)  // Positioning the title
+        .attr("text-anchor", "middle")
+        .style("font-size", "16px")
+        .style("font-weight", "bold")
+        .text("Glucose Trends Over 2 Hours for Low, Medium, and High Spike Foods");
+} else {
+    title.text("Glucose Trends Over 2 Hours for Low, Medium, and High Spike Foods");
+}
+
+    
+
+>>>>>>> Stashed changes
     // Calculate the average line for each group
     const averagedLines = Array.from(groupedLines, ([color, lines]) => {
         const averagedGlucoseValues = [];
@@ -730,9 +769,9 @@ function filterDataByCombination(combination) {
 
     // Filter the data based on the specific combination
     const filteredData = data.filter(d => {
-        const carbsCondition = carbs === "all" || (carbs === "high" ? d.totalCarbs > thresholds.carbs : d.totalCarbs <= thresholds.carbs);
-        const sugarCondition = sugar === "all" || (sugar === "high" ? d.sugar > thresholds.sugar : d.sugar <= thresholds.sugar);
-        const proteinCondition = protein === "all" || (protein === "high" ? d.protein > thresholds.protein : d.protein <= thresholds.protein);
+        const carbsCondition = carbs === "All" || (carbs === "High" ? d.totalCarbs > thresholds.carbs : d.totalCarbs <= thresholds.carbs);
+        const sugarCondition = sugar === "All" || (sugar === "High" ? d.sugar > thresholds.sugar : d.sugar <= thresholds.sugar);
+        const proteinCondition = protein === "All" || (protein === "High" ? d.protein > thresholds.protein : d.protein <= thresholds.protein);
 
         return carbsCondition && sugarCondition && proteinCondition;
     });

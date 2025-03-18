@@ -95,7 +95,7 @@
 
 
     <div id ="histogram-content">
-        <h2>Glucose Spike Histogram</h2>
+        <h2>Maximum Glucose Change Histogram</h2>
         <style>
             /* To ensure the buttons stack horizontally below the dropdowns */
             #button-container {
@@ -143,11 +143,33 @@
         <svg width="800" height="500"></svg>
         <div class="tooltip" id="tooltip"></div>
 
-        <div id="chart-container2"></div>
+        <!-- <div id="chart-container2"></div> -->
 
     </div>
 
 
+    <section id="transition3" style="margin: 0 20px; text-align: left; max-width: 800px; margin-left: auto; margin-right: auto;">
+        <p>The Maximum Glucose Change Histogram categorizes meals based on their macronutrient composition—carbohydrates, sugar, fat, and protein—and visualizes the distribution of glucose spikes that follow within two hours of eating. Each bar in the histogram represents the frequency of meals that caused a certain level of glucose increase, allowing us to see how different types of meals impact blood sugar levels.</p>
+        <p>To summarize this data, the Mean Glucose Spike Bar Chart condenses the histogram’s information by displaying the average glucose response for each meal category. Instead of showing individual data points, the bar chart highlights the overall trend, making it easier to compare how different meal compositions affect blood sugar levels.</p>
+        <p>The colors in the bar chart provide further insight:</p>
+        <ul>
+            <li><strong style="color: green;">Green</strong> represents meals that lead to low glucose spikes.</li>
+            <li><strong style="color: blue;">Blue</strong> indicates moderate spikes.</li>
+            <li><strong style="color: red;">Red</strong> highlights meals that cause high spikes.</li>
+        </ul>
+        <p>By deriving the bar chart from the histogram, we move from granular meal-level data to a broader summary, helping us quickly identify which meal types are better for glucose stability.</p>
+    </section>
+
+    <div id="chart-container2"></div>
+
+    <section id="transition4" style="margin: 0 20px; text-align: left; max-width: 800px; margin-left: auto; margin-right: auto;">
+        <h2 style="text-align: center;">Tracking Glucose Trends Over Time</h2>
+        <p>After categorizing meals by their glucose impact, we now examine how blood sugar changes over time for each category. The <strong>Glucose Trends Over 2 Hours</strong> motion chart dynamically visualizes the average glucose response for low, medium, and high spike foods across a two-hour window post-meal.</p>
+        <p>Each line in the chart represents one of the three previously categorie. This visualization builds upon our previous insights. The Mean Glucose Spike Bar Chart summarized glucose responses by meal category, and now, the motion chart extends this understanding by mapping how glucose levels evolve over time for each category.</p>
+        <p>By transitioning to this time-based view, we can observe how different meal compositions influence glucose stability beyond just the initial spike, offering a clearer picture of which foods promote sustained, healthy glucose levels.</p>
+    </section>
+
+    
     <div id ="motion-content">
         <div id = "motion-image"></div>
     </div>
