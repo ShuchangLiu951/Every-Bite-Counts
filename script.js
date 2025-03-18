@@ -560,8 +560,6 @@ function updateMotionChart() {
     if (svg.empty()) {
         svg = container
         .append("svg")
-            .attr("width", 600) // Set the width of the SVG
-            .attr("height", 600) // Set the height of the SVG
             .style("border", "1px solid black");
             svg.append("text")
                 .attr("class", "chart-title")
