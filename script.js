@@ -300,10 +300,10 @@ d3.selectAll(".chart-container2").each(function () {
         .transition()
         .duration(1000)
         .call(d3.axisLeft(y))
-        // .style("font-size", "13px")  // Increased font size
-        // .style("font-weight", "bold") // Select all category labels
+        .selectAll("text")  // Select all category labels
         .style("font-size", "16px")  // Make text larger
         .style("font-weight", "bold"); ;
+
 
 
     // Bind data to bars
@@ -323,11 +323,7 @@ d3.selectAll(".chart-container2").each(function () {
         .attr("height", y.bandwidth())
         .attr("fill", d => getColor(d.mean))
         .style("font-size", "13px")  // Increased font size
-
         .style("font-weight", "bold") // Use getColor to set the initial color
-
-        .style("font-weight", "bold")
-
         .merge(bars) // Merge with the update selection
         .transition() // Apply transition to both new and existing bars
         .duration(1000)
@@ -877,5 +873,7 @@ document.addEventListener("DOMContentLoaded", function () {
         updateChart();
     });
 });
+
+
 
 
