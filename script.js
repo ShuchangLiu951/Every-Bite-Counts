@@ -634,7 +634,7 @@ function updateMotionChart() {
         motionGroup.append("text")
             .attr("class", "x-axis-label")
             .attr("text-anchor", "middle")
-            .attr("x", width / 2) // Center the label horizontally
+            .attr("x",  600 / 2) // Center the label horizontally
             .attr("y", height + margin.bottom - 10) // Position below the X-axis
             .style("font-size", "14px")
             .style("font-weight", "bold")

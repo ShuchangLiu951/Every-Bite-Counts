@@ -840,15 +840,18 @@ console.log(document.getElementById("pause-combinations1"))
         document.getElementById("reset-average").click();
     });
 
-    document.getElementById("carbs1").addEventListener("click", function() {
-        document.getElementById("carbs").click();
+    document.getElementById("carbs1").addEventListener("change", function() {
+        document.getElementById("carbs").value = document.getElementById("carbs1").value;
+        updateChart();
     });
 
     document.getElementById("sugar1").addEventListener("click", function() {
-        document.getElementById("sugar").click();
+        document.getElementById("sugar").value = document.getElementById("sugar1").value;
+        updateChart();
     });
 
     document.getElementById("protein1").addEventListener("click", function() {
-        document.getElementById("protein").click();
+        document.getElementById("protein").value = document.getElementById("protein1").value;
+        updateChart();
     });
 })
